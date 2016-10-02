@@ -5,8 +5,8 @@ import com.stoyanov.developer.goevent.di.scope.ActivityScope;
 import dagger.Component;
 
 
-@Component(dependencies = ApplicationComponent.class)
 @ActivityScope
-public interface MainActivityComponent {
+@Component(dependencies = ApplicationComponent.class)
+public interface ActivityComponent {
 
 }
