@@ -1,13 +1,13 @@
-package com.stoyanov.developer.goevent.mvp.data.source;
+package com.stoyanov.developer.goevent.mvp.model.repository;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.stoyanov.developer.goevent.mvp.data.Event;
-import com.stoyanov.developer.goevent.mvp.data.source.cache.Cache;
-import com.stoyanov.developer.goevent.mvp.data.source.local.EventsLocalDataSource;
-import com.stoyanov.developer.goevent.mvp.data.source.remote.EventsRemoteDataSource;
+import com.stoyanov.developer.goevent.mvp.model.domain.Events;
+import com.stoyanov.developer.goevent.mvp.model.repository.cache.Cache;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalDataSource;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsRemoteDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +17,7 @@ public class EventsRepository implements EventsDataSource {
     private final EventsLocalDataSource localDataSource;
     private final EventsRemoteDataSource remoteDataSource;
     private List<Observer> observers = new ArrayList<>();
-    private Cache<Event> cacheEvents;
+    private Cache<Events> cacheEvents;
 
     public EventsRepository(@NonNull EventsLocalDataSource localDataSource,
                             @NonNull EventsRemoteDataSource remoteDataSource) {
@@ -45,8 +45,8 @@ public class EventsRepository implements EventsDataSource {
 
     @Nullable
     @Override
-    public List<Event> getEvents() {
-        List<Event> events = null;
+    public Events getEvents() {
+/*        List<Events> events = null;
         if (cacheEvents.isCacheValid()) {
             if (cacheEvents.cachedAvailable()) {
                 events = cacheEvents.getCached();
@@ -59,21 +59,22 @@ public class EventsRepository implements EventsDataSource {
         }
         localDataSource.saveEvents(events);
         cacheEvents.cache(events);
-        return cacheEvents.getCached();
+        return cacheEvents.getCached();*/
+        return null;
     }
 
     @Override
-    public void saveEvents(@NonNull List<Event> events) {
+    public void saveEvents(@NonNull List<Events> events) {
         // FIXME: 01.10.2016
     }
 
     @Nullable
-    public Cache<Event> getCacheEvents() {
+    public Cache<Events> getCacheEvents() {
         Log.d(TAG, "EventsRepository: is cache null? -> " + (cacheEvents == null));
         return cacheEvents;
     }
 
-    public void setCacheEvents(Cache<Event> cacheEvents) {
+    public void setCacheEvents(Cache<Events> cacheEvents) {
         this.cacheEvents = cacheEvents;
     }
 

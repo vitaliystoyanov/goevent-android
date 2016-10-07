@@ -1,4 +1,4 @@
-package com.stoyanov.developer.goevent.mvp.data.source.cache;
+package com.stoyanov.developer.goevent.mvp.model.repository.cache;
 
 import android.support.annotation.Nullable;
 
