@@ -29,7 +29,8 @@ public class EventsRepositoryModule {
 
     @Provides
     UriBuilder provideUriBuilder(Application application) {
-        return new UriBuilder(application.getString(R.string.host));
+        return new UriBuilder(application.getString(R.string.host),
+                application.getString(R.string.port));
     }
 
     @Provides

@@ -16,9 +16,12 @@ import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
+import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsRemoteDataSource;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.UriBuilder;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -68,8 +71,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void onTest() {
         EventsRemoteDataSource remoteDataSource =
-                new EventsRemoteDataSource(new UriBuilder(getString(R.string.host)), getApplication());
-        String id = remoteDataSource.getEvents().get().get(0).getEventId();
-        Toast.makeText(this, remoteDataSource.getEvent(id).getName(), Toast.LENGTH_SHORT).show();
+                new EventsRemoteDataSource(new UriBuilder(getString(R.string.host),
+                        getString(R.string.port)), getApplication());
+        List<Event> eventsTest = remoteDataSource.getEventsByLocation(50.4501f, 30.5234f);
+        Toast.makeText(this, "size: " + eventsTest.size(), Toast.LENGTH_SHORT).show();
     }
 }

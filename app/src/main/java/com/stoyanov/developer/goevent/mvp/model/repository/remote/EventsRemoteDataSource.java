@@ -10,6 +10,7 @@ import com.koushikdutta.ion.Ion;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class EventsRemoteDataSource {
@@ -23,33 +24,35 @@ public class EventsRemoteDataSource {
     }
 
     @Nullable
-    public Events getEvents() {
-        Events result = null;
+    public List<Event> getEvents() {
+        Log.d(TAG, "getEvents: url is built - " + uriBuilder.getEvents());
+        List<Event> events = null;
         try {
-            Log.d(TAG, "getEvents: url is built - " + uriBuilder.getEvents());
-            result = Ion.getDefault(context).build(context)
+            events = Ion.getDefault(context).build(context)
                     .load(uriBuilder.getEvents())
-                    .as(new TypeToken<Events>() {})
-                    .get();
-        } catch (InterruptedException | ExecutionException e) {
+                    .as(new TypeToken<Events>() {
+                    })
+                    .get().list();
+        } catch (ExecutionException | InterruptedException e) {
             Log.e(TAG, "getEvents: ", e);
         }
-        if (result != null) {
-            Log.d(TAG, "getEvents: serialized events - " + result.toString());
+        if (events != null) {
+            Log.d(TAG, "getEvents: serialized events - " + events.toString());
         }
-        return result;
+        return events;
     }
 
     @Nullable
     public Event getEvent(@NonNull String id) {
+        Log.d(TAG, "getEvent: url is built - " + uriBuilder.getEvent(id));
         Event event = null;
         try {
-            Log.d(TAG, "getEvent: url is built - " + uriBuilder.getEvent(id));
             event = Ion.getDefault(context).build(context)
                     .load(uriBuilder.getEvent(id))
-                    .as(new TypeToken<Event>() {})
+                    .as(new TypeToken<Event>() {
+                    })
                     .get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException | InterruptedException e) {
             Log.e(TAG, "getEvent: ", e);
         }
         if (event != null) {
@@ -59,7 +62,42 @@ public class EventsRemoteDataSource {
     }
 
     @Nullable
-    public Events getEventsByLocation(float latitude, float longitude, int distance) {
-        return null;
+    public List<Event> getEventsByLocation(float latitude, float longitude, int distance) {
+        Log.d(TAG, "getEventsByLocation: url is built - " +
+                uriBuilder.getEventsByLocation(latitude, longitude, distance));
+        List<Event> events = null;
+        try {
+            events = Ion.getDefault(context).build(context)
+                    .load(uriBuilder.getEventsByLocation(latitude, longitude, distance))
+                    .as(new TypeToken<Events>() {
+                    })
+                    .get().list();
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, "getEventsByLocation: ", e);
+        }
+        if (events != null) {
+            Log.d(TAG, "getEventsByLocation: a serialized event - " + events.toString());
+        }
+        return events;
+    }
+
+    @Nullable
+    public List<Event> getEventsByLocation(float latitude, float longitude) {
+        Log.d(TAG, "getEventsByLocation: url is built - " +
+                uriBuilder.getEventsByLocation(latitude, longitude));
+        List<Event> events = null;
+        try {
+            events = Ion.getDefault(context).build(context)
+                    .load(uriBuilder.getEventsByLocation(latitude, longitude))
+                    .as(new TypeToken<Events>() {
+                    })
+                    .get().list();
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(TAG, "getEventsByLocation: ", e);
+        }
+        if (events != null) {
+            Log.d(TAG, "getEventsByLocation: a serialized event - " + events.toString());
+        }
+        return events;
     }
 }

@@ -13,7 +13,7 @@ public final class Events implements Identification<String> {
         return null;
     }
 
-    public List<Event> get() {
+    public List<Event> list() {
         return events;
     }
 
