@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="host">192.168.1.103</string>
-    <string name="port">:8000</string>
+    <string name="host">192.168.1.104</string>
+    <string name="port">8000</string>
 </resources>

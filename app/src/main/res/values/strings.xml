@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Goevent</string>
+    <string name="drawer_open">drawer open</string>
+    <string name="drawer_close">drawer close</string>
+    <string name="drawer_list_of_events">List of events</string>
+    <string name="drawer_favorites">Favorites</string>
+    <string name="drawer_nearby">Nearby</string>
+    <string name="drawer_map">Map</string>
+    <string name="drawer_notifications">Notifications</string>
+    <string name="drawer_login">Login</string>
+    <string name="drawer_help">Help</string>
+    <string name="drawer_about">About</string>
 </resources>

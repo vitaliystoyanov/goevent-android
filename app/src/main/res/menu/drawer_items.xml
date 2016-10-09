@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_item_list_events"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/drawer_list_of_events" />
+        <item
+            android:id="@+id/drawer_item_favorites"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/drawer_favorites" />
+        <item
+            android:id="@+id/drawer_item_nearby"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/drawer_nearby" />
+        <item
+            android:id="@+id/drawer_map"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/drawer_map" />
+        <item
+            android:id="@+id/drawer_item_notification"
+            android:checked="true"
+            android:title="@string/drawer_notifications"
+            app:actionLayout="@layout/switch_drawer_item" />
+    </group>
+    <group android:id="@+id/submenu_drawer_items"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_login"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/drawer_login" />
+        <item
+            android:id="@+id/drawer_help"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/drawer_help" />
+        <item
+            android:id="@+id/drawer_about"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="@string/drawer_about" />
+    </group>
+</menu>
