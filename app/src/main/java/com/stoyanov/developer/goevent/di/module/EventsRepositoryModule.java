@@ -2,14 +2,12 @@ package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
 
-import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.cache.Cache;
 import com.stoyanov.developer.goevent.mvp.model.repository.cache.CacheInMemory;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalDataSource;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsRemoteDataSource;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.UriBuilder;
 
 import dagger.Module;
 import dagger.Provides;
@@ -28,15 +26,8 @@ public class EventsRepositoryModule {
     }
 
     @Provides
-    UriBuilder provideUriBuilder(Application application) {
-        return new UriBuilder(application.getString(R.string.host),
-                application.getString(R.string.port));
-    }
-
-    @Provides
-    EventsRemoteDataSource provideEventsRemoteDataSource(UriBuilder uriBuilder,
-                                                         Application application) {
-        return new EventsRemoteDataSource(uriBuilder, application);
+    EventsRemoteDataSource provideEventsRemoteDataSource(Application application) {
+        return new EventsRemoteDataSource(application);
     }
 
     @Provides

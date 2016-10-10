@@ -1,6 +1,7 @@
 package com.stoyanov.developer.goevent.ui.activity;
 
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -24,7 +25,6 @@ import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsRemoteDataSource;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.UriBuilder;
 
 import java.util.List;
 
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private void setupDagger() {
         ActivityComponent activityComponent = DaggerActivityComponent.builder()
-                .applicationComponent(((MainApplication) getApplication()).getApplicationComponent())
+                .applicationComponent((MainApplication.getApplicationComponent(this)))
                 .build();
         activityComponent.inject(this);
         Log.d(TAG, "setupDagger: is cache null -> " + (eventsRepository.getCacheEvents() == null));
@@ -106,11 +106,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void onTest() {
-        EventsRemoteDataSource remoteDataSource =
-                new EventsRemoteDataSource(new UriBuilder(getString(R.string.host),
-                        getString(R.string.port)), getApplication());
-        List<Event> eventsTest = remoteDataSource.getEventsByLocation(50.4501f, 30.5234f);
-        Toast.makeText(this, "size: " + eventsTest.size(), Toast.LENGTH_SHORT).show();
+/*        List<Event> eventsTest = remoteDataSource.getEventsByLocation(50.4501f, 30.5234f);
+        Toast.makeText(this, "size: " + eventsTest.size(), Toast.LENGTH_SHORT).show();*/
+        new EventsAsyncTask().execute();
     }
 
     @Override
@@ -123,5 +121,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    public class EventsAsyncTask extends AsyncTask<Void, Void, List<Event>> {
+
+        private final EventsRemoteDataSource remoteDataSource;
+
+        public EventsAsyncTask() {
+            remoteDataSource =
+                    new EventsRemoteDataSource(getApplication());
+        }
+
+        @Override
+        protected List<Event> doInBackground(Void... voids) {
+            return remoteDataSource.getEvents();
+        }
+
+        @Override
+        protected void onPostExecute(List<Event> events) {
+            super.onPostExecute(events);
+            Toast.makeText(MainActivity.this, "size of list: " + events.size(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
