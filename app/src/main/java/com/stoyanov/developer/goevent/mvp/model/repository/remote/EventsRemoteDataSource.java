@@ -7,9 +7,11 @@ import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.api.EventsApi;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,52 +32,49 @@ public class EventsRemoteDataSource {
 
     @Nullable
     public List<Event> getEvents() {
-        List<Event> events = null;
         try {
-            events = eventsApi.getEvents().execute().body().list();
+            Events body = eventsApi.getEvents().execute().body();
+            if (body == null) return null;
+            return new ArrayList<>(body.list());
         } catch (IOException e) {
-            Log.e(TAG, "getEvents: Error has occured!");
+            Log.d(TAG, "getEvents: Error has occurred!", e);
         }
-        if (events != null) {
-            Log.d(TAG, "getEvents: serialized events - " + events.toString());
-        }
-        return events;
+        return null;
     }
 
     @Nullable
     public Event getEvent(@NonNull String id) {
-        Event event = null;
         try {
-            event = eventsApi.getEvent(id).execute().body();
+            return eventsApi.getEvent(id).execute().body();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(TAG, "getEvents: Error has occurred!", e);
         }
-        if (event != null) {
-            Log.d(TAG, "getEvent: a serialized event - " + event.toString());
-        }
-        return event;
+        return null;
     }
 
     @Nullable
     public List<Event> getEventsByLocation(float latitude, float longitude, int distance) {
-        List<Event> events = null;
         try {
-            events = eventsApi.getEventsByLocation(latitude, longitude, distance).execute().body().list();
+            Events responseBody = eventsApi.getEventsByLocation(latitude, longitude, distance)
+                    .execute()
+                    .body();
+            if (responseBody == null) return null;
+            return responseBody.list();
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.d(TAG, "getEvents: Error has occurred!", e);
         }
-        if (events != null) {
-            Log.d(TAG, "getEventsByLocation: a serialized event - " + events.toString());
-        }
-        return events;
+        return null;
     }
 
     @Nullable
     public List<Event> getEventsByLocation(float latitude, float longitude) {
-        List<Event> events = null;
-        if (events != null) {
-            Log.d(TAG, "getEventsByLocation: a serialized event - " + events.toString());
+        try {
+            Events body = eventsApi.getEventsByLocation(latitude, longitude).execute().body();
+            if (body == null) return null;
+            return body.list();
+        } catch (IOException e) {
+            Log.d(TAG, "getEvents: Error has occurred!", e);
         }
-        return events;
+        return null;
     }
 }

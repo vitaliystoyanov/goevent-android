@@ -134,13 +134,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         protected List<Event> doInBackground(Void... voids) {
-            return remoteDataSource.getEvents();
+            return remoteDataSource.getEventsByLocation(50.4501f, 30.5234f, 10000);
         }
 
         @Override
         protected void onPostExecute(List<Event> events) {
             super.onPostExecute(events);
-            Toast.makeText(MainActivity.this, "size of list: " + events.size(), Toast.LENGTH_SHORT).show();
+            if (events != null) {
+                Toast.makeText(MainActivity.this, "size of list: " + events.size(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "Error has occurred!", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

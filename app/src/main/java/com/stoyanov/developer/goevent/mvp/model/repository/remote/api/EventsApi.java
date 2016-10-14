@@ -10,16 +10,16 @@ import retrofit2.http.Query;
 
 public interface EventsApi {
 
-    @GET("/events")
+    @GET("events")
     Call<Events> getEvents();
 
-    @GET("/events/{id}")
+    @GET("events/{id}")
     Call<Event> getEvent(@Path("id") String id);
 
-    @GET("/events-location")
+    @GET("events-location")
     Call<Events> getEventsByLocation(@Query("lat") float latitude, @Query("lng") float longitude);
 
-    @GET("/events-location")
+    @GET("events-location")
     Call<Events> getEventsByLocation(@Query("lat") float latitude, @Query("lng") float longitude,
                                      @Query("distance") float distance);
 

@@ -10,9 +10,10 @@ import retrofit2.http.POST;
 
 public interface UserApi {
 
-    @POST("/login")
+    @POST("user/login")
     Call<Token> login(@Body Login login);
 
-    @POST("/logout")
+    @POST("user/logout")
     Call<SuccessLogout> logout();
+
 }
