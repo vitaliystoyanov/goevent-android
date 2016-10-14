@@ -4,9 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.SuccessLogout;
 import com.stoyanov.developer.goevent.mvp.model.domain.Token;
-import com.stoyanov.developer.goevent.mvp.model.repository.UserDataSource;
 
-public class UserRemoteDataSource implements UserDataSource {
+public class UserBackendServiceImp implements UserBackendService {
 
     @Nullable
     @Override

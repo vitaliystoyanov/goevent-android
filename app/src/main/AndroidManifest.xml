@@ -17,6 +17,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="DATABASE"
+            android:value="sugar_goevent.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="com.stoyanov.developer.goevent.mvp.model.domain" />
+
         <activity android:name=".ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +40,7 @@
         </activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBkrIm5iOlaJMo0-pif0HfisC-ROqko0f0"/>
+            android:value="AIzaSyBkrIm5iOlaJMo0-pif0HfisC-ROqko0f0" />
     </application>
 
 </manifest>

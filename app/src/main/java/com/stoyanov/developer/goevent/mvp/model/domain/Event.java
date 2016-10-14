@@ -1,10 +1,11 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
 import com.google.gson.annotations.SerializedName;
+import com.orm.SugarRecord;
+import com.stoyanov.developer.goevent.mvp.model.repository.cache.Identification;
 
-public final class Event {
-    @SerializedName("_id")
-    private String id;
+public final class Event extends SugarRecord implements Identification<Long> {
+
     @SerializedName("eventPicture")
     private String picture;
     @SerializedName("eventId")
@@ -19,9 +20,11 @@ public final class Event {
     private String endTime;
     private EventLocation eventLocation;
 
-    public Event(String id, String picture, String eventId, String name, String description,
+    public Event() {
+    }
+
+    public Event(String picture, String eventId, String name, String description,
                  String startTime, String endTime, EventLocation eventLocation) {
-        this.id = id;
         this.picture = picture;
         this.eventId = eventId;
         this.name = name;
@@ -29,14 +32,6 @@ public final class Event {
         this.startTime = startTime;
         this.endTime = endTime;
         this.eventLocation = eventLocation;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getPicture() {
@@ -104,7 +99,6 @@ public final class Event {
             System.err.println(e);
         }
         return "Event{" +
-                "id='" + id + '\'' +
                 ", picture='" + picture + '\'' +
                 ", eventId='" + eventId + '\'' +
                 ", name='" + name + '\'' +

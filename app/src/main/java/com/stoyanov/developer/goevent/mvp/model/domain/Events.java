@@ -4,12 +4,12 @@ import com.stoyanov.developer.goevent.mvp.model.repository.cache.Identification;
 
 import java.util.List;
 
-public final class Events implements Identification<String> {
+public final class Events implements Identification<String>{
     private List<Event> events;
     private int count;
 
     @Override
-    public String getId() { // FIXME: 07.10.2016
+    public String getId() {
         return null;
     }
 

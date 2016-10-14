@@ -51,4 +51,8 @@ public class CacheInMemory<K, V extends Identification<K>> implements Cache<V> {
         }
         cachedMap.put(value.getId(), value);
     }
+
+    public void invalid() {
+        cacheIsValid = false;
+    }
 }

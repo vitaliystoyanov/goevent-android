@@ -18,15 +18,15 @@ import javax.inject.Inject;
 
 import retrofit2.Retrofit;
 
-public class EventsRemoteDataSource {
-    private static final String TAG = "EventsRemoteDataSource";
+public class EventsBackendServiceImp implements EventsBackendService {
+    private static final String TAG = "EventsBackendServiceImp";
     private final EventsApi eventsApi;
     @Inject
     Retrofit retrofit;
 
-    public EventsRemoteDataSource(Context context) {
+    public EventsBackendServiceImp(Context context) {
         MainApplication.getApplicationComponent(context).inject(this);
-        Log.d(TAG, "EventsRemoteDataSource: retrofit instance is null? - " + (retrofit == null));
+        Log.d(TAG, "EventsBackendServiceImp: retrofit instance is null? - " + (retrofit == null));
         eventsApi = retrofit.create(EventsApi.class);
     }
 

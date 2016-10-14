@@ -3,7 +3,7 @@ package com.stoyanov.developer.goevent.di.component;
 import android.app.Application;
 
 import com.stoyanov.developer.goevent.di.module.ApplicationModule;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsRemoteDataSource;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 
 import javax.inject.Singleton;
 
@@ -15,6 +15,6 @@ public interface ApplicationComponent {
 
     Application application();
 
-    void inject(EventsRemoteDataSource remoteDataSource);
+    void inject(EventsBackendServiceImp remoteDataSource);
 
 }

@@ -2,12 +2,15 @@ package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.Events;
+import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.cache.Cache;
 import com.stoyanov.developer.goevent.mvp.model.repository.cache.CacheInMemory;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalDataSource;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsRemoteDataSource;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 
 import dagger.Module;
 import dagger.Provides;
@@ -16,25 +19,23 @@ import dagger.Provides;
 public class EventsRepositoryModule {
 
     @Provides
-    Cache<Events> provideCache() {
-        return new CacheInMemory<String, Events>();
+    Cache<Event> provideCache() {
+        return new CacheInMemory<Long, Event>();
     }
 
     @Provides
-    EventsLocalDataSource provideEventsLocalDataSource(Application application) {
-        return new EventsLocalDataSource();
+    EventsLocalStorage provideEventsLocalDataSource() {
+        return new EventsLocalStorageImp();
     }
 
     @Provides
-    EventsRemoteDataSource provideEventsRemoteDataSource(Application application) {
-        return new EventsRemoteDataSource(application);
+    EventsBackendService provideEventsRemoteDataSource(Application application) {
+        return new EventsBackendServiceImp(application);
     }
 
     @Provides
-    EventsRepository provideEventsRepository(Cache<Events> cache, EventsLocalDataSource local,
-                                             EventsRemoteDataSource remote) {
-        EventsRepository repository = new EventsRepository(local, remote);
-        repository.setCacheEvents(cache);
-        return repository;
+    EventsRepository provideEventsRepository(Cache<Event> cache, EventsLocalStorage local,
+                                             EventsBackendService remote) {
+        return new EventsRepositoryImp(cache, local, remote);
     }
 }

@@ -23,8 +23,8 @@ import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsRemoteDataSource;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import javax.inject.Inject;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String TAG = "MainActivity";
     @Inject
-    EventsRepository eventsRepository;
+    EventsRepositoryImp eventsRepository;
     private ActionBarDrawerToggle drawerToggle;
 
     @Override
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .applicationComponent((MainApplication.getApplicationComponent(this)))
                 .build();
         activityComponent.inject(this);
-        Log.d(TAG, "setupDagger: is cache null -> " + (eventsRepository.getCacheEvents() == null));
+        Log.d(TAG, "setupDagger: is cache null -> " + (eventsRepository.getCache() == null));
     }
 
     @Override
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void onTest() {
 /*        List<Event> eventsTest = remoteDataSource.getEventsByLocation(50.4501f, 30.5234f);
         Toast.makeText(this, "size: " + eventsTest.size(), Toast.LENGTH_SHORT).show();*/
-        new EventsAsyncTask().execute();
+        new EventsRemoteAsyncTask().execute();
     }
 
     @Override
@@ -123,25 +123,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
-    public class EventsAsyncTask extends AsyncTask<Void, Void, List<Event>> {
+    public class EventsRemoteAsyncTask extends AsyncTask<Void, Void, List<Event>> {
 
-        private final EventsRemoteDataSource remoteDataSource;
+        private final EventsBackendServiceImp remoteDataSource;
 
-        public EventsAsyncTask() {
+        public EventsRemoteAsyncTask() {
             remoteDataSource =
-                    new EventsRemoteDataSource(getApplication());
+                    new EventsBackendServiceImp(getApplication());
         }
 
         @Override
         protected List<Event> doInBackground(Void... voids) {
-            return remoteDataSource.getEventsByLocation(50.4501f, 30.5234f, 10000);
+/*            EventsLocalStorageImp localDataSource = new EventsLocalStorageImp();
+            localDataSource.saveEvents(remoteDataSource.getEventsByLocation(50.4501f, 30.5234f, 10000));
+            return localDataSource.getEvents();*/
+            return eventsRepository.getEvents();
         }
 
         @Override
         protected void onPostExecute(List<Event> events) {
             super.onPostExecute(events);
             if (events != null) {
-                Toast.makeText(MainActivity.this, "size of list: " + events.size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "size of list from repository: " + events.size(), Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(MainActivity.this, "Error has occurred!", Toast.LENGTH_SHORT).show();
             }
