@@ -1,10 +1,12 @@
 package com.stoyanov.developer.goevent.di.component;
 
 import android.app.Application;
+import android.support.v4.app.LoaderManager;
 
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.di.module.ApplicationModule;
 import com.stoyanov.developer.goevent.di.module.EventsRepositoryModule;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 
@@ -21,5 +23,7 @@ public interface ApplicationComponent {
     Application application();
 
     void inject(EventsBackendServiceImp remoteDataSource);
+
+    void inject(EventsLoader loader);
 
 }

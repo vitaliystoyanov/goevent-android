@@ -1,10 +1,13 @@
 package com.stoyanov.developer.goevent.di.module;
 
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.di.scope.ActivityScope;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -34,5 +37,11 @@ public class ActivityModule {
     @ActivityScope
     NavigationManager provideNavigationManager(FragmentManager manager) {
         return new NavigationManager(manager);
+    }
+
+    @Provides
+    @ActivityScope
+    LoaderManager provideLoaderManager(MainActivity activity) {
+        return activity.getSupportLoaderManager();
     }
 }

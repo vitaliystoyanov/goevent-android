@@ -3,13 +3,13 @@ package com.stoyanov.developer.goevent;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.fragment.ListEventsFragment;
-
-import java.util.List;
+import com.stoyanov.developer.goevent.ui.fragment.MapEventsFragment;
 
 public class NavigationManager {
+    private static final String TAG = "NavigationManager";
 
     private FragmentManager manager;
 
@@ -19,6 +19,7 @@ public class NavigationManager {
 
     private void open(Fragment fragment) {
         if (manager != null) {
+            Log.d(TAG, "open: (manager != null)");
             manager.beginTransaction()
                     .replace(R.id.container, fragment)
                     .addToBackStack(fragment.toString())
@@ -48,8 +49,11 @@ public class NavigationManager {
         }
     }
 
-    public void showListOfEvents(List<Event> events) {
-        ListEventsFragment fragment  = ListEventsFragment.newInstance();
-        open(fragment);
+    public void showListOfEvents() {
+        openAsRoot(new ListEventsFragment());
+    }
+
+    public void showMapEvents() {
+        openAsRoot(new MapEventsFragment());
     }
 }

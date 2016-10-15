@@ -63,12 +63,12 @@ public class EventsRepositoryImp implements EventsRepository {
         cache.cache(events);
         return cache.getCached();*/
 
-        List<Event> events = remoteDataSource.getEvents();
+/*        List<Event> events = remoteDataSource.getEvents();
         if (events != null) {
             Log.d(TAG, "getEvents: Events saved into DB");
             localDataSource.saveEvents(events);
-        }
-        return localDataSource.getEvents();
+        }*/
+        return remoteDataSource.getEvents();
     }
 
     @Override

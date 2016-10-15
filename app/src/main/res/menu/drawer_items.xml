@@ -5,6 +5,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_item_list_events"
+            android:checked="true"
             android:icon="@drawable/common_full_open_on_phone"
             android:title="@string/drawer_list_of_events" />
         <item
@@ -21,7 +22,6 @@
             android:title="@string/drawer_map" />
         <item
             android:id="@+id/drawer_item_notification"
-            android:checked="true"
             android:title="@string/drawer_notifications"
             app:actionLayout="@layout/switch_drawer_item" />
     </group>
@@ -31,10 +31,6 @@
             android:id="@+id/drawer_login"
             android:icon="@drawable/common_full_open_on_phone"
             android:title="@string/drawer_login" />
-        <item
-            android:id="@+id/drawer_help"
-            android:icon="@drawable/common_full_open_on_phone"
-            android:title="@string/drawer_help" />
         <item
             android:id="@+id/drawer_about"
             android:icon="@drawable/common_full_open_on_phone"

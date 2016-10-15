@@ -3,7 +3,6 @@ package com.stoyanov.developer.goevent;
 import android.os.Build;
 
 import com.google.gson.JsonObject;
-import com.koushikdutta.ion.Ion;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @Config(sdk = Build.VERSION_CODES.M)
 public class AuthorizationUserTest implements MappingAPI {
 
-    @Test
+/*    @Test
     public void loginUserTest() throws Exception {
         JsonObject json = new JsonObject();
         json.addProperty("username", "melka");
@@ -50,5 +49,5 @@ public class AuthorizationUserTest implements MappingAPI {
                 .get();
         System.out.println("logoutUserTest: Body: " + response);
         assertThat(response, allOf(containsString("Success"), containsString("logout")));
-    }
+    }*/
 }

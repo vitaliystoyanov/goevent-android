@@ -10,7 +10,8 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     @Override
-    protected void onUpdateView() {
+    public void onResume() {
 
     }
+
 }

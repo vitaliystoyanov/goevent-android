@@ -14,13 +14,9 @@ public abstract class BasePresenter<T extends BaseView> {
         return view;
     }
 
-    public void onResume() {
-        onUpdateView();
-    }
+    public abstract void onResume();
 
     public void onDestroy() {
         view = null;
     }
-
-    protected abstract void onUpdateView();
 }

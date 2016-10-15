@@ -1,6 +1,7 @@
 package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
+import android.support.v4.app.LoaderManager;
 
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
