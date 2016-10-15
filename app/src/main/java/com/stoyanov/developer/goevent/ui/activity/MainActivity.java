@@ -8,32 +8,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
+import com.stoyanov.developer.goevent.di.module.ActivityModule;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
+import com.stoyanov.developer.goevent.mvp.view.MainView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MainActivity extends AppCompatActivity implements MainView {
     private static final String TAG = "MainActivity";
     @Inject
-    EventsRepositoryImp eventsRepository;
+    EventsRepository eventsRepository;
+    @Inject
+    NavigationManager navigationManager;
     private ActionBarDrawerToggle drawerToggle;
 
     @Override
@@ -44,9 +42,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         setupNavigationDrawer(toolbar);
 
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         setupDagger();
     }
 
@@ -80,14 +75,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void setupDagger() {
         ActivityComponent activityComponent = DaggerActivityComponent.builder()
                 .applicationComponent((MainApplication.getApplicationComponent(this)))
+                .activityModule(new ActivityModule(this))
                 .build();
         activityComponent.inject(this);
-        Log.d(TAG, "setupDagger: is cache null -> " + (eventsRepository.getCache() == null));
-    }
-
-    @Override
-    public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
     }
 
     @Override
@@ -112,6 +102,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    public void showListOfEvents(List<Event> events) {
+        navigationManager.showListOfEvents(events);
+    }
+
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
@@ -125,18 +120,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     public class EventsRemoteAsyncTask extends AsyncTask<Void, Void, List<Event>> {
 
-        private final EventsBackendServiceImp remoteDataSource;
-
-        public EventsRemoteAsyncTask() {
-            remoteDataSource =
-                    new EventsBackendServiceImp(getApplication());
-        }
-
         @Override
         protected List<Event> doInBackground(Void... voids) {
-/*            EventsLocalStorageImp localDataSource = new EventsLocalStorageImp();
-            localDataSource.saveEvents(remoteDataSource.getEventsByLocation(50.4501f, 30.5234f, 10000));
-            return localDataSource.getEvents();*/
             return eventsRepository.getEvents();
         }
 

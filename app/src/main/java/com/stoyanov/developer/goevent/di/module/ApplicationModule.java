@@ -2,6 +2,7 @@ package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
 
+import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 
 import javax.inject.Singleton;
