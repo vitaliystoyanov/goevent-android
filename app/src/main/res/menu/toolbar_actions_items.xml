@@ -5,4 +5,8 @@
     <item android:id="@+id/toolbar_action_test"
         android:title="Test"
         app:showAsAction="never" />
+    <item android:id="@+id/toolbar_action_search"
+        android:icon="@drawable/vector_search"
+        android:title=""
+        app:showAsAction="always" />
 </menu>

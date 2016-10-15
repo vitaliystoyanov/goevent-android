@@ -6,22 +6,23 @@
         <item
             android:id="@+id/drawer_item_list_events"
             android:checked="true"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@drawable/vector_list"
             android:title="@string/drawer_list_of_events" />
         <item
             android:id="@+id/drawer_item_favorites"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@drawable/vector_star"
             android:title="@string/drawer_favorites" />
         <item
             android:id="@+id/drawer_item_nearby"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@drawable/vector_near_me"
             android:title="@string/drawer_nearby" />
         <item
             android:id="@+id/drawer_map"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@drawable/vector_map"
             android:title="@string/drawer_map" />
         <item
             android:id="@+id/drawer_item_notification"
+            android:icon="@drawable/vector_notifications"
             android:title="@string/drawer_notifications"
             app:actionLayout="@layout/switch_drawer_item" />
     </group>
@@ -33,7 +34,7 @@
             android:title="@string/drawer_login" />
         <item
             android:id="@+id/drawer_about"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@drawable/vector_about"
             android:title="@string/drawer_about" />
     </group>
 </menu>

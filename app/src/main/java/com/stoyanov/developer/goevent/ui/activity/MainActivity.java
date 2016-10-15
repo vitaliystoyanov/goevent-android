@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.NavigationManager;
@@ -53,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     navigationManager.showListOfEvents(); // FIXME: 10/15/16 Move to presenter
                 } else if (i == R.id.drawer_map) {
                     navigationManager.showMapEvents(); // FIXME: 10/15/16 Move to presenter
+                } else if (i == R.id.drawer_about) {
+                    navigationManager.showAbout();
                 }
                 return true;
             }
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_actions, menu);
+        getMenuInflater().inflate(R.menu.toolbar_actions_items, menu);
         return true;
     }
 
