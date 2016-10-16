@@ -42,7 +42,6 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
         super.onActivityCreated(savedInstanceState);
         DaggerFragmentComponent.builder()
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
-                .presenterModule(new PresenterModule(this))
                 .build()
                 .inject(this);
     }
@@ -62,6 +61,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+        presenter.attach(this);
         presenter.onStart();
     }
 
@@ -77,13 +77,12 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void onResume() {
         super.onResume();
-        presenter.onResume();
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        presenter.onDestroy();
+    public void onStop() {
+        super.onStop();
+        presenter.detach();
     }
 
     @Override
@@ -98,7 +97,6 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
 
     @Override
     public void showProgressBar(boolean state) {
-        Log.d(TAG, "showProgressBar: ");
         progressBar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
     }
 }

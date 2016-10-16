@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.fragment.AboutFragment;
@@ -17,18 +16,15 @@ public class NavigationManager {
 
     private FragmentManager manager;
 
-    public NavigationManager(FragmentManager fragmentManager) {
-        manager = fragmentManager;
+    public NavigationManager(FragmentManager manager) {
+        this.manager = manager;
     }
 
     private void open(Fragment fragment) {
-        if (manager != null) {
-            Log.d(TAG, "open: (manager != null)");
-            manager.beginTransaction()
-                    .replace(R.id.container, fragment)
-                    .addToBackStack(fragment.toString())
-                    .commit();
-        }
+        manager.beginTransaction()
+                .replace(R.id.container, fragment)
+                .addToBackStack(fragment.toString())
+                .commit();
     }
 
     private void openAsRoot(Fragment fragment) {
@@ -53,19 +49,31 @@ public class NavigationManager {
         }
     }
 
-    public void showListOfEvents() {
+    public void goToListOfEvents() {
         openAsRoot(new ListEventsFragment());
     }
 
-    public void showMapEvents() {
+    public void goToMapEvents() {
         openAsRoot(new MapEventsFragment());
     }
 
-    public void showAbout() {
+    public void goToAbout() {
         openAsRoot(new AboutFragment());
     }
 
-    public void showLoginForm(Context context) {
+    public void goToLoginForm(Context context) {
         context.startActivity(new Intent(context, LoginActivity.class));
+    }
+
+    public void goToFavorites() {
+
+    }
+
+    public void goToNotifications() {
+
+    }
+
+    public void goToNearby() {
+
     }
 }

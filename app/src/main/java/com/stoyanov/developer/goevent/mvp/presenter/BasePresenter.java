@@ -6,17 +6,15 @@ public abstract class BasePresenter<T extends BaseView> {
 
     private T view;
 
-    public BasePresenter(T view) {
-        this.view = view;
-    }
-
     public T getView() {
         return view;
     }
 
-    public abstract void onResume();
+    public void attach(T view) {
+        this.view = view;
+    }
 
-    public void onDestroy() {
+    public void detach() {
         view = null;
     }
 }

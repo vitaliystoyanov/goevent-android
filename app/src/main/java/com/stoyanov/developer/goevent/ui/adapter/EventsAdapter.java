@@ -42,8 +42,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         if (urlPicture != null) {
             Picasso.with(context)
                     .load(urlPicture)
+                    .fit()
+                    .centerCrop()
                     .into(holder.image);
         }
+        holder.when.setText(event.getStartTime());
+        holder.where.setText("Location not define");
         holder.name.setText(event.getName());
     }
 
@@ -55,10 +59,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public ImageView image;
+        public TextView when;
+        public TextView where;
 
         public ViewHolder(View view) {
             super(view);
             this.name = (TextView) view.findViewById(R.id.item_event_name);
+            this.when = (TextView) view.findViewById(R.id.item_event_when);
+            this.where = (TextView) view.findViewById(R.id.item_event_where);
             this.image = (ImageView) view.findViewById(R.id.card_item_image);
         }
     }

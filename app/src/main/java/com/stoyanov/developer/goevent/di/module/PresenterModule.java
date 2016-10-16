@@ -13,15 +13,10 @@ import dagger.Provides;
 @Module
 public class PresenterModule {
 
-    private ListEventsView listEventsView;
-
-    public PresenterModule(ListEventsView listEventsView) {
-        this.listEventsView = listEventsView;
-    }
-
     @Provides
-    @FragmentScope
     ListEventsPresenter providePresenter(Application application, LoaderManager manager) {
-        return new ListEventsPresenter(application, manager, listEventsView);
+        return new ListEventsPresenter(application, manager);
     }
+
+
 }

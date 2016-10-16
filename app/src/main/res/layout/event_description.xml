@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/item_event_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="24dp"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="16sp"
+        tool:text="Event name " />
+
+    <ImageView
+        android:id="@+id/item_event_imege_when"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/item_event_name"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:src="@drawable/vector_time" />
+
+    <TextView
+        android:id="@+id/item_event_when"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_below="@+id/item_event_name"
+        android:layout_toEndOf="@+id/item_event_imege_when"
+        android:layout_toRightOf="@+id/item_event_imege_when"
+        android:gravity="center_vertical|left"
+        android:textColor="@color/colorAccent"
+        tool:text="10 pm, 12 Friday" />
+
+    <ImageView
+        android:id="@+id/item_event_image_where"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_event_imege_when"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_toLeftOf="@+id/item_event_when"
+        android:layout_toStartOf="@+id/item_event_when"
+        android:src="@drawable/vector_place" />
+
+    <TextView
+        android:id="@+id/item_event_where"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_alignLeft="@+id/item_event_when"
+        android:layout_alignStart="@+id/item_event_when"
+        android:layout_alignTop="@+id/item_event_image_where"
+        android:gravity="center_vertical|left"
+        tool:text="Kyiv, yangelya st. 20" />
+</RelativeLayout>

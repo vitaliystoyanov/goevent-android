@@ -19,15 +19,9 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
     private LoaderManager loaderManager;
     private Loader<List<Event>> loader;
 
-    public ListEventsPresenter(Context context, LoaderManager loaderManager, ListEventsView view) {
-        super(view);
+    public ListEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
         loader = new EventsLoader(context);
-    }
-
-    @Override
-    public void onResume() {
-
     }
 
     public void onStart() {

@@ -17,7 +17,7 @@
             android:icon="@drawable/vector_near_me"
             android:title="@string/drawer_nearby" />
         <item
-            android:id="@+id/drawer_map"
+            android:id="@+id/drawer_item_map"
             android:icon="@drawable/vector_map"
             android:title="@string/drawer_map" />
         <item
@@ -29,11 +29,11 @@
     <group android:id="@+id/submenu_drawer_items"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/drawer_login"
+            android:id="@+id/drawer_item_login"
             android:icon="@drawable/common_full_open_on_phone"
             android:title="@string/drawer_login" />
         <item
-            android:id="@+id/drawer_about"
+            android:id="@+id/drawer_item_about"
             android:icon="@drawable/vector_about"
             android:title="@string/drawer_about" />
     </group>
