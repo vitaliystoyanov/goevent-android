@@ -11,8 +11,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.stoyanov.developer.goevent.R;
+import com.stoyanov.developer.goevent.mvp.view.MapEventsView;
 
-public class MapEventsFragment extends Fragment implements OnMapReadyCallback {
+public class MapEventsFragment extends Fragment implements MapEventsView, OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap map;
