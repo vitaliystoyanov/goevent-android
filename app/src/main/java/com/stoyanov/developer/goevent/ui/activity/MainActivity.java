@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     navigationManager.showMapEvents(); // FIXME: 10/15/16 Move to presenter
                 } else if (i == R.id.drawer_about) {
                     navigationManager.showAbout();
+                } else if (i == R.id.drawer_login) {
+                    navigationManager.showLoginForm(MainActivity.this);
                 }
                 return true;
             }
