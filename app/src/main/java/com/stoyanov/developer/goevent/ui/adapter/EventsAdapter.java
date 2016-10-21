@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
@@ -20,11 +21,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private Context context;
 
     public EventsAdapter(Context context) {
+        data = new ArrayList<>();
         this.context = context;
     }
 
-    public void setData(List<Event> data) {
-        this.data = data;
+    public void addData(List<Event> events) {
+        data.clear();
+        if (events != null) data.addAll(events);
         notifyDataSetChanged();
     }
 

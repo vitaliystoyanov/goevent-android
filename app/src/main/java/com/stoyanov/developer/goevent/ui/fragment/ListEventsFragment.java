@@ -88,7 +88,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
 
     @Override
     public void showEvents(List<Event> events) {
-        adapter.setData(events);
+        adapter.addData(events);
     }
 
     @Override

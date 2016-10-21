@@ -31,8 +31,12 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
 
     @Override
     protected void onStartLoading() {
+        Log.d(TAG, "onStartLoading: ");
         forceLoad();
+        onStart();
     }
+
+    public abstract void onStart();
 
     public abstract void onNotReceiveRemote();
 
@@ -46,4 +50,5 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         Log.d(TAG, "onReset: OnNotReceiveRemoteListener release");
         repository.addOnNotReceiveRemoteListener(null);
     }
+
 }

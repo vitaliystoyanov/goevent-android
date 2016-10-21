@@ -23,6 +23,11 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
         this.loaderManager = loaderManager;
         loader = new EventsLoader(context) {
             @Override
+            public void onStart() {
+                if (getView() != null) getView().showEvents(null);
+            }
+
+            @Override
             public void onNotReceiveRemote() {
                 if (getView() != null) getView().showMessageOnNotReceiveRemote();
             }
@@ -30,22 +35,25 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
     }
 
     public void onStart() {
+        Log.d(TAG, "onStart: ");
         loaderManager.initLoader(EVENTS_QUERY, null, this);
         if (getView() != null) getView().showProgressBar(true);
     }
 
     public void onRefresh() {
-        loader.forceLoad();
+        loaderManager.initLoader(EVENTS_QUERY, null, this);
     }
 
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
+        Log.d(TAG, "onCreateLoader: ");
         return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         Log.d(TAG, "onLoadFinished: ");
+        if (getView() == null) return;
         if (data != null && data.size() > 0) {
             getView().showEvents(data);
         } else {
@@ -56,5 +64,6 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
 
     @Override
     public void onLoaderReset(Loader<List<Event>> loader) {
+        Log.d(TAG, "onLoaderReset: ");
     }
 }
