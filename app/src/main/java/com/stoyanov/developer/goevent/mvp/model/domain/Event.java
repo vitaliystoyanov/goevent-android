@@ -2,9 +2,8 @@ package com.stoyanov.developer.goevent.mvp.model.domain;
 
 import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
-import com.stoyanov.developer.goevent.mvp.model.repository.cache.Identification;
 
-public final class Event extends SugarRecord implements Identification<Long> {
+public final class Event extends SugarRecord {
 
     @SerializedName("eventPicture")
     private String picture;

@@ -1,17 +1,10 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
-import com.stoyanov.developer.goevent.mvp.model.repository.cache.Identification;
-
 import java.util.List;
 
-public final class Events implements Identification<String>{
+public final class Events {
     private List<Event> events;
     private int count;
-
-    @Override
-    public String getId() {
-        return null;
-    }
 
     public List<Event> list() {
         return events;
