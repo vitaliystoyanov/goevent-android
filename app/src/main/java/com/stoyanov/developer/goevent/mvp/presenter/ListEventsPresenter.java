@@ -21,12 +21,17 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
 
     public ListEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
-        loader = new EventsLoader(context);
+        loader = new EventsLoader(context) {
+            @Override
+            public void onNotReceiveRemote() {
+                if (getView() != null) getView().showMessageOnNotReceiveRemote();
+            }
+        };
     }
 
     public void onStart() {
         loaderManager.initLoader(EVENTS_QUERY, null, this);
-        getView().showProgressBar(true);
+        if (getView() != null) getView().showProgressBar(true);
     }
 
     public void onRefresh() {

@@ -11,4 +11,7 @@ public interface ListEventsView extends BaseView {
     void showEmpty();
 
     void showProgressBar(boolean state);
+
+    void showMessageOnNotReceiveRemote();
+
 }

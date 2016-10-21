@@ -2,11 +2,11 @@ package com.stoyanov.developer.goevent.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
-import com.stoyanov.developer.goevent.di.module.PresenterModule;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.presenter.ListEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.ListEventsView;
@@ -31,10 +30,12 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     ListEventsPresenter presenter;
     private ProgressBar progressBar;
     private EventsAdapter adapter;
+    private View root;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_list_of_events, null);
+        root = inflater.inflate(R.layout.fragment_list_of_events, null);
+        return root;
     }
 
     @Override
@@ -98,5 +99,10 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void showProgressBar(boolean state) {
         progressBar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void showMessageOnNotReceiveRemote() {
+        Snackbar.make(root, "Check your connection or try again later", Snackbar.LENGTH_LONG).show();
     }
 }
