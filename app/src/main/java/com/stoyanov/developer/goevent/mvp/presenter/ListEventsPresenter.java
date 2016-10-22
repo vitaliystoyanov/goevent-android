@@ -14,24 +14,14 @@ import java.util.List;
 
 public class ListEventsPresenter extends BasePresenter<ListEventsView>
         implements LoaderManager.LoaderCallbacks<List<Event>> {
-    private static final String TAG = "ListEventsPresenter";
+    private final static String TAG = "ListEventsPresenter";
     private final static int EVENTS_QUERY = 1;
-    private LoaderManager loaderManager;
-    private Loader<List<Event>> loader;
+    private final LoaderManager loaderManager;
+    private final Context context;
 
     public ListEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
-        loader = new EventsLoader(context) {
-            @Override
-            public void onStart() {
-                if (getView() != null) getView().showEvents(null);
-            }
-
-            @Override
-            public void onNotReceiveRemote() {
-                if (getView() != null) getView().showMessageOnNotReceiveRemote();
-            }
-        };
+        this.context = context;
     }
 
     public void onStart() {
@@ -41,13 +31,23 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
     }
 
     public void onRefresh() {
-        loaderManager.initLoader(EVENTS_QUERY, null, this);
+        loaderManager.restartLoader(EVENTS_QUERY, null, this);
+    }
+
+    public void onDestroyView() {
+        Log.d(TAG, "onDestroyView: ");
+        loaderManager.destroyLoader(EVENTS_QUERY);
     }
 
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        return loader;
+        return new EventsLoader(context) {
+            @Override
+            public void onNotReceiveRemote() {
+                if (getView() != null) getView().showMessageOnNotReceiveRemote();
+            }
+        };
     }
 
     @Override

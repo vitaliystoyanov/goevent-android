@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,16 +32,20 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     private ProgressBar progressBar;
     private EventsAdapter adapter;
     private View root;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_list_of_events, null);
+        Log.d(TAG, "onCreateView: ");
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated: ");
         DaggerFragmentComponent.builder()
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
                 .build()
@@ -50,19 +55,21 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart: ");
+        presenter.attach(this);
         setupRecycleView();
         progressBar = (ProgressBar) getActivity().findViewById(R.id.fragment_events_progress_bar);
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
+        swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
                 .findViewById(R.id.fragment_events_swipe_refresh_layout);
-//        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 presenter.onRefresh();
-                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setRefreshing(true);
             }
         });
-        presenter.attach(this);
         presenter.onStart();
     }
 
@@ -83,12 +90,24 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop: ");
         presenter.detach();
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        presenter.onDestroyView();
+    }
+
+    @Override
     public void showEvents(List<Event> events) {
+        swipeRefreshLayout.setEnabled(true);
+        swipeRefreshLayout.setRefreshing(false);
         adapter.addData(events);
+        if (events != null) {
+            Snackbar.make(root, "Shown events: " + events.size(), Snackbar.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -104,5 +123,6 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void showMessageOnNotReceiveRemote() {
         Snackbar.make(root, "Check your connection or try again later", Snackbar.LENGTH_LONG).show();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

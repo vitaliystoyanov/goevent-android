@@ -33,10 +33,7 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
     protected void onStartLoading() {
         Log.d(TAG, "onStartLoading: ");
         forceLoad();
-        onStart();
     }
-
-    public abstract void onStart();
 
     public abstract void onNotReceiveRemote();
 
