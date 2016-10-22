@@ -1,10 +1,12 @@
 package com.stoyanov.developer.goevent.ui.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +39,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     private EventsAdapter adapter;
     private View root;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ActionBarDrawerToggle drawerToggle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +65,10 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
                 .inject(this);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("List of events");
+        drawerToggle = new ActionBarDrawerToggle(getActivity(),
+                ((MainActivity) getActivity()).getDrawerLayout(),
+                toolbar, R.string.drawer_open, R.string.drawer_close);
+        ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
     }
 
     @Override
@@ -83,6 +90,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
             }
         });
         presenter.onStart();
+        drawerToggle.syncState();
     }
 
     private void setupRecycleView() {
@@ -110,6 +118,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     public void onDestroyView() {
         super.onDestroyView();
         presenter.onDestroyView();
+        ((MainActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
     }
 
     @Override
@@ -117,6 +126,12 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
         Log.d(TAG, "onCreateOptionsMenu: ");
         inflater.inflate(R.menu.toolbar_actions_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

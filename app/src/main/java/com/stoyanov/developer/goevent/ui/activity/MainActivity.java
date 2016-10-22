@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity
     NavigationManager navigationManager;
     private MainPresenter presenter;
     private ActivityComponent activityComponent;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setupNavigationDrawer() {
-        final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -62,9 +63,6 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
         });
-//        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-//                toolbar, R.string.drawer_open, R.string.drawer_close);
-//        drawerLayout.addDrawerListener(drawerToggle);
     }
 
     private void setupDagger() {
@@ -73,6 +71,18 @@ public class MainActivity extends AppCompatActivity
                 .activityModule(new ActivityModule(this))
                 .build();
         activityComponent.inject(this);
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
+    }
+
+    public void setDrawerLayoutListener(DrawerLayout.DrawerListener listener) {
+        drawerLayout.addDrawerListener(listener);
+    }
+
+    public void removeDrawerLayoutListener(DrawerLayout.DrawerListener listener) {
+        drawerLayout.removeDrawerListener(listener);
     }
 
     @Override
