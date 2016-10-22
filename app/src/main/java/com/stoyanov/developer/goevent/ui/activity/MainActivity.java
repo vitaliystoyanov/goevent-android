@@ -1,13 +1,9 @@
 package com.stoyanov.developer.goevent.ui.activity;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.stoyanov.developer.goevent.MainApplication;
@@ -21,12 +17,12 @@ import com.stoyanov.developer.goevent.mvp.view.MainView;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity
+        implements MainView {
     private static final String TAG = "MainActivity";
     @Inject
     NavigationManager navigationManager;
     private MainPresenter presenter;
-    private ActionBarDrawerToggle drawerToggle;
     private ActivityComponent activityComponent;
 
     @Override
@@ -34,13 +30,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         presenter = new MainPresenter(); // FIXME: 10/16/16 to dagger
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setupNavigationDrawer(toolbar);
         setupDagger();
+        setupNavigationDrawer();
     }
 
-    private void setupNavigationDrawer(final Toolbar toolbar) {
+    public void setupNavigationDrawer() {
         final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
         final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -54,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     presenter.onItemListOfEvents();
                 } else if (i == R.id.drawer_item_map) {
                     presenter.onItemMap();
-                } else if (i == R.id.drawer_item_about) {
+                } else if (i == R.id.drawer_item_feedback) {
                     presenter.onItemAbout();
                 } else if (i == R.id.drawer_item_login) {
                     presenter.onItemLogin();
@@ -68,9 +62,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 return true;
             }
         });
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
-                toolbar, R.string.drawer_open, R.string.drawer_close);
-        drawerLayout.addDrawerListener(drawerToggle);
+//        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout,
+//                toolbar, R.string.drawer_open, R.string.drawer_close);
+//        drawerLayout.addDrawerListener(drawerToggle);
     }
 
     private void setupDagger() {
@@ -82,42 +76,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_actions_items, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.toolbar_action_test) {
-
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         presenter.attach(this);
         presenter.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
@@ -169,4 +131,5 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public ActivityComponent getActivityComponent() {
         return activityComponent;
     }
+
 }

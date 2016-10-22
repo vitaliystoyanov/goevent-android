@@ -33,7 +33,7 @@
             android:icon="@drawable/common_full_open_on_phone"
             android:title="@string/drawer_login" />
         <item
-            android:id="@+id/drawer_item_about"
+            android:id="@+id/drawer_item_feedback"
             android:icon="@drawable/vector_about"
             android:title="@string/drawer_about" />
     </group>

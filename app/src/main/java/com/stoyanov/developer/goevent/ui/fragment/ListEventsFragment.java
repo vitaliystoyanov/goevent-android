@@ -7,8 +7,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -35,10 +39,16 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        root = inflater.inflate(R.layout.fragment_list_of_events, null);
         Log.d(TAG, "onCreateView: ");
+        setHasOptionsMenu(true);
+        root = inflater.inflate(R.layout.fragment_list_of_events, null);
         return root;
     }
 
@@ -50,6 +60,8 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        toolbar.setTitle("List of events");
     }
 
     @Override
@@ -74,7 +86,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     }
 
     private void setupRecycleView() {
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.events_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.fragment_events_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -101,13 +113,29 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "onCreateOptionsMenu: ");
+        inflater.inflate(R.menu.toolbar_actions_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.toolbar_action_test) {
+
+        }
+        return true;
+    }
+
+    @Override
     public void showEvents(List<Event> events) {
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.addData(events);
-        if (events != null) {
-            Snackbar.make(root, "Shown events: " + events.size(), Snackbar.LENGTH_LONG).show();
-        }
+//        if (events != null) {
+//            Snackbar.make(root, "Shown events: " + events.size(), Snackbar.LENGTH_LONG).show();
+//        }
     }
 
     @Override
@@ -123,6 +151,13 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void showMessageOnNotReceiveRemote() {
         Snackbar.make(root, "Check your connection or try again later", Snackbar.LENGTH_LONG).show();
-        swipeRefreshLayout.setRefreshing(false);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
     }
 }
