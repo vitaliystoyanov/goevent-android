@@ -3,10 +3,9 @@ package com.stoyanov.developer.goevent.di.component;
 import android.app.Application;
 import android.support.v4.app.LoaderManager;
 
+import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
-import com.stoyanov.developer.goevent.di.module.EventsRepositoryModule;
 import com.stoyanov.developer.goevent.di.scope.ActivityScope;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
 
 import dagger.Component;
@@ -17,7 +16,9 @@ public interface ActivityComponent {
 
     Application app();
 
-    LoaderManager manager();
+    LoaderManager loaderManager();
+
+    NavigationManager navigationManager();
 
     void inject(MainActivity activity);
 

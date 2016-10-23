@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/search_events_floating_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:floatingSearch_close_search_on_keyboard_dismiss="true"
+            app:floatingSearch_leftActionMode="showHome"
+            app:floatingSearch_searchBarMarginLeft="@dimen/search_view_inset"
+            app:floatingSearch_searchBarMarginRight="@dimen/search_view_inset"
+            app:floatingSearch_searchBarMarginTop="@dimen/search_view_inset"
+            app:floatingSearch_searchHint="Search events..."
+            app:floatingSearch_showSearchKey="false"
+            app:floatingSearch_suggestionsListAnimDuration="250"
+            app:layout_scrollFlags="scroll|enterAlways" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_events_recycle_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    </android.support.v7.widget.RecyclerView>
+
+</android.support.design.widget.CoordinatorLayout>

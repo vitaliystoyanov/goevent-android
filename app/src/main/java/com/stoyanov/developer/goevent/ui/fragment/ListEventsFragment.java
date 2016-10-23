@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
@@ -36,6 +37,8 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     private static final String TAG = "ListEventsFragment";
     @Inject
     ListEventsPresenter presenter;
+    @Inject
+    NavigationManager navigationManager;
     private ProgressBar progressBar;
     private EventsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -65,7 +68,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     }
 
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.search_events_toolbar);
         toolbar.setTitle("List of events");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
@@ -160,6 +163,11 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void showEmpty() {
 
+    }
+
+    @Override
+    public void goToSearchEvents() {
+        navigationManager.goToSearchEvents(getContext());
     }
 
     @Override

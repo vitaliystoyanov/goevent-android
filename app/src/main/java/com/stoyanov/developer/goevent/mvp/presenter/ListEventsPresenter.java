@@ -35,7 +35,7 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
     }
 
     public void onActionSearch() {
-
+        getView().goToSearchEvents();
     }
 
     public void onDestroyView() {

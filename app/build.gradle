@@ -47,4 +47,5 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.github.arimorty:floatingsearchview:2.0.3'
 }

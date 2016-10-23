@@ -14,4 +14,6 @@ public interface ListEventsView extends BaseView {
 
     void showMessageOnNotReceiveRemote();
 
+    void goToSearchEvents();
+
 }
