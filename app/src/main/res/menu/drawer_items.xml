@@ -31,7 +31,7 @@
             android:title="@string/drawer_login" />
         <item
             android:id="@+id/drawer_item_feedback"
-            android:icon="@drawable/vector_about"
+            android:icon="@drawable/vector_feedback_24px"
             android:title="@string/drawer_about" />
     </group>
 </menu>

@@ -11,4 +11,5 @@
     <string name="drawer_help">Help</string>
     <string name="drawer_about">Feedback</string>
     <string name="title_activity_search">Search events</string>
+    <string name="toolbar_title_favorites">Favorites</string>
 </resources>

@@ -16,16 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
-
     private List<Event> data;
     private Context context;
 
     public EventsAdapter(Context context) {
-        data = new ArrayList<>();
         this.context = context;
+        data = new ArrayList<>();
     }
 
-    public void addData(List<Event> events) {
+    public void removeAndAdd(List<Event> events) {
         data.clear();
         if (events != null) data.addAll(events);
         notifyDataSetChanged();
@@ -49,8 +48,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     .centerCrop()
                     .into(holder.image);
         }
-        holder.when.setText(event.getStartTime());
-        holder.where.setText("Location not define");
+        holder.when.setText("Mon, Jan 10, 8:00 AM");
+        holder.where.setText("Kyiv, Khreshchatyk st., 23");
         holder.name.setText(event.getName());
     }
 
@@ -61,8 +60,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        public ImageView image;
         public TextView when;
+        public ImageView image;
         public TextView where;
 
         public ViewHolder(View view) {

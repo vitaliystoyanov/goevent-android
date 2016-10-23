@@ -1,9 +1,10 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
 import com.google.gson.annotations.SerializedName;
-import com.orm.SugarRecord;
+import com.orm.dsl.Table;
 
-public final class Event extends SugarRecord {
+@Table
+public class Event {
 
     @SerializedName("eventPicture")
     private String picture;
@@ -82,7 +83,7 @@ public final class Event extends SugarRecord {
     }
 
     public Location getLocation() {
-        return eventLocation.getLocation();
+        return eventLocation != null ? eventLocation.getLocation() : null;
     }
 
     public void setLocation(Location location) {
@@ -117,10 +118,6 @@ public final class Event extends SugarRecord {
 
         public Location getLocation() {
             return location;
-        }
-
-        public void setLocation(Location location) {
-            this.location = location;
         }
     }
 }

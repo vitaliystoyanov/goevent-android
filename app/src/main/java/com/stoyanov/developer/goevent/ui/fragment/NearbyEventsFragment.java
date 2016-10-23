@@ -7,16 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.view.MapEventsView;
+import com.stoyanov.developer.goevent.ui.activity.MainActivity;
 
 public class NearbyEventsFragment extends Fragment implements MapEventsView, OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap map;
+    private FloatingSearchView floatingSearchView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,7 +32,9 @@ public class NearbyEventsFragment extends Fragment implements MapEventsView, OnM
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mapView = (MapView) getActivity().findViewById(R.id.fragment_map_events_mapview);
+        floatingSearchView = (FloatingSearchView) getView().findViewById(R.id.nearby_floating_search_view);
+        floatingSearchView.attachNavigationDrawerToMenuButton(((MainActivity)getActivity()).getDrawerLayout());
+        mapView = (MapView) getView().findViewById(R.id.nearby_events_mapview);
         mapView.onCreate(savedInstanceState);
 
         mapView.getMapAsync(this);
@@ -36,7 +43,20 @@ public class NearbyEventsFragment extends Fragment implements MapEventsView, OnM
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        LatLng cameraPosition = new LatLng(50.4565951, 30.4870897);
         map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition, 10));
+/*        List<Event> events = SugarRecord.listAll(Event.class);
+
+        for (Event event: events) {
+            if (event.getLocation() != null) {
+                map.addMarker(new MarkerOptions()
+                        .title(event.getName())
+                        .snippet("")
+                        .position(new LatLng(event.getLocation().getLongitude(),
+                                event.getLocation().getLatitude())));
+            }
+        }*/
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.stoyanov.developer.goevent.ui.fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -43,6 +44,7 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     private EventsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBarDrawerToggle drawerToggle;
+    private FloatingActionButton fab;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +67,13 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
                 .build()
                 .inject(this);
         setupToolbar();
+        fab = (FloatingActionButton) getView().findViewById(R.id.fragment_events_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                navigationManager.goToNearby();
+            }
+        });
     }
 
     private void setupToolbar() {
@@ -154,7 +163,7 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     public void showEvents(List<Event> events) {
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
-        adapter.addData(events);
+        adapter.removeAndAdd(events);
 //        if (events != null) {
 //            Snackbar.make(root, "Shown events: " + events.size(), Snackbar.LENGTH_LONG).show();
 //        }

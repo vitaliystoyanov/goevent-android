@@ -4,8 +4,10 @@ import android.app.Application;
 
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoritesEventsLocalStorageImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoritesEventsStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 
@@ -16,7 +18,7 @@ import dagger.Provides;
 public class EventsRepositoryModule {
 
     @Provides
-    EventsLocalStorage provideEventsLocalDataSource() {
+    EventsStorage provideEventsLocalDataSource() {
         return new EventsLocalStorageImp();
     }
 
@@ -26,8 +28,14 @@ public class EventsRepositoryModule {
     }
 
     @Provides
-    EventsRepository provideEventsRepository(EventsLocalStorage local,
-                                             EventsBackendService remote) {
-        return new EventsRepositoryImp(local, remote);
+    FavoritesEventsStorage provideFavoritesEventsStorage() {
+        return new FavoritesEventsLocalStorageImp();
+    }
+
+    @Provides
+    EventsRepository provideEventsRepository(EventsStorage local,
+                                             EventsBackendService remote,
+                                             FavoritesEventsStorage favorites) {
+        return new EventsRepositoryImp(local, remote, favorites);
     }
 }
