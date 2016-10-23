@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -37,7 +38,6 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     ListEventsPresenter presenter;
     private ProgressBar progressBar;
     private EventsAdapter adapter;
-    private View root;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBarDrawerToggle drawerToggle;
 
@@ -49,10 +49,8 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG, "onCreateView: ");
         setHasOptionsMenu(true);
-        root = inflater.inflate(R.layout.fragment_list_of_events, null);
-        return root;
+        return inflater.inflate(R.layout.fragment_list_of_events, null);
     }
 
     @Override
@@ -63,8 +61,13 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
+        setupToolbar();
+    }
+
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("List of events");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
                 ((MainActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -82,6 +85,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
                 .findViewById(R.id.fragment_events_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setDistanceToTriggerSync(50);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -137,8 +141,8 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.toolbar_action_test) {
-
+        if (itemId == R.id.toolbar_action_search) {
+            presenter.onActionSearch();
         }
         return true;
     }
@@ -165,7 +169,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
 
     @Override
     public void showMessageOnNotReceiveRemote() {
-        Snackbar.make(root, "Check your connection or try again later", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(getView(), "Check your connection or try again later", Snackbar.LENGTH_LONG).show();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
