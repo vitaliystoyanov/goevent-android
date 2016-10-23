@@ -16,10 +16,7 @@
             android:id="@+id/drawer_item_nearby"
             android:icon="@drawable/vector_near_me"
             android:title="@string/drawer_nearby" />
-        <item
-            android:id="@+id/drawer_item_map"
-            android:icon="@drawable/vector_map"
-            android:title="@string/drawer_map" />
+
         <item
             android:id="@+id/drawer_item_notification"
             android:icon="@drawable/vector_notifications"

@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity
                 int i = menuItem.getItemId();
                 if (i == R.id.drawer_item_list_events) {
                     presenter.onItemListOfEvents();
-                } else if (i == R.id.drawer_item_map) {
-                    presenter.onItemMap();
                 } else if (i == R.id.drawer_item_feedback) {
                     presenter.onItemAbout();
                 } else if (i == R.id.drawer_item_login) {
@@ -101,11 +99,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         navigationManager.navigateBack(this);
-    }
-
-    @Override
-    public void goToMap() {
-        navigationManager.goToMapEvents();
     }
 
     @Override

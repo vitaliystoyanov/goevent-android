@@ -33,8 +33,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ListEventsFragment extends Fragment implements ListEventsView {
-    private static final String TAG = "ListEventsFragment";
+public class ListOfEventsFragment extends Fragment implements ListEventsView {
+    private static final String TAG = "ListOfEventsFragment";
     @Inject
     ListEventsPresenter presenter;
     @Inject
@@ -131,7 +131,7 @@ public class ListEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu: ");
-        inflater.inflate(R.menu.toolbar_actions_items, menu);
+        inflater.inflate(R.menu.toolbar_list_events_actions_items, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

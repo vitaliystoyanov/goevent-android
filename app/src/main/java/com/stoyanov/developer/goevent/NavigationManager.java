@@ -8,9 +8,10 @@ import android.support.v4.app.FragmentManager;
 
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SearchActivity;
-import com.stoyanov.developer.goevent.ui.fragment.AboutFragment;
-import com.stoyanov.developer.goevent.ui.fragment.ListEventsFragment;
-import com.stoyanov.developer.goevent.ui.fragment.MapEventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.FavoritesFragment;
+import com.stoyanov.developer.goevent.ui.fragment.FeedBackFragment;
+import com.stoyanov.developer.goevent.ui.fragment.ListOfEventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
 
 public class NavigationManager {
     private static final String TAG = "NavigationManager";
@@ -51,15 +52,11 @@ public class NavigationManager {
     }
 
     public void goToListOfEvents() {
-        openAsRoot(new ListEventsFragment());
-    }
-
-    public void goToMapEvents() {
-        openAsRoot(new MapEventsFragment());
+        openAsRoot(new ListOfEventsFragment());
     }
 
     public void goToAbout() {
-        openAsRoot(new AboutFragment());
+        openAsRoot(new FeedBackFragment());
     }
 
     public void goToLoginForm(Context context) {
@@ -67,7 +64,7 @@ public class NavigationManager {
     }
 
     public void goToFavorites() {
-
+        openAsRoot(new FavoritesFragment());
     }
 
     public void goToNotifications() {
@@ -75,7 +72,7 @@ public class NavigationManager {
     }
 
     public void goToNearby() {
-
+        openAsRoot(new NearbyEventsFragment());
     }
 
     public void goToSearchEvents(Context context) {

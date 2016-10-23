@@ -13,7 +13,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.view.MapEventsView;
 
-public class MapEventsFragment extends Fragment implements MapEventsView, OnMapReadyCallback {
+public class NearbyEventsFragment extends Fragment implements MapEventsView, OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap map;
@@ -21,7 +21,7 @@ public class MapEventsFragment extends Fragment implements MapEventsView, OnMapR
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_map_events, null);
+        return inflater.inflate(R.layout.fragment_nearby_events, null);
     }
 
     @Override
