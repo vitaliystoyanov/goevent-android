@@ -12,4 +12,6 @@
     <string name="drawer_about">Feedback</string>
     <string name="title_activity_search">Search events</string>
     <string name="toolbar_title_favorites">Favorites</string>
+    <string name="card_item_more">MORE</string>
+    <string name="card_item_share">SHARE</string>
 </resources>
