@@ -14,4 +14,6 @@
     <string name="toolbar_title_favorites">Favorites</string>
     <string name="card_item_more">MORE</string>
     <string name="card_item_share">SHARE</string>
+    <string name="login_password_field">Password</string>
+    <string name="login_login_button">Login</string>
 </resources>

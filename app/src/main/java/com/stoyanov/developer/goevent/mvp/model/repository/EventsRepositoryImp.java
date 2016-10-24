@@ -29,7 +29,7 @@ public class EventsRepositoryImp implements EventsRepository {
     @Nullable
     @Override
     public List<Event> getEvents() {
-        List<Event> events = remoteBackendService.getEvents();
+        List<Event> events = remoteBackendService.getEventsByLocation(50.4565951f, 30.4870897f);
         if (events != null) {
             localEventsStorage.saveEvents(events);
         }
