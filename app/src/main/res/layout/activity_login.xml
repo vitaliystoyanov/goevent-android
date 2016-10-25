@@ -12,6 +12,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
         android:layout_marginBottom="10dp"
         app:srcCompat="@drawable/logo" />
 
@@ -20,6 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
@@ -35,34 +40,14 @@
         app:met_underlineColor="@color/colorWhiteText"
         tool:text="stoyanov" />
 
-    <TextView
-        android:id="@+id/login_create_account_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_button"
-        android:gravity="center"
-        android:text="@string/no_account_yet_create_one"
-        android:textColor="@color/colorWhiteText" />
-
-    <Button
-        android:id="@+id/login_button"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/login_password_edit_text"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:text="@string/login_login_button" />
-
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/login_password_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/login_username_edit_text"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
         android:layout_marginBottom="10dp"
         android:layout_marginEnd="16dp"
         android:layout_marginLeft="16dp"
@@ -78,5 +63,37 @@
         app:met_primaryColor="@color/colorAccent"
         app:met_underlineColor="@color/colorWhiteText"
         tool:text="qwerty1234" />
+
+    <Button
+        android:id="@+id/login_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_password_edit_text"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/login_login_button" />
+
+    <Button
+        android:id="@+id/login_register_button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@+id/login_button"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/no_account_yet_create_one"
+        android:textColor="@color/colorWhiteText" />
 
 </RelativeLayout>

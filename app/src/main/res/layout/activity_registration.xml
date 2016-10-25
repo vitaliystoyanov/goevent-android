@@ -1,46 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:background="@color/colorPrimaryDark"
+    android:gravity="center">
 
-    <TextView
-        android:id="@+id/registration_logo_text_view"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/login_logo"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
         android:layout_marginBottom="10dp"
-        android:gravity="center"
-        android:text="Goevent"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        app:srcCompat="@drawable/logo" />
 
-    <EditText
-        android:id="@+id/registration_username_edit_text"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/login_username_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/registration_logo_text_view"
-        android:layout_margin="10dp"
-        android:hint="Username" />
+        android:layout_below="@+id/login_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:hint="@string/login_username"
+        app:met_baseColor="@color/colorWhiteText"
+        app:met_clearButton="true"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="@string/login_username"
+        app:met_floatingLabelTextColor="@color/colorAccent"
+        app:met_primaryColor="@color/colorAccent"
+        app:met_underlineColor="@color/colorWhiteText"
+        tool:text="stoyanov" />
 
-    <EditText
-        android:id="@+id/registration_password_edit_text"
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/login_password_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/registration_username_edit_text"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword" />
+        android:layout_below="@+id/login_username_edit_text"
+        android:layout_centerHorizontal="true"
+        android:layout_centerInParent="false"
+        android:layout_centerVertical="false"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:hint="@string/login_password_field"
+        android:inputType="textPassword"
+        app:met_baseColor="@color/colorWhiteText"
+        app:met_clearButton="true"
+        app:met_floatingLabel="highlight"
+        app:met_floatingLabelText="@string/login_password_field"
+        app:met_floatingLabelTextColor="@color/colorAccent"
+        app:met_primaryColor="@color/colorAccent"
+        app:met_underlineColor="@color/colorWhiteText"
+        tool:text="qwerty1234" />
 
     <Button
-        android:id="@+id/registration_button"
+        android:id="@+id/login_button"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/registration_password_edit_text"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:text="Register" />
+        android:layout_below="@+id/login_password_edit_text"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:text="Create an account" />
+
+    <Button
+        android:id="@+id/login_register_button"
+        style="@style/Widget.AppCompat.Button.Borderless.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_button"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/registration_log_in"
+        android:textColor="@color/colorWhiteText" />
 
 </RelativeLayout>

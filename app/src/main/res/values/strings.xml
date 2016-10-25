@@ -18,4 +18,5 @@
     <string name="login_login_button">Login</string>
     <string name="no_account_yet_create_one">No account yet? Create one</string>
     <string name="login_username">Username</string>
+    <string name="registration_log_in">Log in</string>
 </resources>

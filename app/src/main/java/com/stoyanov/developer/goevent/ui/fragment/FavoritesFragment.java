@@ -49,6 +49,7 @@ public class FavoritesFragment extends Fragment implements FavoritesView {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.favorites_toolbar);
         toolbar.setTitle(R.string.toolbar_title_favorites);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.favorites_progress_bar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
                 ((MainActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -68,8 +69,6 @@ public class FavoritesFragment extends Fragment implements FavoritesView {
     public void onStart() {
         super.onStart();
         presenter.attach(this);
-        setupRecycleView();
-        progressBar = (ProgressBar) getActivity().findViewById(R.id.favorites_progress_bar);
         presenter.onStart();
         drawerToggle.syncState();
     }
