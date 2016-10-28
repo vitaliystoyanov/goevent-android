@@ -18,10 +18,12 @@ import java.util.List;
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
     private List<Event> data;
     private Context context;
+    private OnItemClickListener onItemClickListener;
 
-    public EventsAdapter(Context context) {
-        this.context = context;
+    public EventsAdapter(Context context, OnItemClickListener listener) {
+        onItemClickListener = listener;
         data = new ArrayList<>();
+        this.context = context;
     }
 
     public void removeAndAdd(List<Event> events) {
@@ -30,11 +32,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public List<Event> getData() {
+        return data;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_item_event, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, onItemClickListener);
     }
 
     @Override
@@ -58,18 +64,34 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return (data != null ? data.size() : 0);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public interface OnItemClickListener {
+
+        void onItem(int position);
+
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public OnItemClickListener listener;
         public TextView name;
         public TextView when;
         public ImageView image;
         public TextView where;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
-            this.name = (TextView) view.findViewById(R.id.item_event_name);
-            this.when = (TextView) view.findViewById(R.id.item_event_when);
-            this.where = (TextView) view.findViewById(R.id.item_event_where);
-            this.image = (ImageView) view.findViewById(R.id.card_item_image);
+            this.listener = listener;
+            name = (TextView) view.findViewById(R.id.item_event_name);
+            when = (TextView) view.findViewById(R.id.item_event_when);
+            where = (TextView) view.findViewById(R.id.item_event_where);
+            image = (ImageView) view.findViewById(R.id.card_item_image);
+
+            view.findViewById(R.id.card_item_more_button).setOnClickListener(this);
+            view.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (listener != null) listener.onItem(getAdapterPosition());
         }
     }
 }

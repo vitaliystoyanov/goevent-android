@@ -21,7 +21,7 @@
 
         <include
             android:id="@+id/card_event_description"
-            layout="@layout/event_description_in_item"
+            layout="@layout/event_description_in_item_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_item_image" />

@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SearchActivity;
+import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
 import com.stoyanov.developer.goevent.ui.fragment.FavoritesFragment;
 import com.stoyanov.developer.goevent.ui.fragment.FeedBackFragment;
 import com.stoyanov.developer.goevent.ui.fragment.ListOfEventsFragment;
@@ -77,5 +79,9 @@ public class NavigationManager {
 
     public void goToSearchEvents(Context context) {
         context.startActivity(new Intent(context, SearchActivity.class));
+    }
+
+    public void goToDetailEvent(Event event) {
+        open(DetailEventFragment.newInstance(event));
     }
 }

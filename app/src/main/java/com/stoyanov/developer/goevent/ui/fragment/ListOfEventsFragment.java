@@ -114,7 +114,12 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new EventsAdapter(getContext());
+        adapter = new EventsAdapter(getContext(), new EventsAdapter.OnItemClickListener() {
+            @Override
+            public void onItem(int position) {
+                presenter.onItem(adapter.getData().get(position));
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
@@ -164,9 +169,6 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
-//        if (events != null) {
-//            Snackbar.make(root, "Shown events: " + events.size(), Snackbar.LENGTH_LONG).show();
-//        }
     }
 
     @Override
@@ -177,6 +179,11 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void goToSearchEvents() {
         navigationManager.goToSearchEvents(getContext());
+    }
+
+    @Override
+    public void goToDetailEvent(Event event) {
+        navigationManager.goToDetailEvent(event);
     }
 
     @Override

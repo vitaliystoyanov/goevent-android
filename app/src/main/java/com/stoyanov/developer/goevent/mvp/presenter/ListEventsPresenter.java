@@ -70,4 +70,8 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
     public void onLoaderReset(Loader<List<Event>> loader) {
         Log.d(TAG, "onLoaderReset: ");
     }
+
+    public void onItem(Event event) {
+        getView().goToDetailEvent(event);
+    }
 }

@@ -61,7 +61,12 @@ public class FavoritesFragment extends Fragment implements FavoritesView {
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new EventsAdapter(getContext());
+        adapter = new EventsAdapter(getContext(), new EventsAdapter.OnItemClickListener() {
+            @Override
+            public void onItem(int position) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
