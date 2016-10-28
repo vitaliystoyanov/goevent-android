@@ -1,11 +1,26 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 import com.orm.dsl.Table;
 
 @Table
-public class Event {
+public class Event implements Parcelable {
 
+    public static final Parcelable.Creator<Event> CREATOR =
+            new Parcelable.Creator<Event>() {
+                @Override
+                public Event createFromParcel(Parcel parcel) {
+                    return new Event(parcel);
+                }
+
+                @Override
+                public Event[] newArray(int i) {
+                    return new Event[i];
+                }
+            };
     @SerializedName("eventPicture")
     private String picture;
     @SerializedName("eventId")
@@ -32,6 +47,15 @@ public class Event {
         this.startTime = startTime;
         this.endTime = endTime;
         this.eventLocation = eventLocation;
+    }
+
+    private Event(Parcel in) {
+        picture = in.readString();
+        description = in.readString();
+        eventId = in.readString();
+        name = in.readString();
+        startTime = in.readString();
+        endTime = in.readString();
     }
 
     public String getPicture() {
@@ -109,7 +133,22 @@ public class Event {
                 '}';
     }
 
-    private final class EventLocation { // FIXME: 07.10.2016
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(picture);
+        parcel.writeString(description);
+        parcel.writeString(eventId);
+        parcel.writeString(name);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public class EventLocation {
         private Location location;
 
         public EventLocation(Location location) {
