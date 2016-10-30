@@ -10,15 +10,13 @@
         android:id="@+id/item_event_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="24dp"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="16sp"
+        android:textSize="18sp"
         tool:text="Event name " />
 
     <ImageView
@@ -30,18 +28,7 @@
         android:layout_below="@+id/item_event_name"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:srcCompat="@drawable/vector_access_time_18px" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="24dp"
-        android:layout_below="@+id/item_event_name"
-        android:layout_toEndOf="@+id/item_event_imege_when"
-        android:layout_toRightOf="@+id/item_event_imege_when"
-        android:gravity="center_vertical|start"
-        android:textColor="@color/colorAccent"
-        tool:text="10 pm, 12 Friday" />
+        app:srcCompat="@drawable/ic_access_time_18px" />
 
     <TextView
         android:id="@+id/item_event_when"
@@ -52,7 +39,8 @@
         android:layout_toRightOf="@+id/item_event_imege_when"
         android:gravity="center_vertical|start"
         android:textColor="@color/colorAccent"
-        tool:text="10 pm, 12 Friday" />
+        android:textSize="16sp"
+        tool:text="Today, 10:00 AM - 12:00 AM" />
 
     <ImageView
         android:id="@+id/item_event_image_where"
@@ -74,7 +62,7 @@
         android:layout_alignStart="@+id/item_event_when"
         android:layout_alignTop="@+id/item_event_image_where"
         android:layout_marginBottom="16dp"
-        android:gravity="center_vertical|left"
-        android:textSize="14sp"
+        android:gravity="center_vertical|start"
+        android:textSize="16sp"
         tool:text="Kyiv, yangelya st. 20" />
 </RelativeLayout>

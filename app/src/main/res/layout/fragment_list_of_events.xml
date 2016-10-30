@@ -31,7 +31,7 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/event_map_routes_tabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tabs_height"
             android:layout_gravity="bottom"
@@ -40,7 +40,7 @@
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Upcoming" />
+                android:text="Date" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Distance" />
+                android:text="Location" />
 
         </android.support.design.widget.TabLayout>
 
@@ -70,7 +70,7 @@
         android:clickable="true"
         app:fabSize="normal"
         app:layout_behavior="com.stoyanov.developer.goevent.ui.common.FABHideOnScroll"
-        app:srcCompat="@drawable/vector_google_maps" />
+        app:srcCompat="@drawable/ic_google_maps" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/fragment_events_swipe_refresh_layout"

@@ -72,12 +72,12 @@ public class DetailEventFragment extends Fragment
 //        Toast.makeText(getContext(), "Event: " + event.getName(), Toast.LENGTH_SHORT).show();
         setupToolbar();
         ExpandableTextView expandableTextView =
-                (ExpandableTextView) getView().findViewById(R.id.expand_text_view);
+                (ExpandableTextView) getView().findViewById(R.id.description_expand_text_view);
         expandableTextView.setText(event.getDescription());
         ((TextView) getView().findViewById(R.id.description_event_name)).setText(event.getName());
 
 
-        mapView = (MapView) getView().findViewById(R.id.detail_event_map);
+        mapView = (MapView) getView().findViewById(R.id.event_map_routes_map);
         mapView.onCreate(savedInstanceState);
 
         mapView.getMapAsync(this);

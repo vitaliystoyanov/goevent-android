@@ -17,11 +17,11 @@
         <ImageView
             android:id="@+id/card_item_image"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="200dp" />
 
         <include
             android:id="@+id/card_event_description"
-            layout="@layout/event_description_in_item_card"
+            layout="@layout/layout_description_in_item_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/card_item_image" />
@@ -42,8 +42,11 @@
             android:layout_toLeftOf="@+id/card_item_more_button"
             android:layout_toStartOf="@+id/card_item_more_button"
             android:text="@string/card_item_share"
+            android:textAlignment="textEnd"
             android:textColor="@color/colorPrimaryText"
             android:textColorLink="@color/colorAccent" />
+
+
 
         <Button
             android:id="@+id/card_item_more_button"

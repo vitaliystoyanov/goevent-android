@@ -50,4 +50,5 @@ dependencies {
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    compile 'com.ms-square:expandableTextView:0.1.4'
 }
