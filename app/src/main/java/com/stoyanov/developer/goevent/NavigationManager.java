@@ -53,6 +53,12 @@ public class NavigationManager {
         }
     }
 
+    public void back(Fragment fragment) {
+        if (manager.getBackStackEntryCount() != 1) {
+            manager.popBackStackImmediate();
+        }
+    }
+
     public void goToListOfEvents() {
         openAsRoot(new ListOfEventsFragment());
     }
