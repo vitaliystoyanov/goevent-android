@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             app:borderWidth="0dp"
             app:fabSize="normal"
-            app:srcCompat="@drawable/vector_gps" />
+            app:srcCompat="@drawable/ic_gps" />
 
     </com.github.jorgecastilloprz.FABProgressCircle>
 

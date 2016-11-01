@@ -1,26 +1,22 @@
 package com.stoyanov.developer.goevent.ui.fragment;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.arlib.floatingsearchview.FloatingSearchView;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
@@ -45,6 +41,7 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBarDrawerToggle drawerToggle;
     private FloatingActionButton fab;
+    private FloatingSearchView searchView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +51,6 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_list_of_events, null);
     }
 
@@ -66,24 +62,18 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
-        setupToolbar();
-        fab = (FloatingActionButton) getView().findViewById(R.id.fragment_events_fab);
+        fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigationManager.goToNearby();
             }
         });
-    }
 
-    private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.search_events_toolbar);
-        toolbar.setTitle("List of events");
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        drawerToggle = new ActionBarDrawerToggle(getActivity(),
-                ((MainActivity) getActivity()).getDrawerLayout(),
-                toolbar, R.string.drawer_open, R.string.drawer_close);
-        ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
+        searchView = (FloatingSearchView) getView().findViewById(R.id.list_events_floating_search_view);
+        searchView.attachNavigationDrawerToMenuButton(
+                (DrawerLayout) getActivity().findViewById(R.id.main_drawer_layout));
+
     }
 
     @Override
@@ -92,9 +82,9 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
         Log.d(TAG, "onStart: ");
         presenter.attach(this);
         setupRecycleView();
-        progressBar = (ProgressBar) getActivity().findViewById(R.id.fragment_events_progress_bar);
+        progressBar = (ProgressBar) getActivity().findViewById(R.id.list_events_progress_bar);
         swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
-                .findViewById(R.id.fragment_events_swipe_refresh_layout);
+                .findViewById(R.id.list_events_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setDistanceToTriggerSync(50);
@@ -106,11 +96,10 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
             }
         });
         presenter.onStart();
-        drawerToggle.syncState();
     }
 
     private void setupRecycleView() {
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.fragment_events_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.list_events_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -131,7 +120,6 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop: ");
         presenter.detach();
     }
 
@@ -140,28 +128,6 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
         super.onDestroyView();
         presenter.onDestroyView();
         ((MainActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.d(TAG, "onCreateOptionsMenu: ");
-        inflater.inflate(R.menu.toolbar_list_events_actions_items, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.toolbar_action_search) {
-            presenter.onActionSearch();
-        }
-        return true;
     }
 
     @Override
@@ -174,11 +140,6 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     @Override
     public void showEmpty() {
 
-    }
-
-    @Override
-    public void goToSearchEvents() {
-        navigationManager.goToSearchEvents(getContext());
     }
 
     @Override

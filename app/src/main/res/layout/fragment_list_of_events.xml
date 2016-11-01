@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/fragment_events_progress_bar"
+        android:id="@+id/list_events_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="false"
@@ -15,23 +15,28 @@
         android:visibility="invisible" />
 
     <android.support.design.widget.AppBarLayout
-        android:id="@+id/detail_event_appbar"
+        android:id="@+id/list_events_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/search_events_toolbar"
+        <com.arlib.floatingsearchview.FloatingSearchView
+            android:id="@+id/list_events_floating_search_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
-            android:background="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+            android:layout_height="66dp"
+            app:floatingSearch_close_search_on_keyboard_dismiss="true"
+            app:floatingSearch_leftActionMode="showHamburger"
+            app:floatingSearch_searchBarMarginLeft="@dimen/search_view_inset"
+            app:floatingSearch_searchBarMarginRight="@dimen/search_view_inset"
+            app:floatingSearch_searchBarMarginTop="@dimen/search_view_inset"
+            app:floatingSearch_searchHint="Search for events..."
+            app:floatingSearch_showSearchKey="false"
+            app:floatingSearch_suggestionsListAnimDuration="250"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/event_map_routes_tabs"
+            android:id="@+id/list_events_category_tabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tabs_height"
             android:layout_gravity="bottom"
@@ -57,7 +62,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fragment_events_fab"
+        android:id="@+id/list_events_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -73,13 +78,13 @@
         app:srcCompat="@drawable/ic_google_maps" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/fragment_events_swipe_refresh_layout"
+        android:id="@+id/list_events_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/fragment_events_recycler_view"
+            android:id="@+id/list_events_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"

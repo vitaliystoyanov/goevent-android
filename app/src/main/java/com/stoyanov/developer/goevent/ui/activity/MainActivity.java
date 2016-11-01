@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setupNavigationDrawer() {
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 

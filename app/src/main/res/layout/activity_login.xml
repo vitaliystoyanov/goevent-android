@@ -15,7 +15,7 @@
         android:layout_centerInParent="false"
         android:layout_centerVertical="false"
         android:layout_marginBottom="10dp"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/ic_logo" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/login_username_edit_text"

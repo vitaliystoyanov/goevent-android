@@ -85,8 +85,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             where = (TextView) view.findViewById(R.id.item_event_where);
             image = (ImageView) view.findViewById(R.id.card_item_image);
 
-            view.findViewById(R.id.card_item_more_button).setOnClickListener(this);
-            view.setOnClickListener(this);
+//            view.findViewById(R.id.card_item_more_button).setOnClickListener(this);
+            image.setOnClickListener(this);
         }
 
         @Override

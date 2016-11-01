@@ -85,7 +85,7 @@ public class DetailEventFragment extends Fragment
 
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) getView().findViewById(R.id.detail_event_toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle("Detail event");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);

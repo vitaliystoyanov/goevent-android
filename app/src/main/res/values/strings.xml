@@ -18,10 +18,11 @@
     <string name="login_login_button">Login</string>
     <string name="no_account_yet_create_one">No account yet? Create one</string>
     <string name="login_username">Username</string>
-    <string name="registration_log_in">Log in</string>
+    <string name="registration_log_in">Already have an account? Log in.</string>
     <string name="description_time">Duration time</string>
     <string name="event_map_routes_routes">Routes</string>
     <string name="event_map_routes_open_map">Open map</string>
     <string name="event_info_location">Location</string>
     <string name="event_info_people_attending">People attending</string>
+    <string name="registration_create">Create</string>
 </resources>

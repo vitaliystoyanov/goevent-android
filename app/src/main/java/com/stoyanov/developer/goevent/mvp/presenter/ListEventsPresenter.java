@@ -34,10 +34,6 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
         loaderManager.restartLoader(EVENTS_QUERY, null, this);
     }
 
-    public void onActionSearch() {
-        getView().goToSearchEvents();
-    }
-
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView: ");
         loaderManager.destroyLoader(EVENTS_QUERY);

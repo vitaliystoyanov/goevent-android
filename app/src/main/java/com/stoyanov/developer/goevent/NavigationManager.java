@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
-import com.stoyanov.developer.goevent.ui.activity.SearchActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
 import com.stoyanov.developer.goevent.ui.fragment.FavoritesFragment;
 import com.stoyanov.developer.goevent.ui.fragment.FeedBackFragment;
@@ -81,10 +80,6 @@ public class NavigationManager {
 
     public void goToNearby() {
         openAsRoot(new NearbyEventsFragment());
-    }
-
-    public void goToSearchEvents(Context context) {
-        context.startActivity(new Intent(context, SearchActivity.class));
     }
 
     public void goToDetailEvent(Event event) {

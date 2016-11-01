@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:paddingBottom="16dp"
+        android:paddingBottom="8dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="24dp"
@@ -20,12 +20,13 @@
         tool:text="Event name " />
 
     <ImageView
-        android:id="@+id/item_event_imege_when"
+        android:id="@+id/item_event_image_when"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/item_event_name"
+        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:srcCompat="@drawable/ic_access_time_18px" />
@@ -35,24 +36,23 @@
         android:layout_width="match_parent"
         android:layout_height="24dp"
         android:layout_below="@+id/item_event_name"
-        android:layout_toEndOf="@+id/item_event_imege_when"
-        android:layout_toRightOf="@+id/item_event_imege_when"
+        android:layout_toEndOf="@+id/item_event_image_when"
+        android:layout_toRightOf="@+id/item_event_image_when"
         android:gravity="center_vertical|start"
         android:textColor="@color/colorAccent"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tool:text="Today, 10:00 AM - 12:00 AM" />
 
     <ImageView
         android:id="@+id/item_event_image_where"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_below="@+id/item_event_imege_when"
+        android:layout_below="@+id/item_event_image_when"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
         android:layout_toLeftOf="@+id/item_event_when"
         android:layout_toStartOf="@+id/item_event_when"
-        app:srcCompat="@drawable/vector_place_18px" />
+        app:srcCompat="@drawable/ic_place_18px" />
 
     <TextView
         android:id="@+id/item_event_where"
@@ -63,6 +63,6 @@
         android:layout_alignTop="@+id/item_event_image_where"
         android:layout_marginBottom="16dp"
         android:gravity="center_vertical|start"
-        android:textSize="16sp"
+        android:textSize="14sp"
         tool:text="Kyiv, yangelya st. 20" />
 </RelativeLayout>

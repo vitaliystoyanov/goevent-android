@@ -57,7 +57,7 @@
                 android:layout_width="72dp"
                 android:layout_height="match_parent"
                 android:scaleType="center"
-                app:srcCompat="@drawable/vector_place_gray_24px" />
+                app:srcCompat="@drawable/ic_place_gray_24px" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

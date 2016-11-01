@@ -49,10 +49,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBkrIm5iOlaJMo0-pif0HfisC-ROqko0f0" />
 
-        <activity
-            android:name=".ui.activity.SearchActivity"
-            android:label="@string/title_activity_search"
-            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@
             android:textSize="16sp" />
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/event_map_routes_tabs"
+            android:id="@+id/list_events_category_tabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tabs_height"
             android:layout_gravity="bottom">

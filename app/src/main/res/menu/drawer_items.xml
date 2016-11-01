@@ -6,20 +6,20 @@
         <item
             android:id="@+id/drawer_item_list_events"
             android:checked="true"
-            android:icon="@drawable/vector_list"
+            android:icon="@drawable/ic_list"
             android:title="@string/drawer_list_of_events" />
         <item
             android:id="@+id/drawer_item_favorites"
-            android:icon="@drawable/vector_star"
+            android:icon="@drawable/ic_star"
             android:title="@string/drawer_favorites" />
         <item
             android:id="@+id/drawer_item_nearby"
-            android:icon="@drawable/vector_near_me"
+            android:icon="@drawable/ic_near_me"
             android:title="@string/drawer_nearby" />
 
         <item
             android:id="@+id/drawer_item_notification"
-            android:icon="@drawable/vector_notifications"
+            android:icon="@drawable/ic_notifications"
             android:title="@string/drawer_notifications"
             app:actionLayout="@layout/switch_drawer_item" />
     </group>
@@ -31,7 +31,7 @@
             android:title="@string/drawer_login" />
         <item
             android:id="@+id/drawer_item_feedback"
-            android:icon="@drawable/vector_feedback_24px"
+            android:icon="@drawable/ic_feedback_24px"
             android:title="@string/drawer_about" />
     </group>
 </menu>
