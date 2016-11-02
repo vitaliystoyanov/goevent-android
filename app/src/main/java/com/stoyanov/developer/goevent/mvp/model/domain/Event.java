@@ -4,9 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
-import com.orm.dsl.Table;
 
-@Table
 public class Event implements Parcelable {
 
     public static final Parcelable.Creator<Event> CREATOR =
