@@ -2,11 +2,16 @@ package com.stoyanov.developer.goevent.mvp.model.domain;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Event implements Parcelable {
+import co.uk.rushorm.core.RushObject;
 
+import static android.content.ContentValues.TAG;
+
+public class Event extends RushObject implements Parcelable {
     public static final Parcelable.Creator<Event> CREATOR =
             new Parcelable.Creator<Event>() {
                 @Override
@@ -104,6 +109,7 @@ public class Event implements Parcelable {
         this.endTime = endTime;
     }
 
+    @Nullable
     public Location getLocation() {
         return eventLocation != null ? eventLocation.getLocation() : null;
     }
@@ -115,10 +121,8 @@ public class Event implements Parcelable {
     @Override
     public String toString() {
         String locationToString = null;
-        try {
+        if (eventLocation != null) {
             locationToString = eventLocation.getLocation().toString();
-        } catch (NullPointerException e) {
-            System.err.println(e);
         }
         return "Event{" +
                 ", picture='" + picture + '\'' +
@@ -144,17 +148,5 @@ public class Event implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public class EventLocation {
-        private Location location;
-
-        public EventLocation(Location location) {
-            this.location = location;
-        }
-
-        public Location getLocation() {
-            return location;
-        }
     }
 }

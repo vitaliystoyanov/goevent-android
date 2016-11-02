@@ -41,6 +41,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/cart_item_divider"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
             android:paddingBottom="10dp"
             android:paddingRight="15dp"
             android:paddingTop="10dp"

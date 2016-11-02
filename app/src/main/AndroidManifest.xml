@@ -21,6 +21,7 @@
         <meta-data android:name="Rush_classes_package" android:value="com.stoyanov.developer.goevent.mvp.model.domain" />
         <meta-data android:name="Rush_db_version" android:value="1" />
         <meta-data android:name="Rush_db_name" android:value="goevent_rush.db" />
+        <meta-data android:name="Rush_debug" android:value="true" />
 
         <activity
             android:name=".ui.activity.SplashActivity"
