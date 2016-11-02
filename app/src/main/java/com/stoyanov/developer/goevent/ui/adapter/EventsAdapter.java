@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     .centerCrop()
                     .into(holder.image);
         }
-        holder.when.setText("Mon, Jan 10, 8:00 AM");
-        holder.where.setText("Kyiv, Khreshchatyk st., 23");
+        holder.when.setText(event.getStartTime());
+        Location location = event.getLocation();
+        if (location != null) {
+            holder.where.setText(location.getStreet());
+        }
         holder.name.setText(event.getName());
     }
 
