@@ -12,6 +12,7 @@ import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
+import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +21,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private List<Event> data;
     private Context context;
     private OnItemClickListener onItemClickListener;
+    private OnLikeButtonClickListener onLikeButtonClickListener;
 
-    public EventsAdapter(Context context, OnItemClickListener listener) {
+    public EventsAdapter(Context context, OnItemClickListener listener,
+                         OnLikeButtonClickListener onLikeButtonClickListener) {
+        this.onLikeButtonClickListener = onLikeButtonClickListener;
         onItemClickListener = listener;
         data = new ArrayList<>();
         this.context = context;
@@ -41,7 +45,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_item_event, parent, false);
-        return new ViewHolder(view, onItemClickListener);
+        return new ViewHolder(view, onItemClickListener, onLikeButtonClickListener);
     }
 
     @Override
@@ -55,10 +59,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     .centerCrop()
                     .into(holder.image);
         }
-        holder.when.setText(event.getStartTime());
+        holder.when.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
+                DateUtil.toDate(event.getEndTime())));
         Location location = event.getLocation();
         if (location != null) {
-            holder.where.setText(location.getStreet());
+            holder.location.setText(context.getResources()
+                    .getString(R.string.location_field_full_format,
+                            location.getCity(),
+                            location.getCountry(),
+                            location.getStreet())
+            );
+
+        } else {
+            // FIXME: 03.11.2016
         }
         holder.name.setText(event.getName());
     }
@@ -74,28 +87,44 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public OnItemClickListener listener;
+    public interface OnLikeButtonClickListener {
+
+        void onLikeClick(int position);
+
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
         public TextView name;
         public TextView when;
         public ImageView image;
-        public TextView where;
+        public TextView location;
+        private OnItemClickListener itemClickListener;
+        private OnLikeButtonClickListener likeButtonClickListener;
+        private ImageView like;
 
-        public ViewHolder(View view, OnItemClickListener listener) {
+        public ViewHolder(View view, OnItemClickListener itemClickListener,
+                          OnLikeButtonClickListener likeButtonClickListener) {
             super(view);
-            this.listener = listener;
+            this.itemClickListener = itemClickListener;
+            this.likeButtonClickListener = likeButtonClickListener;
             name = (TextView) view.findViewById(R.id.item_event_name);
             when = (TextView) view.findViewById(R.id.item_event_when);
-            where = (TextView) view.findViewById(R.id.item_event_where);
+            location = (TextView) view.findViewById(R.id.item_event_where);
             image = (ImageView) view.findViewById(R.id.card_item_image);
+            like = (ImageView) view.findViewById(R.id.card_item_like);
 
-//            view.findViewById(R.id.card_item_more_button).setOnClickListener(this);
+            like.setOnClickListener(this);
             image.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            if (listener != null) listener.onItem(getAdapterPosition());
+            if (view.getId() == R.id.card_item_image && itemClickListener != null) {
+                itemClickListener.onItem(getAdapterPosition());
+            } else if (view.getId() == R.id.card_item_like && likeButtonClickListener != null) {
+                likeButtonClickListener.onLikeClick(getAdapterPosition());
+            }
         }
     }
 }
