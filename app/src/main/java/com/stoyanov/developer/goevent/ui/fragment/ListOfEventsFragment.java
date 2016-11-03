@@ -2,9 +2,11 @@ package com.stoyanov.developer.goevent.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,8 +23,8 @@ import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.presenter.ListEventsPresenter;
-import com.stoyanov.developer.goevent.mvp.view.ListEventsView;
+import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
+import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
 
@@ -30,10 +32,10 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class ListOfEventsFragment extends Fragment implements ListEventsView {
+public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     private static final String TAG = "ListOfEventsFragment";
     @Inject
-    ListEventsPresenter presenter;
+    ListOfEventsPresenter presenter;
     @Inject
     NavigationManager navigationManager;
     private ProgressBar progressBar;
@@ -42,6 +44,7 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     private ActionBarDrawerToggle drawerToggle;
     private FloatingActionButton fab;
     private FloatingSearchView searchView;
+    private CoordinatorLayout coordinatorLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +65,7 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
+        coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.list_of_events_coordinator_layout);
         fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +112,11 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
             public void onItem(int position) {
                 presenter.onItem(adapter.getData().get(position));
             }
+        }, new EventsAdapter.OnLikeButtonClickListener() {
+            @Override
+            public void onLikeClick(int position) {
+                presenter.onItemLikeClick(adapter.getData().get(position));
+            }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -143,6 +152,19 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
     }
 
     @Override
+    public void showMessageAddedToFavorite() {
+        Snackbar.make(coordinatorLayout, R.string.message_event_added_favorite, Snackbar.LENGTH_LONG)
+                .setAction("Favorite", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        navigationManager.goToFavorites();
+                    }
+                })
+                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorActionText))
+                .show();
+    }
+
+    @Override
     public void goToDetailEvent(Event event) {
         navigationManager.goToDetailEvent(event);
     }
@@ -154,7 +176,9 @@ public class ListOfEventsFragment extends Fragment implements ListEventsView {
 
     @Override
     public void showMessageOnNotReceiveRemote() {
-        Snackbar.make(getView(), "Check your connection or try again later", Snackbar.LENGTH_LONG).show();
+        Snackbar.make(coordinatorLayout,
+                R.string.message_bad_connection, Snackbar.LENGTH_LONG)
+                .show();
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {

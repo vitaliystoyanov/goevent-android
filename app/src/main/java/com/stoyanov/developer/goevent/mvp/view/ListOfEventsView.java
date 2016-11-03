@@ -4,7 +4,7 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 
 import java.util.List;
 
-public interface ListEventsView extends BaseView {
+public interface ListOfEventsView extends BaseView {
 
     void showEvents(List<Event> events);
 
@@ -15,5 +15,7 @@ public interface ListEventsView extends BaseView {
     void showMessageOnNotReceiveRemote();
 
     void goToDetailEvent(Event event);
+
+    void showMessageAddedToFavorite();
 
 }

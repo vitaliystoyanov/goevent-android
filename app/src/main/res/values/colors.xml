@@ -9,4 +9,5 @@
     <color name="colorPrimaryText">#e3000000</color>
     <color name="colorWhiteText">#ffffff</color>
     <color name="colorSecondaryText">#8a000000</color>
+    <color name="colorActionText">#ecd004</color>
 </resources>

@@ -35,7 +35,7 @@ public class EventsBackendServiceImp implements EventsBackendService {
         try {
             Events body = eventsApi.getEvents().execute().body();
             if (body == null) return null;
-            return new ArrayList<>(body.list());
+            return body.list();
         } catch (IOException e) {
             Log.d(TAG, "getEvents: Error has occurred!", e);
         }

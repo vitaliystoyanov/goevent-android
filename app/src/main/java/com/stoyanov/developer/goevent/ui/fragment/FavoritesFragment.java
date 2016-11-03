@@ -66,6 +66,11 @@ public class FavoritesFragment extends Fragment implements FavoritesView {
             public void onItem(int position) {
 
             }
+        }, new EventsAdapter.OnLikeButtonClickListener() {
+            @Override
+            public void onLikeClick(int position) {
+
+            }
         });
         recyclerView.setAdapter(adapter);
     }

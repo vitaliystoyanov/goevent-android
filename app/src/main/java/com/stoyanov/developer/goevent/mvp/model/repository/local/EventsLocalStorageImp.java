@@ -15,8 +15,7 @@ public class EventsLocalStorageImp implements EventsStorage {
     @Nullable
     @Override
     public List<Event> getEvents() {
-        List<Event> events = new RushSearch().find(Event.class);
-        return events;
+        return new RushSearch().find(Event.class);
     }
 
     @Override

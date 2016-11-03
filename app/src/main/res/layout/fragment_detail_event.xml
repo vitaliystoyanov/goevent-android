@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/detail_event_coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -64,6 +65,6 @@
         app:fabSize="normal"
         app:layout_anchor="@id/detail_event_appbar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_star_white_24dp" />
+        app:srcCompat="@drawable/ic_heart_white_24px" />
 
 </android.support.design.widget.CoordinatorLayout>

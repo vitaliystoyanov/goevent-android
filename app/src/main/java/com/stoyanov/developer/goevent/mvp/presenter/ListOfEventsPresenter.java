@@ -8,18 +8,18 @@ import android.util.Log;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
-import com.stoyanov.developer.goevent.mvp.view.ListEventsView;
+import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 
 import java.util.List;
 
-public class ListEventsPresenter extends BasePresenter<ListEventsView>
+public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         implements LoaderManager.LoaderCallbacks<List<Event>> {
-    private final static String TAG = "ListEventsPresenter";
+    private final static String TAG = "ListOfEventsPresenter";
     private final static int EVENTS_QUERY = 1;
     private final LoaderManager loaderManager;
     private final Context context;
 
-    public ListEventsPresenter(Context context, LoaderManager loaderManager) {
+    public ListOfEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
         this.context = context;
     }
@@ -69,5 +69,9 @@ public class ListEventsPresenter extends BasePresenter<ListEventsView>
 
     public void onItem(Event event) {
         getView().goToDetailEvent(event);
+    }
+
+    public void onItemLikeClick(Event favoriteEvent) {
+        getView().showMessageAddedToFavorite();
     }
 }

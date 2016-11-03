@@ -2,7 +2,6 @@ package com.stoyanov.developer.goevent.mvp.model.repository;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.FavoriteEvent;
