@@ -1,0 +1,17 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/ic_triangle_white"
+        android:drawablePadding="2dp"
+        android:drawableRight="@drawable/ic_triangle_white"
+        android:textColor="@color/colorWhiteText"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</LinearLayout>
