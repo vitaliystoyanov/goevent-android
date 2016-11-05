@@ -4,7 +4,9 @@ import android.support.annotation.Nullable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 public class DateUtil {
@@ -21,10 +23,25 @@ public class DateUtil {
         return null;
     }
 
-    @Nullable
-    public static String toDuration(Date form, Date to) {
-        SimpleDateFormat format = new SimpleDateFormat("EEEE, MMM d, HH:mm",
+    public static String toDuration(Date dateFrom, Date dateTo) {
+        SimpleDateFormat fullFormat = new SimpleDateFormat("EEE, MMM d, HH:mm",
                 Locale.getDefault());
-        return format.format(form) + " - " + format.format(to);
+
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm",
+                Locale.getDefault());
+
+        Calendar from = new GregorianCalendar();
+        from.setTime(dateFrom);
+
+        Calendar to = new GregorianCalendar();
+        to.setTime(dateTo);
+
+        if (from.get(Calendar.DAY_OF_MONTH) == to.get(Calendar.DAY_OF_MONTH)
+                && from.get(Calendar.MONTH) == to.get(Calendar.MONTH)
+                && from.get(Calendar.YEAR) == to.get(Calendar.YEAR)) {
+            return fullFormat.format(dateFrom) + " - " + timeFormat.format(dateTo);
+        }
+
+        return fullFormat.format(dateFrom) + " - " + fullFormat.format(dateTo);
     }
 }
