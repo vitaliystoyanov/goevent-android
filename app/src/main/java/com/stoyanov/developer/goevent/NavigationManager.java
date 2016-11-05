@@ -85,4 +85,8 @@ public class NavigationManager {
     public void goToDetailEvent(Event event) {
         open(DetailEventFragment.newInstance(event));
     }
+
+    public void goToSearchEvents(Context context) {
+        context.startActivity(new Intent(context, LoginActivity.class));
+    }
 }

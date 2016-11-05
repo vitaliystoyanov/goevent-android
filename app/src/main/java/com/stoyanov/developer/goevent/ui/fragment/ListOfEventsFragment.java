@@ -1,5 +1,6 @@
 package com.stoyanov.developer.goevent.ui.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -7,18 +8,23 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 
-import com.arlib.floatingsearchview.FloatingSearchView;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
@@ -26,6 +32,7 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+import com.stoyanov.developer.goevent.ui.adapter.CategorySpinnerAdapter;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
 
 import java.util.List;
@@ -43,8 +50,8 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBarDrawerToggle drawerToggle;
     private FloatingActionButton fab;
-    private FloatingSearchView searchView;
     private CoordinatorLayout coordinatorLayout;
+    private Toolbar toolbar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,6 +61,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fragment_list_of_events, null);
     }
 
@@ -73,37 +81,36 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
                 navigationManager.goToNearby();
             }
         });
-
-        searchView = (FloatingSearchView) getView().findViewById(R.id.list_events_floating_search_view);
-        searchView.attachNavigationDrawerToMenuButton(
-                (DrawerLayout) getActivity().findViewById(R.id.main_drawer_layout));
-
+        setupToolbar();
+        setupRecycleView();
+        setupSpinner(toolbar);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart: ");
-        presenter.attach(this);
-        setupRecycleView();
-        progressBar = (ProgressBar) getActivity().findViewById(R.id.list_events_progress_bar);
-        swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
-                .findViewById(R.id.list_events_swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        swipeRefreshLayout.setEnabled(false);
-        swipeRefreshLayout.setDistanceToTriggerSync(50);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.onRefresh();
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
-        presenter.onStart();
+    private void setupToolbar() {
+        toolbar = (Toolbar) getView().findViewById(R.id.list_events_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        drawerToggle = new ActionBarDrawerToggle(getActivity(),
+                ((MainActivity) getActivity()).getDrawerLayout(),
+                toolbar, R.string.drawer_open, R.string.drawer_close);
+        ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
+    }
+
+    private void setupSpinner(Toolbar toolbar) {
+        View spinnerContainer = LayoutInflater
+                .from(getContext())
+                .inflate(R.layout.toolbar_spinner, toolbar, false);
+        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        toolbar.addView(spinnerContainer, lp);
+
+        CategorySpinnerAdapter spinnerAdapter = new CategorySpinnerAdapter(getContext(),
+                R.array.categories_of_events_in_spinner);
+        Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
+        spinner.setAdapter(spinnerAdapter);
     }
 
     private void setupRecycleView() {
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.list_events_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.list_events_recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -119,6 +126,50 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: ");
+        presenter.attach(this);
+        drawerToggle.syncState();
+        progressBar = (ProgressBar) getView().findViewById(R.id.list_events_progress_bar);
+        swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
+                .findViewById(R.id.list_events_swipe_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setDistanceToTriggerSync(50);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.onRefresh();
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+        presenter.onStart();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        Log.d(TAG, "onCreateOptionsMenu: ");
+        inflater.inflate(R.menu.toolbar_list_events_actions_items, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.toolbar_action_search) {
+            presenter.onActionSearch();
+        }
+        return true;
     }
 
     @Override
@@ -141,6 +192,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
 
     @Override
     public void showEvents(List<Event> events) {
+        Log.d(TAG, "showEvents: events size: " + events.size());
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
@@ -149,6 +201,11 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     @Override
     public void showEmpty() {
 
+    }
+
+    @Override
+    public void goToSearchEvents() {
+        navigationManager.goToSearchEvents(getContext());
     }
 
     @Override

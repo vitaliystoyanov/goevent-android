@@ -15,7 +15,7 @@ import java.util.List;
 public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         implements LoaderManager.LoaderCallbacks<List<Event>> {
     private final static String TAG = "ListOfEventsPresenter";
-    private final static int EVENTS_QUERY = 1;
+    private final static int EVENTS_QUERY = 11;
     private final LoaderManager loaderManager;
     private final Context context;
 
@@ -52,7 +52,6 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
 
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        Log.d(TAG, "onLoadFinished: ");
         if (getView() == null) return;
         if (data != null && data.size() > 0) {
             getView().showEvents(data);
@@ -60,6 +59,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
             getView().showEmpty();
         }
         getView().showProgressBar(false);
+        if (data != null) Log.d(TAG, "onLoadFinished: data size:" + data.size());
     }
 
     @Override
@@ -73,5 +73,9 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
 
     public void onItemLikeClick(Event favoriteEvent) {
         getView().showMessageAddedToFavorite();
+    }
+
+    public void onActionSearch() {
+        getView().goToSearchEvents();
     }
 }

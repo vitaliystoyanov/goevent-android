@@ -16,6 +16,8 @@ public interface ListOfEventsView extends BaseView {
 
     void goToDetailEvent(Event event);
 
+    void goToSearchEvents();
+
     void showMessageAddedToFavorite();
 
 }

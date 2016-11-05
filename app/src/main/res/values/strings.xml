@@ -30,4 +30,23 @@
     <string name="title_detail_event">Detail event</string>
     <string name="location_field_full_format">%1$s, %2$s, %3$s</string>
     <string name="location_country_city_format">%1$s, %2$s</string>
+    <string name="action_favorite">Favorite</string>
+
+    <string-array name="categories_of_events_in_spinner">
+        <item>Nightlife</item>
+        <item>Shopping</item>
+        <item>Music</item>
+        <item>Art</item>
+        <item>Food</item>
+        <item>Movie</item>
+        <item>Dance</item>
+        <item>Festival</item>
+        <item>Comedy</item>
+        <item>Theater</item>
+        <item>Dining</item>
+        <item>Conference</item>
+        <item>Sports</item>
+        <item>Other</item>
+    </string-array>
+
 </resources>

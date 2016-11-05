@@ -30,13 +30,13 @@ public class EventsRepositoryImp implements EventsRepository {
     @Override
     public List<Event> getEvents() {
         List<Event> events = remoteBackendService.getEventsByLocation(50.4565951f, 30.4870897f);
-        if (events != null) {
+/*        if (events != null) {
             localEventsStorage.saveEvents(events);
-        }
+        }*/
         if (events == null && listener != null) {
             listener.notReceive();
         }
-        return localEventsStorage.getEvents();
+        return events;
     }
 
     @Override

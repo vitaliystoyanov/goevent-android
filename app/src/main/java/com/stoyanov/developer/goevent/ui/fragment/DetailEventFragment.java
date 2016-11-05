@@ -135,11 +135,12 @@ public class DetailEventFragment extends Fragment
 
     @Override
     public void showLocation(Location location) {
+        if (location == null) return;
         countryAndCity.setText(getResources()
                 .getString(R.string.location_country_city_format,
                         location.getCity(), location.getCountry())
         );
-        if (location.getStreet() != null) {
+        if (location.getStreet() != null && !location.getStreet().isEmpty()) {
             street.setText(location.getStreet());
         } else {
             street.setVisibility(View.GONE);
@@ -155,7 +156,7 @@ public class DetailEventFragment extends Fragment
     @Override
     public void showMessageAddedToFavorites() {
         Snackbar.make(coordinatorLayout, R.string.message_event_added_favorite, Snackbar.LENGTH_LONG)
-                .setAction("Favorite", new View.OnClickListener() {
+                .setAction(R.string.action_favorite, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         navigationManager.goToFavorites();
@@ -176,7 +177,7 @@ public class DetailEventFragment extends Fragment
         map = googleMap;
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
-        map.addMarker(new MarkerOptions().position(this.location));
+        map.addMarker(new MarkerOptions().position(location));
     }
 
     @Override

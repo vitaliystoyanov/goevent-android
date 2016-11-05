@@ -39,7 +39,7 @@
         android:layout_toEndOf="@+id/item_event_image_when"
         android:layout_toRightOf="@+id/item_event_image_when"
         android:gravity="center_vertical|start"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorSpecialText"
         android:textSize="14sp"
         tool:text="Today, 10:00 AM - 12:00 AM" />
 
@@ -57,11 +57,12 @@
     <TextView
         android:id="@+id/item_event_where"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/item_event_when"
         android:layout_alignStart="@+id/item_event_when"
         android:layout_alignTop="@+id/item_event_image_where"
         android:layout_marginBottom="16dp"
+        android:layout_marginTop="3dp"
         android:gravity="center_vertical|start"
         android:textSize="14sp"
         tool:text="Kyiv, yangelya st. 20" />
