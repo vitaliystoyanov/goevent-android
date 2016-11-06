@@ -5,6 +5,7 @@ import android.support.v4.app.LoaderManager;
 
 import com.stoyanov.developer.goevent.mvp.presenter.DetailPresenter;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
+import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -20,5 +21,10 @@ public class PresenterModule {
     @Provides
     DetailPresenter provideDetailPresenter() {
         return new DetailPresenter();
+    }
+
+    @Provides
+    NearbyEventsPresenter provideNearbyEventsPresenter(Application application, LoaderManager manager) {
+        return new NearbyEventsPresenter(application, manager);
     }
 }

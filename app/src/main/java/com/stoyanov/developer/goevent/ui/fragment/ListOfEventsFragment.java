@@ -232,7 +232,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     }
 
     @Override
-    public void showMessageOnNotReceiveRemote() {
+    public void showMessageNetwotkError() {
         Snackbar.make(coordinatorLayout,
                 R.string.message_bad_connection, Snackbar.LENGTH_LONG)
                 .show();

@@ -20,6 +20,7 @@ public class EventsLocalStorageImp implements EventsStorage {
 
     @Override
     public void saveEvents(@NonNull List<Event> events) {
+        RushCore.getInstance().deleteAll(Event.class);
         RushCore.getInstance().save(events);
     }
 }

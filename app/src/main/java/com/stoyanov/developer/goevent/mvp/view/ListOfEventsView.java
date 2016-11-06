@@ -12,7 +12,7 @@ public interface ListOfEventsView extends BaseView {
 
     void showProgressBar(boolean state);
 
-    void showMessageOnNotReceiveRemote();
+    void showMessageNetwotkError();
 
     void goToDetailEvent(Event event);
 

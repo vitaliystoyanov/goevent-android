@@ -7,6 +7,7 @@ import android.util.Log;
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,16 +18,25 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
 
     @Inject
     EventsRepository repository;
+    private FILTER filter;
 
-    public EventsLoader(Context context) {
+    public EventsLoader(Context context, FILTER filter) {
         super(context);
+        this.filter = filter;
         (MainApplication.getApplicationComponent(context)).inject(this);
         repository.addOnNotReceiveRemoteListener(this);
     }
 
     @Override
     public List<Event> loadInBackground() {
-        return repository.getEvents();
+        if (filter == FILTER.ALL) {
+            return repository.getEvents();
+        } else if (filter == FILTER.ELIMINATE_NULL_LOCATION) {
+            Log.d(TAG, "loadInBackground: ");
+            return repository.getEventsEliminateNullLocation();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     @Override
@@ -35,11 +45,11 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         forceLoad();
     }
 
-    public abstract void onNotReceiveRemote();
+    public abstract void onNetworkError();
 
     @Override
     public void notReceive() {
-        onNotReceiveRemote();
+        onNetworkError();
     }
 
     @Override
@@ -48,4 +58,7 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         repository.addOnNotReceiveRemoteListener(null);
     }
 
+    public enum FILTER {
+        ELIMINATE_NULL_LOCATION, ALL
+    }
 }

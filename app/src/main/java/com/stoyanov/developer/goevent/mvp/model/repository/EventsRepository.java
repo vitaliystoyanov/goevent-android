@@ -16,6 +16,8 @@ public interface EventsRepository extends FavoritesEventsStorage {
 
     void addOnNotReceiveRemoteListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
 
+    List<Event> getEventsEliminateNullLocation();
+
     interface OnNotReceiveRemoteListener {
 
         void notReceive();

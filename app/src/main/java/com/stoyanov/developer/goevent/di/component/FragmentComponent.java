@@ -4,6 +4,7 @@ import com.stoyanov.developer.goevent.di.module.PresenterModule;
 import com.stoyanov.developer.goevent.di.scope.FragmentScope;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
 import com.stoyanov.developer.goevent.ui.fragment.ListOfEventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
 
 import dagger.Component;
 
@@ -14,5 +15,7 @@ public interface FragmentComponent {
     void inject(ListOfEventsFragment fragment);
 
     void inject(DetailEventFragment fragment);
+
+    void inject(NearbyEventsFragment fragment);
 
 }

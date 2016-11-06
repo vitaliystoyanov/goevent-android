@@ -42,10 +42,10 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        return new EventsLoader(context) {
+        return new EventsLoader(context, EventsLoader.FILTER.ALL) {
             @Override
-            public void onNotReceiveRemote() {
-                if (getView() != null) getView().showMessageOnNotReceiveRemote();
+            public void onNetworkError() {
+                if (getView() != null) getView().showMessageNetwotkError();
             }
         };
     }

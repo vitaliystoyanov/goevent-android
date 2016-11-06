@@ -3,15 +3,14 @@ package com.stoyanov.developer.goevent.mvp.model.domain;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
+import com.google.maps.android.clustering.ClusterItem;
 
 import co.uk.rushorm.core.RushObject;
 
-import static android.content.ContentValues.TAG;
-
-public class Event extends RushObject implements Parcelable {
+public class Event extends RushObject implements Parcelable, ClusterItem {
     public static final Parcelable.Creator<Event> CREATOR =
             new Parcelable.Creator<Event>() {
                 @Override
@@ -148,5 +147,10 @@ public class Event extends RushObject implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(getLocation().getLatitude(), getLocation().getLongitude());
     }
 }

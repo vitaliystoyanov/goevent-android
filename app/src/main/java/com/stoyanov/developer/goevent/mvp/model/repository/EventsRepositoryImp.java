@@ -2,6 +2,7 @@ package com.stoyanov.developer.goevent.mvp.model.repository;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.FavoriteEvent;
@@ -9,6 +10,7 @@ import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoritesEventsStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class EventsRepositoryImp implements EventsRepository {
@@ -30,13 +32,37 @@ public class EventsRepositoryImp implements EventsRepository {
     @Override
     public List<Event> getEvents() {
         List<Event> events = remoteBackendService.getEventsByLocation(50.4565951f, 30.4870897f);
-/*        if (events != null) {
+        if (events != null) {
             localEventsStorage.saveEvents(events);
-        }*/
+        }
         if (events == null && listener != null) {
             listener.notReceive();
         }
-        return events;
+        return localEventsStorage.getEvents();
+    }
+
+    @Override
+    public List<Event> getEventsEliminateNullLocation() {
+        List<Event> events = remoteBackendService.getEventsByLocation(50.4565951f, 30.4870897f);
+        if (events != null) {
+            localEventsStorage.saveEvents(events);
+        }
+        if (events == null && listener != null) {
+            listener.notReceive();
+        }
+        return removeNullLocation(localEventsStorage.getEvents());
+    }
+
+    @NonNull
+    private List<Event> removeNullLocation(List<Event> data) {
+        Iterator<Event> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            Event next = iterator.next();
+            if (next.getLocation() == null) {
+                iterator.remove();
+            }
+        }
+        return data;
     }
 
     @Override
