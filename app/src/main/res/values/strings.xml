@@ -32,6 +32,8 @@
     <string name="location_country_city_format">%1$s, %2$s</string>
     <string name="action_favorite">Favorite</string>
     <string name="message_action_update">Update</string>
+    <string name="title_notification_settings">Notification settings</string>
+    <string name="title_settings">Settings</string>
 
     <string-array name="categories_of_events_in_spinner">
         <item>Nightlife</item>

@@ -18,7 +18,7 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     public void onItemNotifications() {
-        getView().goToNotification();
+        getView().goToNotificationSettings();
     }
 
     public void onItemFavorites() {

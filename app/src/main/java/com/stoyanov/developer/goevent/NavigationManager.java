@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
+import com.stoyanov.developer.goevent.ui.activity.SettingsActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
 import com.stoyanov.developer.goevent.ui.fragment.FavoritesFragment;
 import com.stoyanov.developer.goevent.ui.fragment.FeedBackFragment;
@@ -40,7 +41,6 @@ public class NavigationManager {
         for (int i = 0; i < backStackCount; i++) {
             int backStackId = manager.getBackStackEntryAt(i).getId();
             manager.popBackStack(backStackId, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
         }
     }
 
@@ -74,10 +74,6 @@ public class NavigationManager {
         openAsRoot(new FavoritesFragment());
     }
 
-    public void goToNotifications() {
-
-    }
-
     public void goToNearby() {
         openAsRoot(new NearbyEventsFragment());
     }
@@ -88,5 +84,9 @@ public class NavigationManager {
 
     public void goToSearchEvents(Context context) {
         context.startActivity(new Intent(context, LoginActivity.class));
+    }
+
+    public void goToNotificationSettings(Context context) {
+        context.startActivity(new Intent(context, SettingsActivity.class));
     }
 }

@@ -42,7 +42,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class NearbyEventsFragment extends Fragment implements NearbyEventsView, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class NearbyEventsFragment extends Fragment
+        implements NearbyEventsView, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "NearbyEventsFragment";
     @Inject
     NearbyEventsPresenter presenter;

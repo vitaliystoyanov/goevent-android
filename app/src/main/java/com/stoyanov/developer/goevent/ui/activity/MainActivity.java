@@ -17,8 +17,7 @@ import com.stoyanov.developer.goevent.mvp.view.MainView;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity
-        implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView {
     private static final String TAG = "MainActivity";
     @Inject
     NavigationManager navigationManager;
@@ -127,8 +126,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void goToNotification() {
-        navigationManager.goToNotifications();
+    public void goToNotificationSettings() {
+        navigationManager.goToNotificationSettings(this);
     }
 
     public ActivityComponent getActivityComponent() {

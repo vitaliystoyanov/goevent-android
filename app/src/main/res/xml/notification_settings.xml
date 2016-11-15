@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.jenzz.materialpreference.PreferenceCategory android:title="Notifcations">
+        <com.jenzz.materialpreference.CheckBoxPreference
+            android:disableDependentsState="true"
+            android:key="pref_nearby_events"
+            android:summaryOff="Notify about nearby events based on your location: Off"
+            android:summaryOn="Notify about nearby events based on your location: On"
+            android:title="Nearby events" />
+
+        <com.jenzz.materialpreference.CheckBoxPreference
+            android:disableDependentsState="true"
+            android:key="pref_upcoming_favorite_events"
+            android:summaryOff="Notify about upcoming events: Off"
+            android:summaryOn="Notify about upcoming events: On"
+            android:title="Upcoming events" />
+    </com.jenzz.materialpreference.PreferenceCategory>
+</PreferenceScreen>

@@ -12,6 +12,6 @@ public interface MainView extends BaseView {
 
     void goToAbout();
 
-    void goToNotification();
+    void goToNotificationSettings();
 
 }
