@@ -17,6 +17,7 @@ allprojects {
         maven {
             url "http://maven.rushorm.com"
         }
+        maven { url "https://jitpack.io" }
     }
 }
 

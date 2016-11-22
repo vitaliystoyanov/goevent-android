@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+            setContentView(R.layout.activity_main);
         presenter = new MainPresenter(); // FIXME: 10/16/16 to dagger
         setupDagger();
         setupNavigationDrawer();
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     presenter.onItemNearby();
                 } else if (i == R.id.drawer_item_notification) {
                     presenter.onItemNotifications();
-                } else if (i == R.id.drawer_item_favorites) {
+                } else if (i == R.id.drawer_item_saved) {
                     presenter.onItemFavorites();
                 }
                 return true;

@@ -8,27 +8,37 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.like.IconType;
+import com.like.LikeButton;
+import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
+import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
+import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
 import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
+    @Inject
+    SavedEventsManager savedEventsManager;
     private List<Event> data;
     private Context context;
+    private OnLikeItemClickListener onLikeItemClickListener;
     private OnItemClickListener onItemClickListener;
-    private OnLikeButtonClickListener onLikeButtonClickListener;
 
-    public EventsAdapter(Context context, OnItemClickListener listener,
-                         OnLikeButtonClickListener onLikeButtonClickListener) {
-        this.onLikeButtonClickListener = onLikeButtonClickListener;
-        onItemClickListener = listener;
-        data = new ArrayList<>();
+    public EventsAdapter(Context context, OnItemClickListener onItemClickListener,
+                         OnLikeItemClickListener onLikeItemClickListener) {
+        (MainApplication.getApplicationComponent(context)).inject(this);
+        this.onLikeItemClickListener = onLikeItemClickListener;
+        this.onItemClickListener = onItemClickListener;
         this.context = context;
+        data = new ArrayList<>();
     }
 
     public void removeAndAdd(List<Event> events) {
@@ -37,15 +47,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    public List<Event> getData() {
-        return data;
+    public void remove(int position) {
+        data.remove(position);
+        notifyDataSetChanged();
+    }
+
+    public Event getItem(int position) {
+        return data.get(position);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_item_event, parent, false);
-        return new ViewHolder(view, onItemClickListener, onLikeButtonClickListener);
+        return new ViewHolder(view, onItemClickListener, onLikeItemClickListener);
     }
 
     @Override
@@ -59,20 +74,21 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     .centerCrop()
                     .into(holder.image);
         }
-        holder.when.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
-                DateUtil.toDate(event.getEndTime())));
+        if (event.getStartTime() != null && event.getEndTime() != null) {
+            holder.when.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
+                    DateUtil.toDate(event.getEndTime())));
+        }
         Location location = event.getLocation();
         if (location != null) {
-            holder.location.setText(context.getResources()
-                    .getString(R.string.location_field_full_format,
+            holder.location.setText(
+                    context.getResources().getString(R.string.location_field_full_format,
                             location.getCity(),
                             location.getCountry(),
-                            location.getStreet())
-            );
-
+                            location.getStreet()));
         } else {
-            // FIXME: 03.11.2016
+            holder.location.setText(R.string.text_no_location);
         }
+        holder.star.setLiked(savedEventsManager.isSaved(event));
         holder.name.setText(event.getName());
     }
 
@@ -87,9 +103,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     }
 
-    public interface OnLikeButtonClickListener {
+    public interface OnLikeItemClickListener extends OnLikeListener {
 
-        void onLikeClick(int position);
+        void onItem(int position);
 
     }
 
@@ -99,22 +115,25 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         public TextView when;
         public ImageView image;
         public TextView location;
+        private LikeButton star;
         private OnItemClickListener itemClickListener;
-        private OnLikeButtonClickListener likeButtonClickListener;
-        private ImageView like;
+        private OnLikeItemClickListener onLikeItemClickListener;
 
         public ViewHolder(View view, OnItemClickListener itemClickListener,
-                          OnLikeButtonClickListener likeButtonClickListener) {
+                          OnLikeItemClickListener onLikeItemClickListener) {
             super(view);
             this.itemClickListener = itemClickListener;
-            this.likeButtonClickListener = likeButtonClickListener;
+            this.onLikeItemClickListener = onLikeItemClickListener;
             name = (TextView) view.findViewById(R.id.item_event_name);
             when = (TextView) view.findViewById(R.id.item_event_when);
             location = (TextView) view.findViewById(R.id.item_event_where);
             image = (ImageView) view.findViewById(R.id.card_item_image);
-            like = (ImageView) view.findViewById(R.id.card_item_like);
+            star = (LikeButton) view.findViewById(R.id.card_item_star);
+            star.setIconSizeDp(22);
+            star.setIcon(IconType.Star); // FIXME: 22.11.2016 to xml
 
-            like.setOnClickListener(this);
+            star.setOnLikeListener(onLikeItemClickListener);
+            star.setOnClickListener(this);
             image.setOnClickListener(this);
         }
 
@@ -122,8 +141,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         public void onClick(View view) {
             if (view.getId() == R.id.card_item_image && itemClickListener != null) {
                 itemClickListener.onItem(getAdapterPosition());
-            } else if (view.getId() == R.id.card_item_like && likeButtonClickListener != null) {
-                likeButtonClickListener.onLikeClick(getAdapterPosition());
+            } else if (view.getId() == R.id.card_item_star && onLikeItemClickListener != null) {
+                onLikeItemClickListener.onItem(getAdapterPosition());
+                star.onClick(view);
             }
         }
     }

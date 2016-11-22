@@ -3,7 +3,7 @@
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
     <string name="drawer_list_of_events">List of events</string>
-    <string name="drawer_favorites">Favorites</string>
+    <string name="drawer_saved">Favorites</string>
     <string name="drawer_nearby">Nearby</string>
     <string name="drawer_map">Map</string>
     <string name="drawer_notifications">Notifications</string>
@@ -11,7 +11,8 @@
     <string name="drawer_help">Help</string>
     <string name="drawer_about">Feedback</string>
     <string name="title_activity_search">Search events</string>
-    <string name="toolbar_title_favorites">Favorites</string>
+    <string name="toolbar_title_saved_events">%1$d saved events</string>
+    <string name="toolbar_title_no_saved_events">Saved events</string>
     <string name="card_item_more">MORE</string>
     <string name="card_item_share">SHARE</string>
     <string name="login_password_field">Password</string>
@@ -34,6 +35,13 @@
     <string name="message_action_update">Update</string>
     <string name="title_notification_settings">Notification settings</string>
     <string name="title_settings">Settings</string>
+    <string name="contact_us_button_send">Send</string>
+    <string name="contact_us_title_in_text_field">Message</string>
+    <string name="contact_us_your_message">Your message</string>
+    <string name="message_you_have_favorite_events">You have %1$d favorite events</string>
+    <string name="action_undo">UNDO</string>
+    <string name="text_no_location">no location</string>
+    <string name="text_you_don_t_have_saved_events">You don\'t have saved events.</string>
 
     <string-array name="categories_of_events_in_spinner">
         <item>Nightlife</item>

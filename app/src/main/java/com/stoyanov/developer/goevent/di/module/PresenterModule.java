@@ -4,6 +4,7 @@ import android.app.Application;
 import android.support.v4.app.LoaderManager;
 
 import com.stoyanov.developer.goevent.mvp.presenter.DetailPresenter;
+import com.stoyanov.developer.goevent.mvp.presenter.SavedEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
 
@@ -21,6 +22,11 @@ public class PresenterModule {
     @Provides
     DetailPresenter provideDetailPresenter() {
         return new DetailPresenter();
+    }
+
+    @Provides
+    SavedEventsPresenter provideFavoriteEventsPresenter(Application application) {
+        return new SavedEventsPresenter(application);
     }
 
     @Provides

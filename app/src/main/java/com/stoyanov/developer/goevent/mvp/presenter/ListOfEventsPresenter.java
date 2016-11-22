@@ -6,11 +6,15 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
+import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
+import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
 import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         implements LoaderManager.LoaderCallbacks<List<Event>> {
@@ -18,10 +22,14 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     private final static int EVENTS_QUERY = 11;
     private final LoaderManager loaderManager;
     private final Context context;
+    @Inject
+    SavedEventsManager savedEventsManager;
+    private Event savedEvent;
 
     public ListOfEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
         this.context = context;
+        (MainApplication.getApplicationComponent(context)).inject(this);
     }
 
     public void onStart() {
@@ -45,7 +53,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         return new EventsLoader(context, EventsLoader.FILTER.ALL) {
             @Override
             public void onNetworkError() {
-                if (getView() != null) getView().showMessageNetwotkError();
+                if (getView() != null) getView().showMessageNetworkError();
             }
         };
     }
@@ -71,11 +79,23 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         getView().goToDetailEvent(event);
     }
 
-    public void onItemLikeClick(Event favoriteEvent) {
-        getView().showMessageAddedToFavorite();
-    }
-
     public void onActionSearch() {
         getView().goToSearchEvents();
+    }
+
+    public void onItemStar(Event item) {
+        savedEvent = item;
+    }
+
+    public void onLike() {
+        getView().showMessageAddedToFavorite();
+        if (savedEvent != null) {
+            Log.d(TAG, "onLike: savedEventsManager.add(savedEvent);");
+            savedEventsManager.add(savedEvent);
+        }
+    }
+
+    public void onUnlike() {
+        if (savedEvent != null) savedEventsManager.remove(savedEvent);
     }
 }

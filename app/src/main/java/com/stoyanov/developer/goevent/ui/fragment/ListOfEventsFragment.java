@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
+import com.like.LikeButton;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
@@ -117,12 +118,23 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
         adapter = new EventsAdapter(getContext(), new EventsAdapter.OnItemClickListener() {
             @Override
             public void onItem(int position) {
-                presenter.onItem(adapter.getData().get(position));
+                presenter.onItem(adapter.getItem(position));
             }
-        }, new EventsAdapter.OnLikeButtonClickListener() {
+        }, new EventsAdapter.OnLikeItemClickListener() {
+
             @Override
-            public void onLikeClick(int position) {
-                presenter.onItemLikeClick(adapter.getData().get(position));
+            public void onItem(int position) {
+                presenter.onItemStar(adapter.getItem(position));
+            }
+
+            @Override
+            public void liked(LikeButton likeButton) {
+                presenter.onLike();
+            }
+
+            @Override
+            public void unLiked(LikeButton likeButton) {
+                presenter.onUnlike();
             }
         });
         recyclerView.setAdapter(adapter);
@@ -192,7 +204,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
 
     @Override
     public void showEvents(List<Event> events) {
-        Log.d(TAG, "showEvents: events size: " + events.size());
+        Log.d(TAG, "showSaved: events size: " + events.size());
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
@@ -232,7 +244,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     }
 
     @Override
-    public void showMessageNetwotkError() {
+    public void showMessageNetworkError() {
         Snackbar.make(coordinatorLayout,
                 R.string.message_bad_connection, Snackbar.LENGTH_LONG)
                 .show();

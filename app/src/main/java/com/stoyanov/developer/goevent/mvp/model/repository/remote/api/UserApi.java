@@ -1,6 +1,6 @@
 package com.stoyanov.developer.goevent.mvp.model.repository.remote.api;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.FavoriteEvent;
+import com.stoyanov.developer.goevent.mvp.model.domain.SavedEvent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Login;
 import com.stoyanov.developer.goevent.mvp.model.domain.SuccessLogout;
 import com.stoyanov.developer.goevent.mvp.model.domain.Token;
@@ -22,7 +22,7 @@ public interface UserApi {
     Call<SuccessLogout> logout();
 
     @GET("user/user-events")
-    Call<List<FavoriteEvent>> getFavoriteEvents();
+    Call<List<SavedEvent>> getFavoriteEvents();
 
     @POST("user/new-event")
     Call<Response> addFavoriteEvents();

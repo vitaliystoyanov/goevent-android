@@ -4,10 +4,11 @@ import android.app.Application;
 
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsStorage;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoritesEventsLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoritesEventsStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorageImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 
@@ -15,7 +16,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class EventsRepositoryModule {
+public class EventsModule {
 
     @Provides
     EventsStorage provideEventsLocalDataSource() {
@@ -28,14 +29,18 @@ public class EventsRepositoryModule {
     }
 
     @Provides
-    FavoritesEventsStorage provideFavoritesEventsStorage() {
-        return new FavoritesEventsLocalStorageImp();
+    SavedEventsLocalStorage provideFavoritesEventsStorage() {
+        return new SavedEventsLocalStorageImp();
+    }
+
+    @Provides
+    SavedEventsManager provideFavoriteEventsManager(SavedEventsLocalStorage storage) {
+        return new SavedEventsManager(storage);
     }
 
     @Provides
     EventsRepository provideEventsRepository(EventsStorage local,
-                                             EventsBackendService remote,
-                                             FavoritesEventsStorage favorites) {
-        return new EventsRepositoryImp(local, remote, favorites);
+                                             EventsBackendService remote) {
+        return new EventsRepositoryImp(local, remote);
     }
 }

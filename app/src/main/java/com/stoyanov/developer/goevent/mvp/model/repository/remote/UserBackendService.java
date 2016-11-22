@@ -2,7 +2,7 @@ package com.stoyanov.developer.goevent.mvp.model.repository.remote;
 
 import android.support.annotation.Nullable;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.FavoriteEvent;
+import com.stoyanov.developer.goevent.mvp.model.domain.SavedEvent;
 import com.stoyanov.developer.goevent.mvp.model.domain.SuccessLogout;
 import com.stoyanov.developer.goevent.mvp.model.domain.Token;
 
@@ -16,8 +16,8 @@ public interface UserBackendService {
     @Nullable
     SuccessLogout logout();
 
-    List<FavoriteEvent> getUserFavoriteEvent();
+    List<SavedEvent> getUserFavoriteEvent();
 
-    void addFavoriteEvent(FavoriteEvent event);
+    void addFavoriteEvent(SavedEvent event);
 
 }

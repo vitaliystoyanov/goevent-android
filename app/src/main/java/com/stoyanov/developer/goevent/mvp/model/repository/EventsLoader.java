@@ -30,9 +30,10 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
     @Override
     public List<Event> loadInBackground() {
         if (filter == FILTER.ALL) {
+            Log.d(TAG, "loadInBackground: ALL");
             return repository.getEvents();
         } else if (filter == FILTER.ELIMINATE_NULL_LOCATION) {
-            Log.d(TAG, "loadInBackground: ");
+            Log.d(TAG, "loadInBackground: ELIMINATE_NULL_LOCATION");
             return repository.getEventsEliminateNullLocation();
         } else {
             return new ArrayList<>();

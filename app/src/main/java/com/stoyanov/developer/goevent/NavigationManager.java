@@ -10,8 +10,8 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SettingsActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
-import com.stoyanov.developer.goevent.ui.fragment.FavoritesFragment;
-import com.stoyanov.developer.goevent.ui.fragment.FeedBackFragment;
+import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.FeedbackFragment;
 import com.stoyanov.developer.goevent.ui.fragment.ListOfEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
 
@@ -63,7 +63,7 @@ public class NavigationManager {
     }
 
     public void goToAbout() {
-        openAsRoot(new FeedBackFragment());
+        openAsRoot(new FeedbackFragment());
     }
 
     public void goToLoginForm(Context context) {
@@ -71,7 +71,7 @@ public class NavigationManager {
     }
 
     public void goToFavorites() {
-        openAsRoot(new FavoritesFragment());
+        openAsRoot(new SavedEventsFragment());
     }
 
     public void goToNearby() {

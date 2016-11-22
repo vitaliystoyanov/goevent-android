@@ -8,10 +8,11 @@ import android.view.ViewGroup;
 
 import com.stoyanov.developer.goevent.R;
 
-public class FeedBackFragment extends Fragment {
+public class FeedbackFragment extends Fragment {
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_feedback, null);
     }
 }
