@@ -13,3 +13,5 @@ A mobile application for searching Facebook events developed according to a prov
 * [Floating Search View ] (https://github.com/arimorty/floatingsearchview)
 * [Material Edit Text] (https://github.com/rengwuxian/MaterialEditText)
 * [Expandable Text View] (https://github.com/Manabu-GT/ExpandableTextView)
+* [Like Button] (https://github.com/jd-alexander/LikeButton)
+* [Material Preference] (https://github.com/jenzz/Android-MaterialPreference)
