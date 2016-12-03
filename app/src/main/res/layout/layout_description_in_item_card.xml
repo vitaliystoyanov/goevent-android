@@ -26,7 +26,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/item_event_name"
-        android:layout_marginBottom="4dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         app:srcCompat="@drawable/ic_access_time_18px" />
@@ -39,6 +38,8 @@
         android:layout_toEndOf="@+id/item_event_image_when"
         android:layout_toRightOf="@+id/item_event_image_when"
         android:gravity="center_vertical|start"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
         android:textColor="@color/colorSpecialText"
         android:textSize="14sp"
         tool:text="Today, 10:00 AM - 12:00 AM" />
@@ -47,8 +48,7 @@
         android:id="@+id/item_event_image_where"
         android:layout_width="wrap_content"
         android:layout_height="24dp"
-        android:layout_below="@+id/item_event_image_when"
-        android:layout_marginLeft="16dp"
+        android:layout_below="@+id/item_event_image_category"
         android:layout_marginRight="16dp"
         android:layout_toLeftOf="@+id/item_event_when"
         android:layout_toStartOf="@+id/item_event_when"
@@ -59,11 +59,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/item_event_when"
-        android:layout_alignStart="@+id/item_event_when"
-        android:layout_alignTop="@+id/item_event_image_where"
+        android:layout_below="@+id/item_event_category"
         android:layout_marginBottom="16dp"
-        android:layout_marginTop="3dp"
         android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:minHeight="24dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
         android:textSize="14sp"
         tool:text="Kyiv, yangelya st. 20" />
+
+    <ImageView
+        android:id="@+id/item_event_image_category"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_below="@+id/item_event_image_when"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@+id/item_event_category"
+        android:layout_toStartOf="@+id/item_event_category"
+        app:srcCompat="@drawable/ic_category_18px" />
+
+    <TextView
+        android:id="@+id/item_event_category"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_alignLeft="@+id/item_event_when"
+        android:layout_below="@+id/item_event_when"
+        android:gravity="center_vertical|start"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+        tool:text="Conference" />
+
 </RelativeLayout>

@@ -37,7 +37,7 @@ public class EventsRepositoryImp implements EventsRepository {
 
     @Override
     public List<Event> getEventsEliminateNullLocation() {
-        List<Event> events =  remoteBackendService.getEvents();
+        List<Event> events = remoteBackendService.getEvents();
         if (events != null) {
             localEventsStorage.saveEvents(events);
         }
@@ -60,7 +60,7 @@ public class EventsRepositoryImp implements EventsRepository {
     }
 
     @Override
-    public void addOnNotReceiveRemoteListener(OnNotReceiveRemoteListener listener) {
+    public void addOnNetworkErrorListener(OnNotReceiveRemoteListener listener) {
         this.listener = listener;
     }
 }

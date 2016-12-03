@@ -17,9 +17,13 @@ import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
+import com.stoyanov.developer.goevent.ui.common.Comparators;
 import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -56,6 +60,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return data.get(position);
     }
 
+    public void sortBy(SORT... params) {
+        for (SORT p: params) {
+            if (p == SORT.DATE) {
+                Collections.sort(data, new Comparators.EventsComparatorByStartTime());
+            } else if (p == SORT.LOCATION) {
+                Collections.sort(data, new Comparators.EventsComparatorLocation());
+            }
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -78,6 +93,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             holder.when.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
                     DateUtil.toDate(event.getEndTime())));
         }
+        if (event.getCategory() != null) {
+            holder.category.setText(event.getCategory());
+        }
         Location location = event.getLocation();
         if (location != null) {
             holder.location.setText(
@@ -95,6 +113,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return (data != null ? data.size() : 0);
+    }
+
+    public enum SORT {
+        DATE, LOCATION
     }
 
     public interface OnItemClickListener {
@@ -115,6 +137,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         public TextView when;
         public ImageView image;
         public TextView location;
+        public TextView category;
         private LikeButton star;
         private OnItemClickListener itemClickListener;
         private OnLikeItemClickListener onLikeItemClickListener;
@@ -126,6 +149,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             this.onLikeItemClickListener = onLikeItemClickListener;
             name = (TextView) view.findViewById(R.id.item_event_name);
             when = (TextView) view.findViewById(R.id.item_event_when);
+            category = (TextView) view.findViewById(R.id.item_event_category);
             location = (TextView) view.findViewById(R.id.item_event_where);
             image = (ImageView) view.findViewById(R.id.card_item_image);
             star = (LikeButton) view.findViewById(R.id.card_item_star);

@@ -31,22 +31,6 @@
         app:layout_behavior="com.stoyanov.developer.goevent.ui.common.FABHideOnScroll"
         app:srcCompat="@drawable/ic_google_maps" />
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/list_events_swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_events_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:scrollbars="vertical" />
-    </android.support.v4.widget.SwipeRefreshLayout>
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/list_events_appbar"
         android:layout_width="match_parent"
@@ -64,7 +48,7 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/list_events_category_tabs"
+            android:id="@+id/list_events_tabs"
             android:layout_width="match_parent"
             android:layout_height="@dimen/tabs_height"
             android:layout_gravity="bottom"
@@ -78,15 +62,28 @@
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Popular" />
+                android:text="Location" />
 
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location" />
+                android:text="Custom" />
 
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/list_events_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/list_of_events_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>

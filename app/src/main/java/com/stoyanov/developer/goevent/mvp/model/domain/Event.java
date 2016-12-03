@@ -31,6 +31,8 @@ public class Event extends RushObject implements Parcelable, ClusterItem {
     private String name;
     @SerializedName("eventDescription")
     private String description;
+    @SerializedName("eventCategory")
+    private String category;
     @SerializedName("eventStartTime")
     private String startTime;
     @SerializedName("eventEndTime")
@@ -90,6 +92,14 @@ public class Event extends RushObject implements Parcelable, ClusterItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getStartTime() {

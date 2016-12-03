@@ -2,12 +2,15 @@ package com.stoyanov.developer.goevent.ui.fragment;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,12 +38,20 @@ import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
 import com.stoyanov.developer.goevent.ui.adapter.CategorySpinnerAdapter;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
+import com.stoyanov.developer.goevent.ui.adapter.ViewGroupViewPagerAdapter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import static com.stoyanov.developer.goevent.ui.adapter.EventsAdapter.SORT.DATE;
+import static com.stoyanov.developer.goevent.ui.adapter.EventsAdapter.SORT.LOCATION;
+
 public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
+    public static final int VIEW_PAGER_PAGE_COUNT = 3;
+    public static final int PAGE_EVENTS_BY_DATE = 0;
+    public static final int PAGE_EVENTS_BY_LOCATION = 1;
+    public static final int PAGE_EVENTS_CUSTOM_FILTER = 2;
     private static final String TAG = "ListOfEventsFragment";
     @Inject
     ListOfEventsPresenter presenter;
@@ -53,11 +64,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     private FloatingActionButton fab;
     private CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +90,8 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
             }
         });
         setupToolbar();
-        setupRecycleView();
+        setupViewPager();
+        setupEventsAdapter();
         setupSpinner(toolbar);
     }
 
@@ -96,25 +104,60 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
         ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
     }
 
-    private void setupSpinner(Toolbar toolbar) {
-        View spinnerContainer = LayoutInflater
-                .from(getContext())
-                .inflate(R.layout.toolbar_spinner, toolbar, false);
-        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        toolbar.addView(spinnerContainer, lp);
+    private void setupViewPager() {
+        viewPager = (ViewPager) getView().findViewById(R.id.list_of_events_view_pager);
+        viewPager.setAdapter(new ViewGroupViewPagerAdapter(getContext(), VIEW_PAGER_PAGE_COUNT) {
 
-        CategorySpinnerAdapter spinnerAdapter = new CategorySpinnerAdapter(getContext(),
-                R.array.categories_of_events_in_spinner);
-        Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
-        spinner.setAdapter(spinnerAdapter);
+            @Override
+            public ViewGroup inflatePage(LayoutInflater inflater, ViewGroup container, int position) {
+                ViewGroup inflatedPage = null;
+                if (position == PAGE_EVENTS_BY_DATE) {
+                    inflatedPage = (ViewGroup) inflater.inflate(R.layout.layout_events_list_by_date, container, false);
+                    setupRecycleView(inflatedPage, R.id.list_events_recycler_view_date);
+                } else if (position == PAGE_EVENTS_BY_LOCATION) {
+                    inflatedPage = (ViewGroup) inflater.inflate(R.layout.layout_list_events_by_location, container, false);
+                    setupRecycleView(inflatedPage, R.id.list_events_recycler_view_location);
+                } else if (position == PAGE_EVENTS_CUSTOM_FILTER) {
+                    inflatedPage = (ViewGroup) inflater.inflate(R.layout.layout_list_events_custom, container, false);
+                }
+                return inflatedPage;
+            }
+        });
+
+        ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrollStateChanged(int arg0) {
+
+            }
+
+            @Override
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+            }
+
+            @Override
+            public void onPageSelected(int pos) {
+                sortEvents(pos);
+            }
+        };
+        viewPager.setOnPageChangeListener(mPageChangeListener);
+
+        TabLayout tabLayout = (TabLayout) getView().findViewById(R.id.list_events_tabs);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
-    private void setupRecycleView() {
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.list_events_recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
+    private void sortEvents(int position) {
+        if (position == PAGE_EVENTS_BY_DATE) {
+            adapter.sortBy(DATE);
+        } else if (position == PAGE_EVENTS_BY_LOCATION) {
+            adapter.sortBy(LOCATION);
+        } else if (position == PAGE_EVENTS_CUSTOM_FILTER) {
+
+        }
+    }
+
+    private void setupEventsAdapter() {
         adapter = new EventsAdapter(getContext(), new EventsAdapter.OnItemClickListener() {
             @Override
             public void onItem(int position) {
@@ -137,7 +180,28 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
                 presenter.onUnlike();
             }
         });
+    }
+
+    private void setupRecycleView(ViewGroup inflatedPage, @IdRes int res) {
+        RecyclerView recyclerView = (RecyclerView) inflatedPage.findViewById(res);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void setupSpinner(Toolbar toolbar) {
+        View spinnerContainer = LayoutInflater
+                .from(getContext())
+                .inflate(R.layout.toolbar_spinner, toolbar, false);
+        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        toolbar.addView(spinnerContainer, lp);
+
+        CategorySpinnerAdapter spinnerAdapter = new CategorySpinnerAdapter(getContext(),
+                R.array.categories_of_events_in_spinner);
+        Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
+        spinner.setAdapter(spinnerAdapter);
     }
 
     @Override
@@ -208,6 +272,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
+        sortEvents(viewPager.getCurrentItem());
     }
 
     @Override

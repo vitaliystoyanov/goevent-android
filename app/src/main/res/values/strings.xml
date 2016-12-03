@@ -40,7 +40,7 @@
     <string name="contact_us_your_message">Your message</string>
     <string name="message_you_have_favorite_events">You have %1$d favorite events</string>
     <string name="action_undo">UNDO</string>
-    <string name="text_no_location">no location</string>
+    <string name="text_no_location">No location</string>
     <string name="text_you_don_t_have_saved_events">You don\'t have saved events.</string>
 
     <string-array name="categories_of_events_in_spinner">
@@ -58,6 +58,12 @@
         <item>Conference</item>
         <item>Sports</item>
         <item>Other</item>
+    </string-array>
+
+    <string-array name="titles_of_tab">
+        <item>Date</item>
+        <item>Location</item>
+        <item>Custom</item>
     </string-array>
 
 </resources>

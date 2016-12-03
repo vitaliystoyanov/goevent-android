@@ -20,13 +20,6 @@
             android:layout_width="match_parent"
             android:layout_height="170dp" />
 
-        <include
-            android:id="@+id/card_event_description"
-            layout="@layout/layout_description_in_item_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/card_item_image" />
-
         <View
             android:id="@+id/cart_item_divider"
             android:layout_width="match_parent"
@@ -59,6 +52,15 @@
             android:paddingTop="10dp"
             android:visibility="visible"
             card_view:srcCompat="@drawable/ic_share_23px" />
+
+        <include
+            android:id="@+id/card_event_description"
+            layout="@layout/layout_description_in_item_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/card_item_image" />
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -10,7 +10,7 @@ public interface EventsRepository {
 
     @Nullable List<Event> getEvents();
 
-    void addOnNotReceiveRemoteListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
+    void addOnNetworkErrorListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
 
     List<Event> getEventsEliminateNullLocation();
 

@@ -88,7 +88,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     }
 
     public void onLike() {
-        getView().showMessageAddedToFavorite();
+//        getView().showMessageAddedToFavorite();
         if (savedEvent != null) {
             Log.d(TAG, "onLike: savedEventsManager.add(savedEvent);");
             savedEventsManager.add(savedEvent);

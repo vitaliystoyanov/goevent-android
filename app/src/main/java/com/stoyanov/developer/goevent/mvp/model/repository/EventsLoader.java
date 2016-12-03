@@ -15,7 +15,6 @@ import javax.inject.Inject;
 public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         implements EventsRepositoryImp.OnNotReceiveRemoteListener {
     private static final String TAG = "EventsLoader";
-
     @Inject
     EventsRepository repository;
     private FILTER filter;
@@ -24,7 +23,7 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         super(context);
         this.filter = filter;
         (MainApplication.getApplicationComponent(context)).inject(this);
-        repository.addOnNotReceiveRemoteListener(this);
+        repository.addOnNetworkErrorListener(this);
     }
 
     @Override
@@ -55,8 +54,8 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
 
     @Override
     protected void onReset() {
-        Log.d(TAG, "onReset: OnNotReceiveRemoteListener release");
-        repository.addOnNotReceiveRemoteListener(null);
+        Log.d(TAG, "onReset: OnNotReceiveRemoteListener is null");
+        repository.addOnNetworkErrorListener(null);
     }
 
     public enum FILTER {
