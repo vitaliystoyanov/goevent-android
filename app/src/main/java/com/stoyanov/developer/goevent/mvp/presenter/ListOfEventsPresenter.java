@@ -18,13 +18,17 @@ import javax.inject.Inject;
 
 public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         implements LoaderManager.LoaderCallbacks<List<Event>> {
+    public static final int PAGE_EVENTS_CUSTOM_FILTER = 2;
+    public static final int PAGE_EVENTS_BY_LOCATION = 1;
+    public static final int PAGE_EVENTS_BY_DATE = 0;
     private final static String TAG = "ListOfEventsPresenter";
-    private final static int EVENTS_QUERY = 11;
+    private final static int ID_LOADER_EVENTS = 11;
     private final LoaderManager loaderManager;
     private final Context context;
     @Inject
     SavedEventsManager savedEventsManager;
     private Event savedEvent;
+    private EventsLoader.SORTING_PARAM sortingParam;
 
     public ListOfEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
@@ -34,33 +38,35 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
 
     public void onStart() {
         Log.d(TAG, "onStart: ");
-        loaderManager.initLoader(EVENTS_QUERY, null, this);
+        loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
         if (getView() != null) getView().showProgressBar(true);
     }
 
     public void onRefresh() {
-        loaderManager.restartLoader(EVENTS_QUERY, null, this);
+        Log.d(TAG, "onRefresh: ");
+        loaderManager.restartLoader(ID_LOADER_EVENTS, null, this);
     }
 
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView: ");
-        loaderManager.destroyLoader(EVENTS_QUERY);
+        loaderManager.destroyLoader(ID_LOADER_EVENTS);
     }
 
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        return new EventsLoader(context, EventsLoader.FILTER.ALL) {
+        EventsLoader loader = new EventsLoader(context, EventsLoader.FILTER_PARAM.ALL) {
             @Override
             public void onNetworkError() {
                 if (getView() != null) getView().showMessageNetworkError();
             }
         };
+        loader.setSortingParam(sortingParam != null ? sortingParam : EventsLoader.SORTING_PARAM.DATE);
+        return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        if (getView() == null) return;
         if (data != null && data.size() > 0) {
             getView().showEvents(data);
         } else {
@@ -97,5 +103,16 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
 
     public void onUnlike() {
         if (savedEvent != null) savedEventsManager.remove(savedEvent);
+    }
+
+    public void onClickViewPager(int page) {
+        if (page == PAGE_EVENTS_BY_DATE) {
+            sortingParam = EventsLoader.SORTING_PARAM.DATE;
+        } else if (page == PAGE_EVENTS_BY_LOCATION) {
+            sortingParam = EventsLoader.SORTING_PARAM.LOCATION;
+        } else if (page == PAGE_EVENTS_CUSTOM_FILTER) {
+            sortingParam = EventsLoader.SORTING_PARAM.NOT;
+        }
+        loaderManager.restartLoader(ID_LOADER_EVENTS, null, this);
     }
 }

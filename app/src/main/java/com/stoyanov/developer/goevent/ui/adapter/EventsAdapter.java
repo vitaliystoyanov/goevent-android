@@ -17,13 +17,9 @@ import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
-import com.stoyanov.developer.goevent.ui.common.Comparators;
 import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,7 +43,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     public void removeAndAdd(List<Event> events) {
         data.clear();
-        if (events != null) data.addAll(events);
+        data.addAll(events);
         notifyDataSetChanged();
     }
 
@@ -58,17 +54,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     public Event getItem(int position) {
         return data.get(position);
-    }
-
-    public void sortBy(SORT... params) {
-        for (SORT p: params) {
-            if (p == SORT.DATE) {
-                Collections.sort(data, new Comparators.EventsComparatorByStartTime());
-            } else if (p == SORT.LOCATION) {
-                Collections.sort(data, new Comparators.EventsComparatorLocation());
-            }
-        }
-        notifyDataSetChanged();
     }
 
     @Override
@@ -95,6 +80,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         }
         if (event.getCategory() != null) {
             holder.category.setText(event.getCategory());
+        } else {
+            holder.category.setText(R.string.field_no_category);
         }
         Location location = event.getLocation();
         if (location != null) {
@@ -104,7 +91,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                             location.getCountry(),
                             location.getStreet()));
         } else {
-            holder.location.setText(R.string.text_no_location);
+            holder.location.setText(R.string.field_no_location);
         }
         holder.star.setLiked(savedEventsManager.isSaved(event));
         holder.name.setText(event.getName());
@@ -115,20 +102,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return (data != null ? data.size() : 0);
     }
 
-    public enum SORT {
-        DATE, LOCATION
-    }
-
     public interface OnItemClickListener {
-
         void onItem(int position);
-
     }
 
     public interface OnLikeItemClickListener extends OnLikeListener {
-
         void onItem(int position);
-
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder

@@ -44,14 +44,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import static com.stoyanov.developer.goevent.ui.adapter.EventsAdapter.SORT.DATE;
-import static com.stoyanov.developer.goevent.ui.adapter.EventsAdapter.SORT.LOCATION;
+import static com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter.PAGE_EVENTS_BY_DATE;
+import static com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter.PAGE_EVENTS_BY_LOCATION;
+import static com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter.PAGE_EVENTS_CUSTOM_FILTER;
 
 public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
-    public static final int VIEW_PAGER_PAGE_COUNT = 3;
-    public static final int PAGE_EVENTS_BY_DATE = 0;
-    public static final int PAGE_EVENTS_BY_LOCATION = 1;
-    public static final int PAGE_EVENTS_CUSTOM_FILTER = 2;
+    private static final int VIEW_PAGER_PAGE_COUNT = 3;
     private static final String TAG = "ListOfEventsFragment";
     @Inject
     ListOfEventsPresenter presenter;
@@ -61,7 +59,6 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     private EventsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private FloatingActionButton fab;
     private CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
     private ViewPager viewPager;
@@ -82,7 +79,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
                 .build()
                 .inject(this);
         coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.list_of_events_coordinator_layout);
-        fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
+        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,12 +125,10 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
 
             @Override
             public void onPageScrollStateChanged(int arg0) {
-
             }
 
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
-
             }
 
             @Override
@@ -148,13 +143,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     }
 
     private void sortEvents(int position) {
-        if (position == PAGE_EVENTS_BY_DATE) {
-            adapter.sortBy(DATE);
-        } else if (position == PAGE_EVENTS_BY_LOCATION) {
-            adapter.sortBy(LOCATION);
-        } else if (position == PAGE_EVENTS_CUSTOM_FILTER) {
-
-        }
+        presenter.onClickViewPager(position);
     }
 
     private void setupEventsAdapter() {
@@ -199,7 +188,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
         toolbar.addView(spinnerContainer, lp);
 
         CategorySpinnerAdapter spinnerAdapter = new CategorySpinnerAdapter(getContext(),
-                R.array.categories_of_events_in_spinner);
+                R.array.items_date_for_spinner);
         Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
         spinner.setAdapter(spinnerAdapter);
     }
@@ -249,11 +238,6 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
         presenter.detach();
@@ -272,17 +256,10 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
-        sortEvents(viewPager.getCurrentItem());
     }
 
     @Override
     public void showEmpty() {
-
-    }
-
-    @Override
-    public void goToSearchEvents() {
-        navigationManager.goToSearchEvents(getContext());
     }
 
     @Override
@@ -296,6 +273,11 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
                 })
                 .setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorActionText))
                 .show();
+    }
+
+    @Override
+    public void goToSearchEvents() {
+        navigationManager.goToSearchEvents(getContext());
     }
 
     @Override

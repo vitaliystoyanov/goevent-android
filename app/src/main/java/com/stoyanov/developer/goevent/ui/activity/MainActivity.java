@@ -133,5 +133,4 @@ public class MainActivity extends AppCompatActivity implements MainView {
     public ActivityComponent getActivityComponent() {
         return activityComponent;
     }
-
 }

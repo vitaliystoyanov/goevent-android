@@ -6,8 +6,9 @@ import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.ui.common.Comparators;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,32 +18,48 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
     private static final String TAG = "EventsLoader";
     @Inject
     EventsRepository repository;
-    private FILTER filter;
+    private SORTING_PARAM sortingParam;
+    private FILTER_PARAM filter;
 
-    public EventsLoader(Context context, FILTER filter) {
+    public EventsLoader(Context context, FILTER_PARAM filter) {
         super(context);
         this.filter = filter;
+        sortingParam = SORTING_PARAM.NOT;
         (MainApplication.getApplicationComponent(context)).inject(this);
         repository.addOnNetworkErrorListener(this);
     }
 
     @Override
     public List<Event> loadInBackground() {
-        if (filter == FILTER.ALL) {
-            Log.d(TAG, "loadInBackground: ALL");
-            return repository.getEvents();
-        } else if (filter == FILTER.ELIMINATE_NULL_LOCATION) {
-            Log.d(TAG, "loadInBackground: ELIMINATE_NULL_LOCATION");
-            return repository.getEventsEliminateNullLocation();
-        } else {
-            return new ArrayList<>();
+        List<Event> loaded = null;
+        if (filter == FILTER_PARAM.ALL) {
+            loaded = repository.getEvents();
+        } else if (filter == FILTER_PARAM.ELIMINATE_NULL_LOCATION) {
+            loaded = repository.getEventsEliminateNullLocation();
         }
+
+        if (loaded == null) return null;
+
+        if (sortingParam == SORTING_PARAM.DATE) {
+            Collections.sort(loaded, new Comparators.EventsComparatorByDate());
+        } else if (sortingParam == SORTING_PARAM.LOCATION) {
+            Collections.sort(loaded, new Comparators.EventsComparatorLocation());
+        }
+        return loaded;
     }
 
     @Override
     protected void onStartLoading() {
         Log.d(TAG, "onStartLoading: ");
         forceLoad();
+    }
+
+    public SORTING_PARAM getSortingParam() {
+        return sortingParam;
+    }
+
+    public void setSortingParam(SORTING_PARAM param) {
+        sortingParam = param;
     }
 
     public abstract void onNetworkError();
@@ -58,7 +75,11 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         repository.addOnNetworkErrorListener(null);
     }
 
-    public enum FILTER {
+    public enum FILTER_PARAM {
         ELIMINATE_NULL_LOCATION, ALL
+    }
+
+    public enum SORTING_PARAM {
+        DATE, LOCATION, NOT
     }
 }

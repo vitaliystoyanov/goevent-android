@@ -12,7 +12,7 @@ public class Comparators {
 
     private static final String TAG = "Comparators";
 
-    public static class EventsComparatorByStartTime implements Comparator<Event> {
+    public static class EventsComparatorByDate implements Comparator<Event> {
         @Override
         public int compare(Event event, Event t1) {
             Date date1 = DateUtil.toDate(event.getStartTime());

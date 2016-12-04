@@ -2,7 +2,6 @@ package com.stoyanov.developer.goevent.ui.adapter;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +16,7 @@ public abstract class ViewGroupViewPagerAdapter extends PagerAdapter {
     private Context context;
 
     public ViewGroupViewPagerAdapter(Context context, int pageCount) {
-        titles = context.getResources().getStringArray(R.array.titles_of_tab);
+        titles = context.getResources().getStringArray(R.array.item_titles_of_tab);
         this.context = context;
         this.pageCount = pageCount;
         if (titles.length != pageCount) {

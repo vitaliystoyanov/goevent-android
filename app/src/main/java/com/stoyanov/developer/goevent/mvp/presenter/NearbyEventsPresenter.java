@@ -37,7 +37,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        return new EventsLoader(context, EventsLoader.FILTER.ELIMINATE_NULL_LOCATION) {
+        return new EventsLoader(context, EventsLoader.FILTER_PARAM.ELIMINATE_NULL_LOCATION) {
             @Override
             public void onNetworkError() {
                 if (getView() != null) getView().showMessageNetworkError();
