@@ -46,7 +46,7 @@
         </android.support.design.widget.TabLayout>
 
         <com.google.android.gms.maps.MapView
-            android:id="@+id/event_map_routes_map"
+            android:id="@+id/detail_event_routes_map"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
 

@@ -14,6 +14,8 @@ public interface DetailEventView extends BaseView {
 
     void showRoutes();
 
+    void showCategory(String category);
+
     void showMessageAddedToFavorites();
 
 }

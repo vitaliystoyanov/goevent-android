@@ -34,6 +34,11 @@ import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
+
 public class DetailEventFragment extends Fragment
         implements DetailEventView, OnMapReadyCallback {
     public static final String EXTRA_PARCELABLE_EVENT = "EXTRA_PARCELABLE_EVENT";
@@ -41,14 +46,31 @@ public class DetailEventFragment extends Fragment
     NavigationManager navigationManager;
     @Inject
     DetailPresenter presenter;
-    private MapView mapView;
+
+    @BindView(R.id.detail_event_routes_map)
+    MapView mapView;
+    @BindView(R.id.detail_event_coordinator)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.description_expand_text_view)
+    ExpandableTextView expandableTextView;
+    @BindView(R.id.detail_event_info_duration_time)
+    TextView durationTime;
+    @BindView(R.id.detail_event_info_location_county_city)
+    TextView countryAndCity;
+    @BindView(R.id.detail_event_info_location_street)
+    TextView street;
+    @BindView(R.id.detail_event_image)
+    ImageView image;
+    @BindView(R.id.detail_event_name)
+    TextView eventName;
+    @BindView(R.id.event_info_category)
+    TextView category;
+    @BindView(R.id.detail_event_toolbar)
+    Toolbar toolbar;
+
     private GoogleMap map;
-    private CoordinatorLayout coordinatorLayout;
-    private ExpandableTextView expandableTextView;
     private LatLng location;
-    private TextView durationTime;
-    private TextView countryAndCity;
-    private TextView street;
+    private Unbinder unbinder;
 
     public static Fragment newInstance(Event event) {
         Bundle bundle = new Bundle();
@@ -61,7 +83,9 @@ public class DetailEventFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_detail_event, null);
+        View view = inflater.inflate(R.layout.fragment_detail_event, null);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
@@ -72,25 +96,16 @@ public class DetailEventFragment extends Fragment
                 .build()
                 .inject(this);
         setupToolbar();
-        coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.detail_event_coordinator);
-        expandableTextView = (ExpandableTextView) getView().findViewById(R.id.description_expand_text_view);
-        durationTime = (TextView) getView().findViewById(R.id.event_info_duration_time);
-        countryAndCity = (TextView) getView().findViewById(R.id.event_info_location_county_city);
-        street = (TextView) getView().findViewById(R.id.event_info_location_street);
-        getView().findViewById(R.id.detail_event_fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.onLikeClick();
-            }
-        });
-        mapView = (MapView) getView().findViewById(R.id.event_map_routes_map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
 
+    @OnClick(R.id.detail_event_fab)
+    public void onClickSaveFab() {
+        presenter.onSaveClick();
+    }
+
     private void setupToolbar() {
-        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.detail_event_toolbar);
-        toolbar.setTitle(R.string.title_detail_event);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -116,16 +131,17 @@ public class DetailEventFragment extends Fragment
                     .load(url)
                     .fit()
                     .centerCrop()
-                    .into((ImageView) getView().findViewById(R.id.detail_event_image));
+                    .into(image);
         } else {
-            // FIXME: 03.11.2016
+            // FIXME: 05.12.2016
         }
     }
 
     @Override
     public void showDescription(String desc, String name) {
         expandableTextView.setText(desc);
-        ((TextView) getView().findViewById(R.id.description_event_name)).setText(name);
+        eventName.setText(name);
+        toolbar.setTitle(name);
     }
 
     @Override
@@ -135,7 +151,10 @@ public class DetailEventFragment extends Fragment
 
     @Override
     public void showLocation(Location location) {
-        if (location == null) return;
+        if (location == null) {
+            countryAndCity.setText(R.string.field_no_location);
+            return;
+        }
         countryAndCity.setText(getResources()
                 .getString(R.string.location_country_city_format,
                         location.getCity(), location.getCountry())
@@ -150,7 +169,15 @@ public class DetailEventFragment extends Fragment
 
     @Override
     public void showRoutes() {
+    }
 
+    @Override
+    public void showCategory(String category) {
+        if (category == null || category.isEmpty()) {
+            this.category.setText(R.string.field_no_category);
+            return;
+        }
+        this.category.setText(category);
     }
 
     @Override
@@ -176,8 +203,10 @@ public class DetailEventFragment extends Fragment
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.getUiSettings().setMyLocationButtonEnabled(false);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
-        map.addMarker(new MarkerOptions().position(location));
+        if (location != null) {
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+            map.addMarker(new MarkerOptions().position(location));
+        }
     }
 
     @Override
@@ -189,7 +218,7 @@ public class DetailEventFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapView.onDestroy();
+        if (mapView != null) mapView.onDestroy(); // FIXME: 05.12.2016
     }
 
     @Override
@@ -202,5 +231,6 @@ public class DetailEventFragment extends Fragment
     public void onDestroyView() {
         super.onDestroyView();
         presenter.onDestroyView();
+        unbinder.unbind();
     }
 }

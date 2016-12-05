@@ -39,7 +39,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     public void onStart() {
         Log.d(TAG, "onStart: ");
         loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
-        if (getView() != null) getView().showProgressBar(true);
+        if (getView() != null) getView().showProgress(true);
     }
 
     public void onRefresh() {
@@ -49,7 +49,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
 
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView: ");
-        loaderManager.destroyLoader(ID_LOADER_EVENTS);
+//        loaderManager.destroyLoader(ID_LOADER_EVENTS);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         } else {
             getView().showEmpty();
         }
-        getView().showProgressBar(false);
+        getView().showProgress(false);
         if (data != null) Log.d(TAG, "onLoadFinished: data size:" + data.size());
     }
 
@@ -106,6 +106,8 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     }
 
     public void onClickViewPager(int page) {
+        getView().showProgress(true);
+        getView().clearEvents();
         if (page == PAGE_EVENTS_BY_DATE) {
             sortingParam = EventsLoader.SORTING_PARAM.DATE;
         } else if (page == PAGE_EVENTS_BY_LOCATION) {

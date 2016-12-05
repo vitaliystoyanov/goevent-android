@@ -10,7 +10,9 @@ public interface ListOfEventsView extends BaseView {
 
     void showEmpty();
 
-    void showProgressBar(boolean state);
+    void clearEvents();
+
+    void showProgress(boolean state);
 
     void showMessageNetworkError();
 

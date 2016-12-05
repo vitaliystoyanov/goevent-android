@@ -52,6 +52,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
+    public void removeAll() {
+        data.clear();
+        notifyDataSetChanged();
+    }
+
     public Event getItem(int position) {
         return data.get(position);
     }

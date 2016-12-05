@@ -11,13 +11,14 @@ public class DetailPresenter extends BasePresenter<DetailEventView> {
         getView().showDescription(event.getDescription(), event.getName());
         getView().showLocation(event.getLocation());
         getView().showWhen(event.getStartTime(), event.getEndTime());
+        getView().showCategory(event.getCategory());
     }
 
     public void onDestroyView() {
 
     }
 
-    public void onLikeClick() {
+    public void onSaveClick() {
         getView().showMessageAddedToFavorites();
     }
 }

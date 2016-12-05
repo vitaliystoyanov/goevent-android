@@ -24,7 +24,7 @@
     <string name="event_map_routes_routes">Routes</string>
     <string name="event_map_routes_open_map">Open map</string>
     <string name="event_info_location">Location</string>
-    <string name="event_info_people_attending">People attending</string>
+    <string name="event_info_category">Category</string>
     <string name="registration_create">Create</string>
     <string name="message_event_added_favorite">This event added to Favorite</string>
     <string name="message_bad_connection">Check your connection or try again later</string>

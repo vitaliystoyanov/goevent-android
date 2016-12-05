@@ -29,7 +29,7 @@
                 android:layout_gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/event_info_duration_time"
+                    android:id="@+id/detail_event_info_duration_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorSpecialText"
@@ -39,7 +39,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/event_info_duration_time"
+                    android:layout_below="@+id/detail_event_info_duration_time"
                     android:text="@string/description_time"
                     android:textColor="@color/colorSecondaryText"
                     android:textSize="16sp" />
@@ -66,7 +66,7 @@
                 android:layout_gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/event_info_location_street"
+                    android:id="@+id/detail_event_info_location_street"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimaryText"
@@ -74,10 +74,10 @@
                     tool:text="Kreschatyk st., 23"/>
 
                 <TextView
-                    android:id="@+id/event_info_location_county_city"
+                    android:id="@+id/detail_event_info_location_county_city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/event_info_location_street"
+                    android:layout_below="@+id/detail_event_info_location_street"
                     android:textColor="@color/colorSecondaryText"
                     android:textSize="16sp"
                     tool:text="Kyiv, Ukraine" />
@@ -96,7 +96,7 @@
                 android:layout_width="72dp"
                 android:layout_height="match_parent"
                 android:scaleType="center"
-                app:srcCompat="@drawable/ic_people_gray_24px" />
+                app:srcCompat="@drawable/ic_category_24px" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -104,18 +104,17 @@
                 android:layout_gravity="center_vertical">
 
                 <TextView
-                    android:id="@+id/event_info_people_attending"
+                    android:id="@+id/event_info_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="234"
                     android:textColor="@color/colorPrimaryText"
                     android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/event_info_people_attending"
-                    android:text="@string/event_info_people_attending"
+                    android:layout_below="@+id/event_info_category"
+                    android:text="@string/event_info_category"
                     android:textColor="@color/colorSecondaryText"
                     android:textSize="16sp" />
 

@@ -11,7 +11,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/description_event_name"
+            android:id="@+id/detail_event_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="16dp"

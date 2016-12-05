@@ -64,6 +64,6 @@
         app:fabSize="normal"
         app:layout_anchor="@id/detail_event_appbar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_heart_white_24px" />
+        app:srcCompat="@drawable/ic_star_white_24px" />
 
 </android.support.design.widget.CoordinatorLayout>

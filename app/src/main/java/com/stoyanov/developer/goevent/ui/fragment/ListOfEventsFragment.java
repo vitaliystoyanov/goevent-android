@@ -252,7 +252,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
 
     @Override
     public void showEvents(List<Event> events) {
-        Log.d(TAG, "showSaved: events size: " + events.size());
+        Log.d(TAG, "showSaved: Loaded events: " + events.size());
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
@@ -260,6 +260,11 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
 
     @Override
     public void showEmpty() {
+    }
+
+    @Override
+    public void clearEvents() {
+        adapter.removeAll();
     }
 
     @Override
@@ -286,7 +291,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     }
 
     @Override
-    public void showProgressBar(boolean state) {
+    public void showProgress(boolean state) {
         progressBar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
     }
 
