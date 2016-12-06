@@ -21,8 +21,8 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     public static final int PAGE_EVENTS_CUSTOM_FILTER = 2;
     public static final int PAGE_EVENTS_BY_LOCATION = 1;
     public static final int PAGE_EVENTS_BY_DATE = 0;
+    public final static int ID_LOADER_EVENTS = 11;
     private final static String TAG = "ListOfEventsPresenter";
-    private final static int ID_LOADER_EVENTS = 11;
     private final LoaderManager loaderManager;
     private final Context context;
     @Inject

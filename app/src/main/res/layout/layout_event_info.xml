@@ -13,8 +13,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -50,7 +50,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp"
+            android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
@@ -88,8 +88,9 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:layout_marginBottom="8dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -108,7 +109,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimaryText"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    tool:text="Sport" />
 
                 <TextView
                     android:layout_width="match_parent"

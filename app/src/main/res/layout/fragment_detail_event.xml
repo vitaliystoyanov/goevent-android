@@ -46,11 +46,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <include layout="@layout/layout_event_description" />
+            <include layout="@layout/layout_event_text_description" />
 
             <include layout="@layout/layout_event_info" />
 
-            <include layout="@layout/layout_event_map_routes" />
+            <include layout="@layout/layout_event_map" />
 
         </LinearLayout>
 

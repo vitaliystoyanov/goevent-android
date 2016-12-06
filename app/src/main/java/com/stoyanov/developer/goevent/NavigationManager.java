@@ -3,17 +3,19 @@ package com.stoyanov.developer.goevent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SettingsActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
-import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.FeedbackFragment;
 import com.stoyanov.developer.goevent.ui.fragment.ListOfEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
 
 public class NavigationManager {
     private static final String TAG = "NavigationManager";
@@ -22,6 +24,15 @@ public class NavigationManager {
 
     public NavigationManager(FragmentManager manager) {
         this.manager = manager;
+    }
+
+    public static void openGoogleMapApp(Context context, LatLng location) {
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + location.latitude + "," + location.longitude);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(mapIntent);
+        }
     }
 
     private void open(Fragment fragment) {

@@ -1,5 +1,6 @@
 package com.stoyanov.developer.goevent.mvp.view;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 
 public interface DetailEventView extends BaseView {
@@ -17,5 +18,9 @@ public interface DetailEventView extends BaseView {
     void showCategory(String category);
 
     void showMessageAddedToFavorites();
+
+    void addToCalendar();
+
+    void openGoogleMapApp(LatLng latLng);
 
 }

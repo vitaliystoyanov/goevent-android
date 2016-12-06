@@ -218,14 +218,8 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.d(TAG, "onCreateOptionsMenu: ");
-        inflater.inflate(R.menu.toolbar_list_events_actions_items, menu);
+        inflater.inflate(R.menu.list_events_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -235,6 +229,12 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
             presenter.onActionSearch();
         }
         return true;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

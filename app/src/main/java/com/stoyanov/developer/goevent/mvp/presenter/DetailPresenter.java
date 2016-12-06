@@ -1,5 +1,6 @@
 package com.stoyanov.developer.goevent.mvp.presenter;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.view.DetailEventView;
 
@@ -20,5 +21,13 @@ public class DetailPresenter extends BasePresenter<DetailEventView> {
 
     public void onSaveClick() {
         getView().showMessageAddedToFavorites();
+    }
+
+    public void onCalendarAddClick() {
+        getView().addToCalendar();
+    }
+
+    public void onMapClick(LatLng latLng) {
+        getView().openGoogleMapApp(latLng);
     }
 }

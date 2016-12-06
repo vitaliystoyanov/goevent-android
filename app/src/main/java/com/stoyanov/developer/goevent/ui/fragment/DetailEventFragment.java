@@ -7,12 +7,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -67,6 +72,8 @@ public class DetailEventFragment extends Fragment
     TextView category;
     @BindView(R.id.detail_event_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.detail_event_card_map)
+    CardView cardViewMap;
 
     private GoogleMap map;
     private LatLng location;
@@ -83,6 +90,7 @@ public class DetailEventFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_detail_event, null);
         unbinder = ButterKnife.bind(this, view);
         return view;
@@ -125,6 +133,21 @@ public class DetailEventFragment extends Fragment
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.detail_event_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.toolbar_action_add_to_calendar) {
+            presenter.onCalendarAddClick();
+        }
+        return true;
+    }
+
+    @Override
     public void showImage(String url) {
         if (url != null) {
             Picasso.with(getContext())
@@ -152,7 +175,9 @@ public class DetailEventFragment extends Fragment
     @Override
     public void showLocation(Location location) {
         if (location == null) {
-            countryAndCity.setText(R.string.field_no_location);
+            street.setText(R.string.field_no_location);
+            countryAndCity.setVisibility(View.GONE);
+            cardViewMap.setVisibility(View.GONE);
             return;
         }
         countryAndCity.setText(getResources()
@@ -194,17 +219,29 @@ public class DetailEventFragment extends Fragment
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        presenter.detach();
+    public void addToCalendar() {
+        Toast.makeText(getContext(), "In developing", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void openGoogleMapApp(LatLng latLng) {
+        NavigationManager.openGoogleMapApp(getContext(), latLng);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.getUiSettings().setAllGesturesEnabled(false);
+        map.getUiSettings().setMapToolbarEnabled(false);
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                presenter.onMapClick(latLng);
+            }
+        });
         if (location != null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14));
             map.addMarker(new MarkerOptions().position(location));
         }
     }
@@ -213,6 +250,12 @@ public class DetailEventFragment extends Fragment
     public void onResume() {
         mapView.onResume();
         super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.detach();
     }
 
     @Override
