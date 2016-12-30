@@ -58,4 +58,5 @@ dependencies {
     compile 'com.squareup.leakcanary:leakcanary-android:1.5'
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
+    compile 'au.com.dardle:badgelayout:0.1.0'
 }

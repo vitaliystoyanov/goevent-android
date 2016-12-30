@@ -46,6 +46,7 @@
             android:name=".ui.activity.MainActivity"
             android:parentActivityName=".ui.activity.MainActivity" />
         <activity android:name=".ui.activity.LoginActivity" />
+        <activity android:name=".ui.activity.DefineLocationActivity" />
         <activity android:name=".ui.activity.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

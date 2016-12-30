@@ -2,15 +2,12 @@ package com.stoyanov.developer.goevent.ui.fragment;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 
 import com.like.LikeButton;
 import com.stoyanov.developer.goevent.NavigationManager;
@@ -36,20 +32,16 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
-import com.stoyanov.developer.goevent.ui.adapter.CategorySpinnerAdapter;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
-import com.stoyanov.developer.goevent.ui.adapter.ViewGroupViewPagerAdapter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import static com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter.PAGE_EVENTS_BY_DATE;
-import static com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter.PAGE_EVENTS_BY_LOCATION;
-import static com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter.PAGE_EVENTS_CUSTOM_FILTER;
+import au.com.dardle.widget.BadgeLayout;
 
-public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
-    private static final int VIEW_PAGER_PAGE_COUNT = 3;
+public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
+        BadgeLayout.OnBadgeClickedListener {
     private static final String TAG = "ListOfEventsFragment";
     @Inject
     ListOfEventsPresenter presenter;
@@ -61,7 +53,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     private ActionBarDrawerToggle drawerToggle;
     private CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
-    private ViewPager viewPager;
+    private BadgeLayout badgeLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +70,8 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
+        badgeLayout = (BadgeLayout) getActivity().findViewById(R.id.list_events_badge_layout);
+        badgeLayout.addOnBadgeClickedListener(this);
         coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.list_of_events_coordinator_layout);
         FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -87,9 +81,9 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
             }
         });
         setupToolbar();
-        setupViewPager();
         setupEventsAdapter();
-        setupSpinner(toolbar);
+        setupToolbarTitle(toolbar);
+        setupRecycleView();
     }
 
     private void setupToolbar() {
@@ -99,47 +93,6 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
                 ((MainActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
         ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
-    }
-
-    private void setupViewPager() {
-        viewPager = (ViewPager) getView().findViewById(R.id.list_of_events_view_pager);
-        viewPager.setAdapter(new ViewGroupViewPagerAdapter(getContext(), VIEW_PAGER_PAGE_COUNT) {
-
-            @Override
-            public ViewGroup inflatePage(LayoutInflater inflater, ViewGroup container, int position) {
-                ViewGroup inflatedPage = null;
-                if (position == PAGE_EVENTS_BY_DATE) {
-                    inflatedPage = (ViewGroup) inflater.inflate(R.layout.layout_events_list_by_date, container, false);
-                    setupRecycleView(inflatedPage, R.id.list_events_recycler_view_date);
-                } else if (position == PAGE_EVENTS_BY_LOCATION) {
-                    inflatedPage = (ViewGroup) inflater.inflate(R.layout.layout_list_events_by_location, container, false);
-                    setupRecycleView(inflatedPage, R.id.list_events_recycler_view_location);
-                } else if (position == PAGE_EVENTS_CUSTOM_FILTER) {
-                    inflatedPage = (ViewGroup) inflater.inflate(R.layout.layout_list_events_custom, container, false);
-                }
-                return inflatedPage;
-            }
-        });
-
-        ViewPager.OnPageChangeListener mPageChangeListener = new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-
-            @Override
-            public void onPageSelected(int pos) {
-                sortEvents(pos);
-            }
-        };
-        viewPager.setOnPageChangeListener(mPageChangeListener);
-
-        TabLayout tabLayout = (TabLayout) getView().findViewById(R.id.list_events_tabs);
-        tabLayout.setupWithViewPager(viewPager);
     }
 
     private void sortEvents(int position) {
@@ -171,26 +124,28 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
         });
     }
 
-    private void setupRecycleView(ViewGroup inflatedPage, @IdRes int res) {
-        RecyclerView recyclerView = (RecyclerView) inflatedPage.findViewById(res);
+    private void setupRecycleView() {
+        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.list_events_recycle_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupSpinner(Toolbar toolbar) {
-        View spinnerContainer = LayoutInflater
+    private void setupToolbarTitle(Toolbar toolbar) {
+        View toolbarContainer = LayoutInflater
                 .from(getContext())
-                .inflate(R.layout.toolbar_spinner, toolbar, false);
+                .inflate(R.layout.toolbar_title, toolbar, false);
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        toolbar.addView(spinnerContainer, lp);
-
-        CategorySpinnerAdapter spinnerAdapter = new CategorySpinnerAdapter(getContext(),
-                R.array.items_date_for_spinner);
-        Spinner spinner = (Spinner) spinnerContainer.findViewById(R.id.toolbar_spinner);
-        spinner.setAdapter(spinnerAdapter);
+        toolbar.addView(toolbarContainer, lp);
+        toolbarContainer.findViewById(R.id.toolbar_location_textview)
+                .setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        navigationManager.goToDefineLocation(getContext());
+                    }
+                });
     }
 
     @Override
@@ -226,7 +181,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.toolbar_action_search) {
-            presenter.onActionSearch();
+//            presenter.onActionSearch();
         }
         return true;
     }
@@ -240,6 +195,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
     @Override
     public void onStop() {
         super.onStop();
+        badgeLayout.removeOnBadgeClickedListener(this);
         presenter.detach();
     }
 
@@ -248,6 +204,11 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView {
         super.onDestroyView();
         presenter.onDestroyView();
         ((MainActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+    }
+
+    @Override
+    public void onBadgeClicked(BadgeLayout.Badge badge) {
+
     }
 
     @Override

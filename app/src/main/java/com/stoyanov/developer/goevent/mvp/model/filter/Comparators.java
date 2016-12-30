@@ -1,4 +1,4 @@
-package com.stoyanov.developer.goevent.ui.common;
+package com.stoyanov.developer.goevent.mvp.model.filter;
 
 import android.util.Log;
 

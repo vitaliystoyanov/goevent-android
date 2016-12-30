@@ -20,8 +20,6 @@ import dagger.Component;
 @Component(modules = {ApplicationModule.class, EventsModule.class})
 public interface ApplicationComponent {
 
-    EventsRepository eventsRepository();
-
     Application application();
 
     void inject(EventsBackendServiceImp remoteDataSource);

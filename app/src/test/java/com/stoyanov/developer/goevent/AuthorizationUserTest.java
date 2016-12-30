@@ -27,7 +27,7 @@ public class AuthorizationUserTest implements MappingAPI {
                 .load(LOGIN_ENDPOINT)
                 .setJsonObjectBody(json)
                 .asString()
-                .get());
+                .getItem());
     }
 
     @Test
@@ -35,7 +35,7 @@ public class AuthorizationUserTest implements MappingAPI {
         String response = Ion.with(RuntimeEnvironment.application)
                 .load(USER_EVENTS_ENDPOINT)
                 .asString()
-                .get();
+                .getItem();
         System.out.println("userEventsTest: Body: " + response);
         assertThat(response, allOf(containsString("_id"), containsString("eventCreator")));
     }
@@ -46,7 +46,7 @@ public class AuthorizationUserTest implements MappingAPI {
                 .load(LOGOUT_ENDPOINT)
                 .setStringBody("")
                 .asString()
-                .get();
+                .getItem();
         System.out.println("logoutUserTest: Body: " + response);
         assertThat(response, allOf(containsString("Success"), containsString("logout")));
     }*/

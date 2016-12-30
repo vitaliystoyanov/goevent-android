@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.ui.activity.DefineLocationActivity;
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SettingsActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
@@ -99,5 +100,9 @@ public class NavigationManager {
 
     public void goToNotificationSettings(Context context) {
         context.startActivity(new Intent(context, SettingsActivity.class));
+    }
+
+    public void goToDefineLocation(Context context) {
+        context.startActivity(new Intent(context, DefineLocationActivity.class));
     }
 }

@@ -5,11 +5,14 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.ui.common.Comparators;
+import com.stoyanov.developer.goevent.mvp.model.filter.Comparators;
+import com.stoyanov.developer.goevent.mvp.model.filter.FilterManager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -20,6 +23,7 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
     EventsRepository repository;
     private SORTING_PARAM sortingParam;
     private FILTER_PARAM filter;
+    private Set<Category> categories;
 
     public EventsLoader(Context context, FILTER_PARAM filter) {
         super(context);
@@ -41,7 +45,7 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         if (loaded == null) return null;
 
         if (sortingParam == SORTING_PARAM.DATE) {
-            Collections.sort(loaded, new Comparators.EventsComparatorByDate());
+            loaded = FilterManager.filterByDateAndAllCategory(loaded);
         } else if (sortingParam == SORTING_PARAM.LOCATION) {
             Collections.sort(loaded, new Comparators.EventsComparatorLocation());
         }
@@ -54,8 +58,8 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         forceLoad();
     }
 
-    public SORTING_PARAM getSortingParam() {
-        return sortingParam;
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
     public void setSortingParam(SORTING_PARAM param) {

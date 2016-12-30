@@ -3,12 +3,14 @@ package com.stoyanov.developer.goevent.mvp.model.repository;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class EventsRepositoryImp implements EventsRepository {
     private static final String TAG = "EventsRepositoryImp";
@@ -25,25 +27,20 @@ public class EventsRepositoryImp implements EventsRepository {
     @Nullable
     @Override
     public List<Event> getEvents() {
-        List<Event> events = remoteBackendService.getEvents();
-        if (events != null) {
-            localEventsStorage.saveEvents(events);
-        }
-        if (events == null && listener != null) {
-            listener.notReceive();
-        }
+        getAndSaveEvents();
         return localEventsStorage.getEvents();
+    }
+
+    @Nullable
+    @Override
+    public List<Event> getEvents(@NonNull Set<Category> categories) {
+        getAndSaveEvents();
+        return localEventsStorage.getEvents(categories);
     }
 
     @Override
     public List<Event> getEventsEliminateNullLocation() {
-        List<Event> events = remoteBackendService.getEvents();
-        if (events != null) {
-            localEventsStorage.saveEvents(events);
-        }
-        if (events == null && listener != null) {
-            listener.notReceive();
-        }
+        getAndSaveEvents();
         return removeNullLocation(localEventsStorage.getEvents());
     }
 
@@ -57,6 +54,16 @@ public class EventsRepositoryImp implements EventsRepository {
             }
         }
         return data;
+    }
+
+    private void getAndSaveEvents() {
+        List<Event> events = remoteBackendService.getEvents();
+        if (events != null) {
+            localEventsStorage.saveEvents(events);
+        }
+        if (events == null && listener != null) {
+            listener.notReceive();
+        }
     }
 
     @Override

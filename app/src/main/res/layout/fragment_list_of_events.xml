@@ -42,34 +42,70 @@
             android:id="@+id/list_events_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_height"
-            android:background="@color/colorPrimary"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/list_events_tabs"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/tabs_height"
-            android:layout_gravity="bottom"
-            app:layout_scrollFlags="exitUntilCollapsed">
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            app:layout_scrollFlags="scroll|enterAlways">
 
-            <android.support.design.widget.TabItem
+            <TextView
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Date" />
+                android:layout_marginLeft="16dp"
+                android:text="Date: Tomorrow"
+                android:textColor="@color/colorWhiteText"
+                android:textSize="16sp" />
+        </RelativeLayout>
 
-            <android.support.design.widget.TabItem
+        <au.com.dardle.widget.BadgeLayout
+            android:id="@+id/list_events_badge_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            app:badgeBackground="@drawable/background_app_badge"
+            app:badgeTextColor="@android:color/white"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:spacing="8dp">
+
+            <au.com.dardle.widget.BadgeItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location" />
+                android:text="ALL" />
 
-            <android.support.design.widget.TabItem
+            <au.com.dardle.widget.BadgeItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Custom" />
+                android:text="CONCERT" />
 
-        </android.support.design.widget.TabLayout>
+            <au.com.dardle.widget.BadgeItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MOVIE" />
+
+            <au.com.dardle.widget.BadgeItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EARLY ACCESS" />
+
+            <au.com.dardle.widget.BadgeItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FAMILY" />
+
+            <au.com.dardle.widget.BadgeItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EDITORS' CHOICE" />
+
+        </au.com.dardle.widget.BadgeLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -79,8 +115,8 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/list_of_events_view_pager"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_events_recycle_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
