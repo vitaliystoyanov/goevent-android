@@ -2,6 +2,7 @@ package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
 
+import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
@@ -11,6 +12,8 @@ import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLoca
 import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorageImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -42,5 +45,11 @@ public class EventsModule {
     EventsRepository provideEventsRepository(EventsStorage local,
                                              EventsBackendService remote) {
         return new EventsRepositoryImp(local, remote);
+    }
+
+    @Provides
+    @Singleton
+    LocationManager provideLocationManager() {
+        return new LocationManager();
     }
 }

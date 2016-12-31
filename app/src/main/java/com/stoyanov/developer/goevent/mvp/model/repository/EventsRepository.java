@@ -19,6 +19,8 @@ public interface EventsRepository {
 
     List<Event> getEventsEliminateNullLocation();
 
+    List<Event> getEventsByLocation(double latitude, double longitude);
+
     interface OnNotReceiveRemoteListener {
 
         void notReceive();

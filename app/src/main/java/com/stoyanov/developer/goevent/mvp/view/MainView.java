@@ -10,8 +10,8 @@ public interface MainView extends BaseView {
 
     void goToNearby();
 
-    void goToAbout();
-
     void goToNotificationSettings();
+
+    void goToDefineLocation();
 
 }

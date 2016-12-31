@@ -23,12 +23,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.like.LikeButton;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
+import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
@@ -47,6 +50,8 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     ListOfEventsPresenter presenter;
     @Inject
     NavigationManager navigationManager;
+    @Inject
+    LocationManager locationManager;
     private ProgressBar progressBar;
     private EventsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -54,6 +59,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     private CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
     private BadgeLayout badgeLayout;
+    private LastDefinedLocation lastDefinedLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,10 +99,6 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
                 ((MainActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
         ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
-    }
-
-    private void sortEvents(int position) {
-        presenter.onClickViewPager(position);
     }
 
     private void setupEventsAdapter() {
@@ -167,7 +169,11 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
-        presenter.onStart();
+        lastDefinedLocation = locationManager.getLastDefinedLocation();
+        if (lastDefinedLocation != null) ((TextView) getView().findViewById(R.id.toolbar_location_textview))
+                .setText(lastDefinedLocation.getCity() + ", " + lastDefinedLocation.getCountry());
+        presenter.onStart(lastDefinedLocation);
+        Log.d(TAG, "onCreate: " + locationManager.toString());
     }
 
     @Override
@@ -230,8 +236,8 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
 
     @Override
     public void showMessageAddedToFavorite() {
-        Snackbar.make(coordinatorLayout, R.string.message_event_added_favorite, Snackbar.LENGTH_LONG)
-                .setAction("Favorite", new View.OnClickListener() {
+        Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
+                .setAction(R.string.action_saved, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         navigationManager.goToFavorites();

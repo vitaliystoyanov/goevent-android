@@ -11,7 +11,6 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.api.EventsApi;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,7 +52,7 @@ public class EventsBackendServiceImp implements EventsBackendService {
     }
 
     @Nullable
-    public List<Event> getEventsByLocation(float latitude, float longitude, int distance) {
+    public List<Event> getEventsByLocation(double latitude, double longitude, int distance) {
         try {
             Events responseBody = eventsApi.getEventsByLocation(latitude, longitude, distance)
                     .execute()
@@ -67,7 +66,7 @@ public class EventsBackendServiceImp implements EventsBackendService {
     }
 
     @Nullable
-    public List<Event> getEventsByLocation(float latitude, float longitude) {
+    public List<Event> getEventsByLocation(double latitude, double longitude) {
         try {
             Events body = eventsApi.getEventsByLocation(latitude, longitude).execute().body();
             if (body == null) return null;

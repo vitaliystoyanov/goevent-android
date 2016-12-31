@@ -207,7 +207,7 @@ public class DetailEventFragment extends Fragment
 
     @Override
     public void showMessageAddedToFavorites() {
-        Snackbar.make(coordinatorLayout, R.string.message_event_added_favorite, Snackbar.LENGTH_LONG)
+        Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
                 .setAction(R.string.action_favorite, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

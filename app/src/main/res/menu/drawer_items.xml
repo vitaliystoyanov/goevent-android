@@ -23,15 +23,17 @@
             android:title="@string/drawer_notifications"
             app:actionLayout="@layout/switch_drawer_item" />
     </group>
-    <group android:id="@+id/submenu_drawer_items"
+    <group
+        android:id="@+id/submenu_drawer_items"
         android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_item_login"
             android:icon="@drawable/common_full_open_on_phone"
             android:title="@string/drawer_login" />
         <item
-            android:id="@+id/drawer_item_feedback"
-            android:icon="@drawable/ic_feedback_24px"
-            android:title="@string/drawer_about" />
+            android:id="@+id/drawer_item_defined_location"
+            android:checkable="false"
+            android:icon="@drawable/ic_account_location"
+            android:title="Kyiv, Ukraine" />
     </group>
 </menu>

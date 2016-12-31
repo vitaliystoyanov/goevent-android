@@ -54,6 +54,10 @@
         </activity>
         <activity android:name=".ui.activity.RegistrationActivity" />
 
+        <service
+            android:name=".FetchAddressIntentService"
+            android:exported="false"/>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBkrIm5iOlaJMo0-pif0HfisC-ROqko0f0" />

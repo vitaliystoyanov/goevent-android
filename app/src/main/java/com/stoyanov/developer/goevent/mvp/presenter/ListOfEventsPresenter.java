@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
 import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
@@ -29,6 +31,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     SavedEventsManager savedEventsManager;
     private Event savedEvent;
     private EventsLoader.SORTING_PARAM sortingParam;
+    private LastDefinedLocation lastDefinedLocation;
 
     public ListOfEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
@@ -36,10 +39,11 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         (MainApplication.getApplicationComponent(context)).inject(this);
     }
 
-    public void onStart() {
+    public void onStart(LastDefinedLocation location) {
         Log.d(TAG, "onStart: ");
+        lastDefinedLocation = location;
         loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
-        if (getView() != null) getView().showProgress(true);
+        getView().showProgress(true);
     }
 
     public void onRefresh() {
@@ -49,19 +53,19 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
 
     public void onDestroyView() {
         Log.d(TAG, "onDestroyView: ");
-//        loaderManager.destroyLoader(ID_LOADER_EVENTS);
+        loaderManager.destroyLoader(ID_LOADER_EVENTS);
     }
 
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        EventsLoader loader = new EventsLoader(context, EventsLoader.FILTER_PARAM.ALL) {
+        EventsByLocationLoader loader = new EventsByLocationLoader(context, lastDefinedLocation) {
             @Override
             public void onNetworkError() {
                 if (getView() != null) getView().showMessageNetworkError();
             }
         };
-        loader.setSortingParam(sortingParam != null ? sortingParam : EventsLoader.SORTING_PARAM.DATE);
+//        loader.setSortingParam(sortingParam != null ? sortingParam : EventsLoader.SORTING_PARAM.DATE);
         return loader;
     }
 

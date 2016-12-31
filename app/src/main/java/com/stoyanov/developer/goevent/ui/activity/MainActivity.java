@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.stoyanov.developer.goevent.MainApplication;
@@ -12,6 +13,8 @@ import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
+import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
 import com.stoyanov.developer.goevent.mvp.presenter.MainPresenter;
 import com.stoyanov.developer.goevent.mvp.view.MainView;
 
@@ -21,14 +24,17 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final String TAG = "MainActivity";
     @Inject
     NavigationManager navigationManager;
+    @Inject
+    LocationManager locationManager;
     private MainPresenter presenter;
     private ActivityComponent activityComponent;
     private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
         presenter = new MainPresenter(); // FIXME: 10/16/16 to dagger
         setupDagger();
         setupNavigationDrawer();
@@ -36,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     public void setupNavigationDrawer() {
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        final NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
@@ -46,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 int i = menuItem.getItemId();
                 if (i == R.id.drawer_item_list_events) {
                     presenter.onItemListOfEvents();
-                } else if (i == R.id.drawer_item_feedback) {
-                    presenter.onItemAbout();
                 } else if (i == R.id.drawer_item_login) {
                     presenter.onItemLogin();
                 } else if (i == R.id.drawer_item_nearby) {
@@ -56,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     presenter.onItemNotifications();
                 } else if (i == R.id.drawer_item_saved) {
                     presenter.onItemFavorites();
+                } else if (i == R.id.drawer_item_defined_location) {
+                    presenter.onItemDefineLocation();
                 }
                 return true;
             }
@@ -96,6 +102,22 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        LastDefinedLocation location = locationManager.getLastDefinedLocation();
+        if (location != null) {
+            Menu menu = navigationView.getMenu();
+            MenuItem item = menu.findItem(R.id.drawer_item_defined_location);
+            item.setTitle(location.getCity() + ", " + location.getCountry());
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     public void onBackPressed() {
         navigationManager.navigateBack(this);
     }
@@ -121,8 +143,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    public void goToAbout() {
-        navigationManager.goToAbout();
+    public void goToDefineLocation() {
+        navigationManager.goToDefineLocation(this);
     }
 
     @Override

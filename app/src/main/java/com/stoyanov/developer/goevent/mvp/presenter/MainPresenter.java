@@ -9,10 +9,6 @@ public class MainPresenter extends BasePresenter<MainView> {
         getView().goToListOfEvents();
     }
 
-    public void onItemAbout() {
-        getView().goToAbout();
-    }
-
     public void onItemLogin() {
         getView().goToLogin();
     }
@@ -31,5 +27,9 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     public void onStart() {
         getView().goToListOfEvents();
+    }
+
+    public void onItemDefineLocation() {
+        getView().goToDefineLocation();
     }
 }

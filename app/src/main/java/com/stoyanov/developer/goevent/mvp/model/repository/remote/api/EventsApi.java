@@ -17,10 +17,10 @@ public interface EventsApi {
     Call<Event> getEvent(@Path("id") String id);
 
     @GET("events-location")
-    Call<Events> getEventsByLocation(@Query("lat") float latitude, @Query("lng") float longitude);
+    Call<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude);
 
     @GET("events-location")
-    Call<Events> getEventsByLocation(@Query("lat") float latitude, @Query("lng") float longitude,
+    Call<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude,
                                      @Query("distance") float distance);
 
 }

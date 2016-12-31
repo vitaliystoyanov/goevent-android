@@ -10,6 +10,6 @@ public interface NearbyEventsView extends BaseView {
 
     void showMessageNetworkError();
 
-    void showMessageYourLastLocation();
+    void myLocation();
 
 }

@@ -44,6 +44,11 @@ public class EventsRepositoryImp implements EventsRepository {
         return removeNullLocation(localEventsStorage.getEvents());
     }
 
+    public List<Event> getEventsByLocation(double latitude, double longitude) {
+        List<Event> events = remoteBackendService.getEventsByLocation(latitude, longitude);
+        return removeNullLocation(events);
+    }
+
     @NonNull
     private List<Event> removeNullLocation(List<Event> data) {
         Iterator<Event> iterator = data.iterator();

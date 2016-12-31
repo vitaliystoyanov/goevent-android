@@ -16,9 +16,9 @@ public interface EventsBackendService {
     Event getEvent(@NonNull String id);
 
     @Nullable
-    List<Event> getEventsByLocation(float latitude, float longitude, int distance);
+    List<Event> getEventsByLocation(double latitude, double longitude, int distance);
 
     @Nullable
-    List<Event> getEventsByLocation(float latitude, float longitude);
+    List<Event> getEventsByLocation(double latitude, double longitude);
 
 }

@@ -7,8 +7,6 @@ import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.di.scope.ActivityScope;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 

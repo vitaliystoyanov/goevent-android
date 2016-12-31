@@ -6,6 +6,8 @@ import android.support.v4.app.LoaderManager;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
 import com.stoyanov.developer.goevent.di.scope.ActivityScope;
+import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.ui.activity.DefineLocationActivity;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
 
 import dagger.Component;
@@ -20,6 +22,10 @@ public interface ActivityComponent {
 
     NavigationManager navigationManager();
 
+    LocationManager locationManager();
+
     void inject(MainActivity activity);
+
+    void inject(DefineLocationActivity activity);
 
 }

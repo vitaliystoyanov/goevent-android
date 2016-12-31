@@ -4,12 +4,14 @@ import android.app.Application;
 
 import com.stoyanov.developer.goevent.di.module.ApplicationModule;
 import com.stoyanov.developer.goevent.di.module.EventsModule;
+import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.presenter.SavedEventsPresenter;
+import com.stoyanov.developer.goevent.ui.activity.DefineLocationActivity;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
 
 import javax.inject.Singleton;
@@ -22,6 +24,8 @@ public interface ApplicationComponent {
 
     Application application();
 
+    LocationManager locationManager();
+
     void inject(EventsBackendServiceImp remoteDataSource);
 
     void inject(EventsLoader loader);
@@ -33,5 +37,9 @@ public interface ApplicationComponent {
     void inject(SavedEventsPresenter presenter);
 
     void inject(EventsAdapter adapter);
+
+    void inject(EventsByLocationLoader loader);
+
+    void inject(DefineLocationActivity activity);
 
 }
