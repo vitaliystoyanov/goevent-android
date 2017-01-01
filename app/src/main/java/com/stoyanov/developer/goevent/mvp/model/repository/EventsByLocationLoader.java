@@ -6,8 +6,8 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ public abstract class EventsByLocationLoader extends AsyncTaskLoader<List<Event>
     private static final String TAG = "EventsByLocationLoader";
     @Inject
     EventsRepository repository;
-    private LastDefinedLocation definedLocation;
+    private DefinedLocation definedLocation;
 
-    public EventsByLocationLoader(Context context, @NonNull LastDefinedLocation location) {
+    public EventsByLocationLoader(Context context, @NonNull DefinedLocation location) {
         super(context);
         definedLocation = location;
         (MainApplication.getApplicationComponent(context)).inject(this);

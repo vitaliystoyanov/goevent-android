@@ -33,7 +33,7 @@
         <item
             android:id="@+id/drawer_item_defined_location"
             android:checkable="false"
-            android:icon="@drawable/ic_account_location"
-            android:title="Kyiv, Ukraine" />
+            android:icon="@drawable/ic_home_map_marker_24px"
+            android:title="No location" />
     </group>
 </menu>

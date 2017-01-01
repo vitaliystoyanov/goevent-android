@@ -29,7 +29,20 @@
         android:clickable="true"
         app:fabSize="normal"
         app:layout_behavior="com.stoyanov.developer.goevent.ui.common.FABHideOnScroll"
-        app:srcCompat="@drawable/ic_google_maps" />
+        app:srcCompat="@drawable/ic_plus" />
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/list_events_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_events_recycle_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/list_events_appbar"
@@ -45,22 +58,6 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            app:layout_scrollFlags="scroll|enterAlways">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:text="Date: Tomorrow"
-                android:textColor="@color/colorWhiteText"
-                android:textSize="16sp" />
-        </RelativeLayout>
 
         <au.com.dardle.widget.BadgeLayout
             android:id="@+id/list_events_badge_layout"
@@ -107,19 +104,53 @@
 
         </au.com.dardle.widget.BadgeLayout>
 
+        <RelativeLayout
+            android:id="@+id/list_events_layout_params"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:gravity="center_vertical"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <Button
+                android:id="@+id/button2"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="false"
+                android:drawableRight="@drawable/ic_arrow_down_white_25px"
+                android:text="More" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="false"
+                android:layout_centerInParent="false"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:text="Date: Jun 10 - Jul 12, 12:30-13:45 PM"
+                android:textColor="@color/colorWhiteText"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/list_events_swipe_refresh_layout"
+    <RelativeLayout
+        android:id="@+id/list_events_no_upcoming_events"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent"
+        android:visibility="invisible">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/list_events_recycle_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="You have no upcoming events" />
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

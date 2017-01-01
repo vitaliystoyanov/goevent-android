@@ -30,8 +30,8 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
 import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.NearbyEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
@@ -55,13 +55,13 @@ public class NearbyEventsFragment extends Fragment
     @BindView(R.id.nearby_events_mapview)
     MapView mapView;
     @BindView(R.id.nearby_floating_search_view)
-    FloatingSearchView floatingSearchView;
+    FloatingSearchView searchView;
     boolean isConnectedGoogleApi;
     private GoogleMap map;
     private Unbinder unbinder;
     private ClusterManager<Event> clusterManager;
     private GoogleApiClient googleApiClient;
-    private LastDefinedLocation lastUserLocation;
+    private DefinedLocation lastUserLocation;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -80,8 +80,8 @@ public class NearbyEventsFragment extends Fragment
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        floatingSearchView.attachNavigationDrawerToMenuButton(((MainActivity) getActivity()).getDrawerLayout());
-        floatingSearchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+        searchView.attachNavigationDrawerToMenuButton(((MainActivity) getActivity()).getDrawerLayout());
+        searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
 
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
@@ -129,9 +129,10 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void myLocation() {
         if (isConnectedGoogleApi) {
-            updateLastLocation();
+            updateMyLocation();
         } else {
-            Toast.makeText(getContext(), "Google Fused Location isn't connected. Try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Google Location Service isn't connected. Try again",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -195,7 +196,7 @@ public class NearbyEventsFragment extends Fragment
         mapView.onLowMemory();
     }
 
-    private void updateLastLocation() {
+    private void updateMyLocation() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -205,8 +206,7 @@ public class NearbyEventsFragment extends Fragment
             LatLng cameraPosition = new LatLng(location.getLatitude(),
                     location.getLongitude());
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition, 14));
-
-            presenter.onUpdateLastLocation(new LastDefinedLocation(location.getLatitude(),
+            presenter.onUpdateMyLocation(new DefinedLocation(location.getLatitude(),
                     location.getLongitude()));
         }
     }

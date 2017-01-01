@@ -7,8 +7,8 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
@@ -31,7 +31,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     SavedEventsManager savedEventsManager;
     private Event savedEvent;
     private EventsLoader.SORTING_PARAM sortingParam;
-    private LastDefinedLocation lastDefinedLocation;
+    private DefinedLocation definedLocation;
 
     public ListOfEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
@@ -39,9 +39,9 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         (MainApplication.getApplicationComponent(context)).inject(this);
     }
 
-    public void onStart(LastDefinedLocation location) {
+    public void onStart(DefinedLocation location) {
         Log.d(TAG, "onStart: ");
-        lastDefinedLocation = location;
+        definedLocation = location;
         loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
         getView().showProgress(true);
     }
@@ -59,7 +59,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        EventsByLocationLoader loader = new EventsByLocationLoader(context, lastDefinedLocation) {
+        EventsByLocationLoader loader = new EventsByLocationLoader(context, definedLocation) {
             @Override
             public void onNetworkError() {
                 if (getView() != null) getView().showMessageNetworkError();

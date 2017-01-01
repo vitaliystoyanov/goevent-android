@@ -1,20 +1,18 @@
 package com.stoyanov.developer.goevent.mvp.model;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 
 import co.uk.rushorm.core.RushCore;
 import co.uk.rushorm.core.RushSearch;
 
 public class LocationManager {
 
-    private static final String TAG = "LocationManager";
-
-    public LastDefinedLocation getLastDefinedLocation() {
-        return new RushSearch().findSingle(LastDefinedLocation.class);
+    public DefinedLocation getLastDefinedLocation() {
+        return new RushSearch().findSingle(DefinedLocation.class);
     }
 
-    public void updateLastDefinedLocation(LastDefinedLocation location) {
-        RushCore.getInstance().deleteAll(LastDefinedLocation.class);
+    public void updateLastDefinedLocation(DefinedLocation location) {
+        RushCore.getInstance().deleteAll(DefinedLocation.class);
         RushCore.getInstance().save(location);
     }
 

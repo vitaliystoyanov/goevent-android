@@ -100,4 +100,8 @@ public class NavigationManager {
     public void goToDefineLocation(Context context) {
         context.startActivity(new Intent(context, DefineLocationActivity.class));
     }
+
+    public void goToAddEvent() {
+
+    }
 }

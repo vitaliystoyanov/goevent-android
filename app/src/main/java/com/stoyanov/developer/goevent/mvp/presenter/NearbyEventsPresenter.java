@@ -6,8 +6,8 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.view.NearbyEventsView;
 
@@ -19,14 +19,14 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
     private static final int EVENTS_BY_LOCATION_LOADER_ID = 4;
     private final LoaderManager loaderManager;
     private final Context context;
-    private LastDefinedLocation lastDefinedLocation;
+    private DefinedLocation lastDefinedLocation;
 
     public NearbyEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
         this.context = context;
     }
 
-    public void onMapReady(LastDefinedLocation location) {
+    public void onMapReady(DefinedLocation location) {
         lastDefinedLocation = location;
         loaderManager.initLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
     }
@@ -61,7 +61,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
         getView().myLocation();
     }
 
-    public void onUpdateLastLocation(LastDefinedLocation location) {
+    public void onUpdateMyLocation(DefinedLocation location) {
         lastDefinedLocation = location;
         loaderManager.restartLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
     }

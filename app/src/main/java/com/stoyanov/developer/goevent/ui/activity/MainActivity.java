@@ -14,7 +14,7 @@ import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.presenter.MainPresenter;
 import com.stoyanov.developer.goevent.mvp.view.MainView;
 
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onResume() {
         super.onResume();
-        LastDefinedLocation location = locationManager.getLastDefinedLocation();
+        DefinedLocation location = locationManager.getLastDefinedLocation();
         if (location != null) {
             Menu menu = navigationView.getMenu();
             MenuItem item = menu.findItem(R.id.drawer_item_defined_location);

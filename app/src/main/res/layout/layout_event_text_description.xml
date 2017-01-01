@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             expandableTextView:animDuration="200"
             expandableTextView:collapseDrawable="@drawable/ic_arrow_up_25px"
-            expandableTextView:expandDrawable="@drawable/ic_arrow_down_25px"
+            expandableTextView:expandDrawable="@drawable/ic_arrow_down_black_25px"
             expandableTextView:maxCollapsedLines="4">
 
             <TextView

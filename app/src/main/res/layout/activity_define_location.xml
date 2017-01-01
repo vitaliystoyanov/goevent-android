@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/define_location_card_view"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="70dp"
-        card_view:cardCornerRadius="2dp">
+    <!--<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+        <!--android:id="@+id/define_location_card_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="72dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginTop="70dp"-->
+        <!--card_view:cardCornerRadius="2dp">-->
 
-    </android.support.v7.widget.CardView>
+    <!--</android.support.v7.widget.CardView>-->
 
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/define_location_floating_search_view"

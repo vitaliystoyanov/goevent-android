@@ -1,7 +1,6 @@
 package com.stoyanov.developer.goevent.ui.activity;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,9 +14,13 @@ import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -26,7 +29,11 @@ import com.stoyanov.developer.goevent.FetchAddressIntentService;
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -37,13 +44,14 @@ public class DefineLocationActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = "DefineLocationActivity";
     @BindView(R.id.define_location_floating_search_view)
-    FloatingSearchView floatingSearchView;
+    FloatingSearchView searchView;
     @Inject
     LocationManager locationManager;
     private GoogleApiClient googleApiClient;
-    private AddressResultReceiver addressResultReceiver;
+    private ResultReceiver suggestionAddressResultReceiver;
+    private ResultReceiver addressResultReceiver;
     private boolean isConnectedGoogleApi;
-    private Location definedCurrentLocation;
+    private String lastQuery;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,43 +59,126 @@ public class DefineLocationActivity extends AppCompatActivity
         setContentView(R.layout.activity_define_location);
         ButterKnife.bind(this);
         (MainApplication.getApplicationComponent(this)).inject(this);
-
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-        floatingSearchView.setOnHomeActionClickListener(
+
+        searchView.setOnHomeActionClickListener(
                 new FloatingSearchView.OnHomeActionClickListener() {
 
                     @Override
                     public void onHomeClicked() {
-                        finish();
+                        if (searchView.isSearchBarFocused()) {
+                            searchView.clearSearchFocus();
+                        } else {
+                            finish();
+                        }
                     }
                 });
-        floatingSearchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
+        searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
                 int id = item.getItemId();
                 if (id == R.id.floating_search_my_location) {
-                    fetchCurrentLocation();
+                    fetchMyCurrentLocation();
                 }
             }
         });
-        floatingSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+        searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
-
+                searchView.showProgress();
+                lastQuery = searchSuggestion.getBody();
+                FetchAddressIntentService.start(DefineLocationActivity.this,
+                        addressResultReceiver, lastQuery);
             }
 
             @Override
             public void onSearchAction(String currentQuery) {
-                Log.d(TAG, "onSearchAction: ");
-                if (!currentQuery.isEmpty()) startFetchAddressIntentService(currentQuery);
-                floatingSearchView.showProgress(); // FIXME: 12/31/16
+                searchView.showProgress();
+                lastQuery = currentQuery;
+                FetchAddressIntentService.start(DefineLocationActivity.this,
+                        addressResultReceiver, lastQuery);
             }
         });
-        addressResultReceiver = new AddressResultReceiver(new Handler());
+        searchView.setOnFocusChangeListener(new FloatingSearchView.OnFocusChangeListener() {
+            @Override
+            public void onFocus() {
+//                List<LocationSuggestion> suggestions = new ArrayList<>();
+//                suggestions.add(new LocationSuggestion("Kyiv, Ukraine"));
+//                suggestions.add(new LocationSuggestion("Lviv, Ukraine"));
+//                suggestions.add(new LocationSuggestion("Odessa, Ukraine"));
+//                searchView.swapSuggestions(suggestions);
+            }
+
+            @Override
+            public void onFocusCleared() {
+                searchView.setSearchBarTitle(lastQuery);
+            }
+        });
+        searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
+            @Override
+            public void onSearchTextChanged(String oldQuery, String newQuery) {
+                if (!oldQuery.equals("") && newQuery.equals("")) {
+                    searchView.clearSuggestions();
+                    searchView.hideProgress();
+                } else {
+                    FetchAddressIntentService.start(DefineLocationActivity.this, suggestionAddressResultReceiver, newQuery);
+                    searchView.showProgress();
+                }
+            }
+        });
+        searchView.setOnBindSuggestionCallback(new SearchSuggestionsAdapter.OnBindSuggestionCallback() {
+            @Override
+            public void onBindSuggestion(View suggestionView, ImageView leftIcon,
+                                         TextView textView, SearchSuggestion item,
+                                         int itemPosition) {
+                leftIcon.setImageResource(R.drawable.ic_marker_gray_24px);
+            }
+        });
+
+        suggestionAddressResultReceiver = new ResultReceiver(new Handler()) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                Log.d(TAG, "onReceiveResult: Result code  - " + resultCode);
+                if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
+                    List<Address> definedAddresses = resultData.getParcelableArrayList(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESSES);
+                    searchView.swapSuggestions(create(definedAddresses));
+                } else if (resultCode == FetchAddressIntentService.Constants.FAILURE_RESULT) {
+                    String errorMessage = resultData.getString(FetchAddressIntentService.Constants.ERROR_MESSAGE);
+                    Log.d(TAG, "onReceiveResult: error - " + errorMessage);
+                    searchView.clearSuggestions();
+                }
+                searchView.hideProgress();
+            }
+        };
+        addressResultReceiver = new ResultReceiver(new Handler()) {
+
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                Log.d(TAG, "onReceiveResult: Result code  - " + resultCode);
+                if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
+                    List<Address> definedAddresses = resultData.getParcelableArrayList(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESSES);
+                    Address address = definedAddresses.get(0);
+                    DefinedLocation location = new DefinedLocation(address.getLatitude(),
+                            address.getLongitude());
+                    location.setCity(address.getLocality());
+                    location.setCountry(address.getCountryName());
+
+                    finish();
+
+                    Log.d(TAG, "onReceiveResult: DefinedLocation - " + location.toString());
+                    locationManager.updateLastDefinedLocation(location);
+                } else if (resultCode == FetchAddressIntentService.Constants.FAILURE_RESULT) {
+                    String errorMessage = resultData.getString(FetchAddressIntentService.Constants.ERROR_MESSAGE);
+                    Log.d(TAG, "onReceiveResult: error - " + errorMessage);
+                    searchView.clearSuggestions();
+                }
+                searchView.hideProgress();
+            }
+        };
     }
 
     @Override
@@ -102,36 +193,18 @@ public class DefineLocationActivity extends AppCompatActivity
         googleApiClient.disconnect();
     }
 
-    private void startFetchAddressIntentService(Location location) {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, addressResultReceiver);
-        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, location);
-        startService(intent);
-    }
-
-    private void startFetchAddressIntentService(String locationName) {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(FetchAddressIntentService.Constants.RECEIVER, addressResultReceiver);
-        intent.putExtra(FetchAddressIntentService.Constants.LOCATION_DATA_EXTRA, locationName);
-        startService(intent);
-    }
-
-    private void fetchCurrentLocation() {
+    private void fetchMyCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         if (!isConnectedGoogleApi) return;
-        floatingSearchView.showProgress();
         Location location = LocationServices.FusedLocationApi.getLastLocation(
                 googleApiClient);
-        if (location != null) {
-            definedCurrentLocation = location;
-            Toast.makeText(this, "Your location is Lat: " + location.getLatitude() +
+        if (location != null && Geocoder.isPresent()) {
+            Toast.makeText(this, "Your location is Lart: " + location.getLatitude() +
                     ", Lng: " + location.getLongitude(), Toast.LENGTH_SHORT).show();
-            if (Geocoder.isPresent()) {
-                startFetchAddressIntentService(location);
-            }
+            FetchAddressIntentService.start(this, addressResultReceiver, location);
         }
     }
 
@@ -147,33 +220,25 @@ public class DefineLocationActivity extends AppCompatActivity
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: ");
         isConnectedGoogleApi = false;
     }
 
-    public class AddressResultReceiver extends ResultReceiver {
-        public AddressResultReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-            String addressOutput = resultData.getString(FetchAddressIntentService.Constants.RESULT_DATA_KEY);
-            Address definedAddress = resultData.getParcelable(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESS);
-            Toast.makeText(DefineLocationActivity.this, addressOutput, Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "onReceiveResult: Address found - " + addressOutput);
-            if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT && definedAddress != null) {
-                Log.d(TAG, "onReceiveResult: " + getString(R.string.geocoding_address_found));
-
-                LastDefinedLocation location = new LastDefinedLocation(definedAddress.getLatitude(),
-                        definedAddress.getLongitude());
-                location.setCity(definedAddress.getLocality());
-                location.setCountry(definedAddress.getCountryName());
-                Log.d(TAG, "onReceiveResult: LastDefinedLocation - " + location.toString());
-                locationManager.updateLastDefinedLocation(location);
-                finish();
+    private List<LocationSuggestion> create(List<Address> addresses) {
+        List<LocationSuggestion> suggestions = new ArrayList<>();
+        for (Address item : addresses) {
+            StringBuilder builder = new StringBuilder();
+            if (item.getThoroughfare() != null) {
+                builder.append(item.getThoroughfare());
+                builder.append(", ");
             }
-            floatingSearchView.hideProgress();
+            if (item.getLocality() != null) {
+                builder.append(item.getLocality());
+                builder.append(", ");
+            }
+            builder.append(item.getCountryName());
+            Log.d(TAG, "create: " + builder.toString());
+            suggestions.add(new LocationSuggestion(builder.toString()));
         }
+        return suggestions;
     }
 }

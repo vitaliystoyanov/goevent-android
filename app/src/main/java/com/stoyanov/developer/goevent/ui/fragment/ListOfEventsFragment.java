@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.like.LikeButton;
@@ -30,8 +31,8 @@ import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.domain.LastDefinedLocation;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
@@ -59,7 +60,8 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     private CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
     private BadgeLayout badgeLayout;
-    private LastDefinedLocation lastDefinedLocation;
+    private DefinedLocation definedLocation;
+    private RelativeLayout noUpcomingEventsLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +78,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
+        noUpcomingEventsLayout = (RelativeLayout) getActivity().findViewById(R.id.list_events_no_upcoming_events);
         badgeLayout = (BadgeLayout) getActivity().findViewById(R.id.list_events_badge_layout);
         badgeLayout.addOnBadgeClickedListener(this);
         coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.list_of_events_coordinator_layout);
@@ -83,7 +86,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigationManager.goToNearby();
+                navigationManager.goToAddEvent();
             }
         });
         setupToolbar();
@@ -169,11 +172,13 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
-        lastDefinedLocation = locationManager.getLastDefinedLocation();
-        if (lastDefinedLocation != null) ((TextView) getView().findViewById(R.id.toolbar_location_textview))
-                .setText(lastDefinedLocation.getCity() + ", " + lastDefinedLocation.getCountry());
-        presenter.onStart(lastDefinedLocation);
-        Log.d(TAG, "onCreate: " + locationManager.toString());
+
+        definedLocation = locationManager.getLastDefinedLocation();
+        if (definedLocation != null)
+            ((TextView) getView().findViewById(R.id.toolbar_location_textview))
+                    .setText(definedLocation.getCity() + ", " + definedLocation.getCountry());
+
+        presenter.onStart(definedLocation);
     }
 
     @Override
@@ -199,6 +204,11 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         badgeLayout.removeOnBadgeClickedListener(this);
@@ -220,6 +230,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     @Override
     public void showEvents(List<Event> events) {
         Log.d(TAG, "showSaved: Loaded events: " + events.size());
+        noUpcomingEventsLayout.setVisibility(View.INVISIBLE);
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
@@ -227,6 +238,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
 
     @Override
     public void showEmpty() {
+        noUpcomingEventsLayout.setVisibility(View.VISIBLE);
     }
 
     @Override
