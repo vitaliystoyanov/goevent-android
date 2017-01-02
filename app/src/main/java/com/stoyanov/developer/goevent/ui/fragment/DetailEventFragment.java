@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -220,7 +219,7 @@ public class DetailEventFragment extends Fragment
 
     @Override
     public void addToCalendar() {
-        Toast.makeText(getContext(), "In developing", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

@@ -11,7 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.os.ResultReceiver;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -31,9 +36,14 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.ui.IconGenerator;
 import com.stoyanov.developer.goevent.FetchAddressIntentService;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
@@ -44,7 +54,9 @@ import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.NearbyEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+import com.stoyanov.developer.goevent.ui.common.EventMarkerClusterRenderer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -65,6 +77,9 @@ public class NearbyEventsFragment extends Fragment
     MapView mapView;
     @BindView(R.id.nearby_floating_search_view)
     FloatingSearchView searchView;
+    @BindView(R.id.nearby_events_viewpager)
+    ViewPager viewPager;
+
     boolean isConnectedGoogleApi;
     private GoogleMap map;
     private Unbinder unbinder;
@@ -74,6 +89,9 @@ public class NearbyEventsFragment extends Fragment
     private ResultReceiver suggestionAddressResultReceiver;
     private ResultReceiver addressResultReceiver;
     private String lastQuery;
+    private SlidePagerAdapter slidePagerAdapter;
+    private Marker pointerPositionMarker;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -187,6 +205,28 @@ public class NearbyEventsFragment extends Fragment
         };
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        slidePagerAdapter = new SlidePagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(slidePagerAdapter);
+        viewPager.setClipToPadding(true);
+        viewPager.setPageMargin(10);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (isMapReady()) {
+                    presenter.onPageSelected(slidePagerAdapter.get(position));
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void setupDagger() {
@@ -202,9 +242,8 @@ public class NearbyEventsFragment extends Fragment
         clusterManager.clearItems();
         clusterManager.addItems(events);
         clusterManager.cluster();
-        Snackbar.make(mapView, events.size() != 0 ?
-                        events.size() + " events for you!"
-                        : "Here are no events.",
+        slidePagerAdapter.removeAndAdd(events);
+        if (events.size() == 0) Snackbar.make(mapView, "Here are no events.",
                 Snackbar.LENGTH_LONG).show();
     }
 
@@ -233,15 +272,37 @@ public class NearbyEventsFragment extends Fragment
 
     @Override
     public void updateMapCamera(DefinedLocation location) {
-        LatLng cameraPosition = new LatLng(location.getLatitude(),
+        LatLng position = new LatLng(location.getLatitude(),
                 location.getLongitude());
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition, 14));
+        if (pointerPositionMarker != null) pointerPositionMarker.remove();
+        IconGenerator generator = new IconGenerator(getContext());
+        generator.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_marker_accent_32px, null));
+        MarkerOptions pointerMakerOptions = new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(generator.makeIcon()));
+        pointerMakerOptions.position(position);
+        pointerPositionMarker = map.addMarker(pointerMakerOptions);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         clusterManager = new ClusterManager<>(getActivity(), map);
+        clusterManager.setRenderer(new EventMarkerClusterRenderer(getContext(), map, clusterManager));
+        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
+            @Override
+            public boolean onClusterClick(Cluster<Event> cluster) {
+                slidePagerAdapter.removeAndAdd(new ArrayList<>(cluster.getItems()));
+                return false;
+            }
+        });
+        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Event>() {
+            @Override
+            public boolean onClusterItemClick(Event event) {
+                slidePagerAdapter.singleItem(event);
+                presenter.onClusterItemClick(event);
+                return false;
+            }
+        });
         map.setOnMarkerClickListener(clusterManager);
         map.setOnCameraChangeListener(clusterManager);
 
@@ -257,6 +318,10 @@ public class NearbyEventsFragment extends Fragment
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition, 13));
         }
         presenter.onMapReady(lastUserLocation);
+    }
+
+    private boolean isMapReady() {
+        return map != null;
     }
 
     @Override
@@ -325,5 +390,56 @@ public class NearbyEventsFragment extends Fragment
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed: ");
         isConnectedGoogleApi = false;
+    }
+
+    private class SlidePagerAdapter extends FragmentStatePagerAdapter {
+        private List<Event> events;
+
+        public SlidePagerAdapter(FragmentManager fm) {
+            super(fm);
+            events = new ArrayList<>();
+        }
+
+        public void removeAndAdd(List<Event> data) {
+            events.clear();
+            events.addAll(data);
+            notifyDataSetChanged();
+        }
+
+        public void clear() {
+            events.clear();
+            notifyDataSetChanged();
+        }
+
+        public void singleItem(Event event) {
+            events.clear();
+            events.add(event);
+            notifyDataSetChanged();
+        }
+
+        @Nullable
+        public Event get(int position) {
+            return events.size() != 0 ? events.get(position) : null;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return SlidePageFragment.newInstance(events.get(position));
+        }
+
+        @Override
+        public int getItemPosition(Object object) {
+            return PagerAdapter.POSITION_NONE;
+        }
+
+        @Override
+        public float getPageWidth(int position) {
+            return events.size() == 1 ? 1f : 0.93f;
+        }
+
+        @Override
+        public int getCount() {
+            return events.size();
+        }
     }
 }

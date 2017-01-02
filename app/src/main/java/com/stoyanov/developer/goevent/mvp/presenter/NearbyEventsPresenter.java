@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.view.NearbyEventsView;
 
@@ -65,5 +66,22 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
         lastDefinedLocation = location;
         loaderManager.restartLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
         getView().updateMapCamera(lastDefinedLocation);
+    }
+
+    public void onPageSelected(Event event) {
+        updateMapCamera(event);
+    }
+
+    public void onClusterItemClick(Event event) {
+        updateMapCamera(event);
+    }
+
+    private void updateMapCamera(Event event) {
+        Location latLng = event.getLocation();
+        if (latLng != null) {
+            DefinedLocation location = new DefinedLocation(latLng.getLatitude(),
+                    latLng.getLongitude());
+            getView().updateMapCamera(location);
+        }
     }
 }

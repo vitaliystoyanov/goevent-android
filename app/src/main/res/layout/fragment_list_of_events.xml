@@ -120,8 +120,8 @@
                 android:layout_alignParentLeft="false"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="false"
-                android:drawableRight="@drawable/ic_arrow_down_white_25px"
-                android:text="More" />
+                android:text="More"
+                app:srcCompat="@drawable/ic_arrow_down_white_25px" />
 
             <TextView
                 android:id="@+id/textView"
