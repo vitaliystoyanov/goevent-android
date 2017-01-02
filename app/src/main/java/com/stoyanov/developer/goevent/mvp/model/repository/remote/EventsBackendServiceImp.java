@@ -68,7 +68,7 @@ public class EventsBackendServiceImp implements EventsBackendService {
     @Nullable
     public List<Event> getEventsByLocation(double latitude, double longitude) {
         try {
-            Events body = eventsApi.getEventsByLocation(latitude, longitude).execute().body();
+            Events body = eventsApi.getEventsByLocation(latitude, longitude, 5000).execute().body(); // FIXME: 1/2/17
             if (body == null) return null;
             return body.list();
         } catch (IOException e) {

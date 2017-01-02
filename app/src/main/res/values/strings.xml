@@ -3,7 +3,7 @@
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
     <string name="drawer_list_of_events">List of events</string>
-    <string name="drawer_saved">Favorites</string>
+    <string name="drawer_saved">Saved</string>
     <string name="drawer_nearby">Nearby</string>
     <string name="drawer_map">Map</string>
     <string name="drawer_notifications">Notifications</string>

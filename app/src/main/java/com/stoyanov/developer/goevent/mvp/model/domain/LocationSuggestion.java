@@ -1,8 +1,12 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
+import android.location.Address;
 import android.os.Parcel;
 
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LocationSuggestion implements SearchSuggestion {
 
@@ -25,6 +29,24 @@ public class LocationSuggestion implements SearchSuggestion {
 
     public LocationSuggestion(Parcel parcel) {
         location = parcel.readString();
+    }
+
+    public static List<LocationSuggestion> create(List<Address> addresses) {
+        List<LocationSuggestion> suggestions = new ArrayList<>();
+        for (Address item : addresses) {
+            StringBuilder builder = new StringBuilder();
+            if (item.getThoroughfare() != null) {
+                builder.append(item.getThoroughfare());
+                builder.append(", ");
+            }
+            if (item.getLocality() != null) {
+                builder.append(item.getLocality());
+                builder.append(", ");
+            }
+            builder.append(item.getCountryName());
+            suggestions.add(new LocationSuggestion(builder.toString()));
+        }
+        return suggestions;
     }
 
     @Override

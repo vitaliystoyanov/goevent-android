@@ -59,4 +59,5 @@ dependencies {
     compile 'com.ms-square:expandableTextView:0.1.4'
     compile 'com.github.jd-alexander:LikeButton:0.2.0'
     compile 'au.com.dardle:badgelayout:0.1.0'
+    compile 'com.afollestad.material-dialogs:core:0.9.1.0'
 }

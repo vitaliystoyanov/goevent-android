@@ -61,8 +61,9 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
         getView().myLocation();
     }
 
-    public void onUpdateMyLocation(DefinedLocation location) {
+    public void onUpdateSearchLocation(DefinedLocation location) {
         lastDefinedLocation = location;
         loaderManager.restartLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
+        getView().updateMapCamera(lastDefinedLocation);
     }
 }

@@ -44,7 +44,8 @@
 
         <activity
             android:name=".ui.activity.MainActivity"
-            android:parentActivityName=".ui.activity.MainActivity" />
+            android:parentActivityName=".ui.activity.MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".ui.activity.LoginActivity" />
         <activity android:name=".ui.activity.DefineLocationActivity" />
         <activity android:name=".ui.activity.SettingsActivity">
@@ -56,7 +57,7 @@
 
         <service
             android:name=".FetchAddressIntentService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

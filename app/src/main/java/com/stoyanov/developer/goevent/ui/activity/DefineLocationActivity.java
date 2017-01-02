@@ -32,7 +32,6 @@ import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -145,7 +144,7 @@ public class DefineLocationActivity extends AppCompatActivity
                 Log.d(TAG, "onReceiveResult: Result code  - " + resultCode);
                 if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
                     List<Address> definedAddresses = resultData.getParcelableArrayList(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESSES);
-                    searchView.swapSuggestions(create(definedAddresses));
+                    searchView.swapSuggestions(LocationSuggestion.create(definedAddresses));
                 } else if (resultCode == FetchAddressIntentService.Constants.FAILURE_RESULT) {
                     String errorMessage = resultData.getString(FetchAddressIntentService.Constants.ERROR_MESSAGE);
                     Log.d(TAG, "onReceiveResult: error - " + errorMessage);
@@ -221,24 +220,5 @@ public class DefineLocationActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         isConnectedGoogleApi = false;
-    }
-
-    private List<LocationSuggestion> create(List<Address> addresses) {
-        List<LocationSuggestion> suggestions = new ArrayList<>();
-        for (Address item : addresses) {
-            StringBuilder builder = new StringBuilder();
-            if (item.getThoroughfare() != null) {
-                builder.append(item.getThoroughfare());
-                builder.append(", ");
-            }
-            if (item.getLocality() != null) {
-                builder.append(item.getLocality());
-                builder.append(", ");
-            }
-            builder.append(item.getCountryName());
-            Log.d(TAG, "create: " + builder.toString());
-            suggestions.add(new LocationSuggestion(builder.toString()));
-        }
-        return suggestions;
     }
 }
