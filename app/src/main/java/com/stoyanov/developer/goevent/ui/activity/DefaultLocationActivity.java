@@ -12,9 +12,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,11 +43,13 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DefineLocationActivity extends AppCompatActivity
+public class DefaultLocationActivity extends AppCompatActivity
         implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private static final String TAG = "DefineLocationActivity";
-    @BindView(R.id.define_location_floating_search_view)
+    private static final String TAG = "DefaultLocationActivity";
+    @BindView(R.id.default_location_floating_search_view)
     FloatingSearchView searchView;
+    @BindView(R.id.default_location_list_popular)
+    RecyclerView recyclerView;
     @Inject
     LocationManager locationManager;
     private GoogleApiClient googleApiClient;
@@ -55,7 +61,7 @@ public class DefineLocationActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_define_location);
+        setContentView(R.layout.activity_default_location);
         ButterKnife.bind(this);
         (MainApplication.getApplicationComponent(this)).inject(this);
         googleApiClient = new GoogleApiClient.Builder(this)
@@ -63,6 +69,11 @@ public class DefineLocationActivity extends AppCompatActivity
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(new PopularLocationsAdapter(getResources()
+                .getStringArray(R.array.items_popular_locations)));
 
         searchView.setOnHomeActionClickListener(
                 new FloatingSearchView.OnHomeActionClickListener() {
@@ -90,7 +101,7 @@ public class DefineLocationActivity extends AppCompatActivity
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
                 searchView.showProgress();
                 lastQuery = searchSuggestion.getBody();
-                FetchAddressIntentService.start(DefineLocationActivity.this,
+                FetchAddressIntentService.start(DefaultLocationActivity.this,
                         addressResultReceiver, lastQuery);
             }
 
@@ -98,7 +109,7 @@ public class DefineLocationActivity extends AppCompatActivity
             public void onSearchAction(String currentQuery) {
                 searchView.showProgress();
                 lastQuery = currentQuery;
-                FetchAddressIntentService.start(DefineLocationActivity.this,
+                FetchAddressIntentService.start(DefaultLocationActivity.this,
                         addressResultReceiver, lastQuery);
             }
         });
@@ -124,7 +135,7 @@ public class DefineLocationActivity extends AppCompatActivity
                     searchView.clearSuggestions();
                     searchView.hideProgress();
                 } else {
-                    FetchAddressIntentService.start(DefineLocationActivity.this, suggestionAddressResultReceiver, newQuery);
+                    FetchAddressIntentService.start(DefaultLocationActivity.this, suggestionAddressResultReceiver, newQuery);
                     searchView.showProgress();
                 }
             }
@@ -220,5 +231,39 @@ public class DefineLocationActivity extends AppCompatActivity
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         isConnectedGoogleApi = false;
+    }
+
+    private static class PopularLocationsAdapter extends RecyclerView.Adapter<PopularLocationsAdapter.ViewHolder> {
+        private String[] locations;
+
+        public PopularLocationsAdapter(@NonNull String[] locations) {
+            this.locations = locations;
+        }
+
+        @Override
+        public PopularLocationsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_popular_location, parent, false);
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(PopularLocationsAdapter.ViewHolder holder, int position) {
+            holder.location.setText(locations[position]);
+        }
+
+        @Override
+        public int getItemCount() {
+            return locations.length;
+        }
+
+        public static class ViewHolder extends RecyclerView.ViewHolder {
+            public TextView location;
+
+            public ViewHolder(View v) {
+                super(v);
+                location = (TextView) v.findViewById(R.id.item_popular_location);
+            }
+        }
     }
 }

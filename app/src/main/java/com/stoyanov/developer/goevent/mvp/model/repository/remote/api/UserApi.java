@@ -1,7 +1,7 @@
 package com.stoyanov.developer.goevent.mvp.model.repository.remote.api;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.SavedEvent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Login;
+import com.stoyanov.developer.goevent.mvp.model.domain.SavedEvent;
 import com.stoyanov.developer.goevent.mvp.model.domain.SuccessLogout;
 import com.stoyanov.developer.goevent.mvp.model.domain.Token;
 

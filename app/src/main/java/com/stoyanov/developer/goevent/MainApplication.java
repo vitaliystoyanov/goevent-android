@@ -14,7 +14,7 @@ public class MainApplication extends Application {
     private ApplicationComponent applicationComponent;
 
     public static ApplicationComponent getApplicationComponent(Context context) {
-        return ((MainApplication)context.getApplicationContext()).applicationComponent; // FIXME: 09.10.2016
+        return ((MainApplication) context.getApplicationContext()).applicationComponent; // FIXME: 09.10.2016
     }
 
     @Override

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/floating_search_my_location"
-        android:icon="@drawable/ic_gps"
+        android:icon="@drawable/ic_gps_black_24px"
         android:title=""
         app:showAsAction="always" />
 

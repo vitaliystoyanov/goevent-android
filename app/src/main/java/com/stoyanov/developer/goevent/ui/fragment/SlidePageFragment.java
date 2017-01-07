@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
@@ -26,6 +28,8 @@ public class SlidePageFragment extends Fragment {
     TextView name;
     @BindView(R.id.slide_page_image)
     ImageView image;
+    @BindView(R.id.slide_page_progressbar)
+    ProgressBar progressBar;
     private Unbinder unbinder;
 
     public static SlidePageFragment newInstance(Event event) {
@@ -51,11 +55,22 @@ public class SlidePageFragment extends Fragment {
         Event event = getArguments().getParcelable(KEY_PARCELABLE_DATA);
         if (event != null) {
             if (event.getPicture() != null) {
+                progressBar.setVisibility(View.VISIBLE);
                 Picasso.with(getContext())
                         .load(event.getPicture())
                         .fit()
                         .centerCrop()
-                        .into(image);
+                        .into(image, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                progressBar.setVisibility(View.INVISIBLE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                progressBar.setVisibility(View.INVISIBLE);
+                            }
+                        });
             }
             name.setText(event.getName());
             date.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),

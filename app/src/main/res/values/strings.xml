@@ -74,4 +74,10 @@
         <item>Set date</item>
     </string-array>
 
+    <string-array name="items_popular_locations">
+        <item>Kyiv, UA</item>
+        <item>Lviv, UA</item>
+        <item>Odessa, UA</item>
+    </string-array>
+
 </resources>

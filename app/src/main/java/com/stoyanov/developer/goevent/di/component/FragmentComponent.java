@@ -3,9 +3,9 @@ package com.stoyanov.developer.goevent.di.component;
 import com.stoyanov.developer.goevent.di.module.PresenterModule;
 import com.stoyanov.developer.goevent.di.scope.FragmentScope;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
-import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.ListOfEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
 
 import dagger.Component;
 

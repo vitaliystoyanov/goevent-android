@@ -20,7 +20,8 @@ public class EventMarkerClusterRenderer extends DefaultClusterRenderer<Event> {
     public EventMarkerClusterRenderer(Context context, GoogleMap map, ClusterManager<Event> clusterManager) {
         super(context, map, clusterManager);
         mIconGenerator = new IconGenerator(context);
-        mIconGenerator.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_marker_red_32px, null));
+        mIconGenerator.setBackground(ResourcesCompat.getDrawable(context.getResources(),
+                R.drawable.ic_marker_red_32px, null));
     }
 
     @Override

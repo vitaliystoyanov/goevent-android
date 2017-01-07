@@ -11,9 +11,11 @@ import java.util.Set;
 
 public interface EventsRepository {
 
-    @Nullable List<Event> getEvents();
+    @Nullable
+    List<Event> getEvents();
 
-    @Nullable List<Event> getEvents(@NonNull Set<Category> categories);
+    @Nullable
+    List<Event> getEvents(@NonNull Set<Category> categories);
 
     void addOnNetworkErrorListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
 

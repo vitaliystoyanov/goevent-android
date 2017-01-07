@@ -1,7 +1,6 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
 import co.uk.rushorm.core.RushObject;
-import co.uk.rushorm.core.annotations.RushTableAnnotation;
 
 public class Location extends RushObject {
     private String street;
