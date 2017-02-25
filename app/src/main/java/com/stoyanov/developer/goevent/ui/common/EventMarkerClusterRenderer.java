@@ -15,12 +15,12 @@ import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 
 public class EventMarkerClusterRenderer extends DefaultClusterRenderer<Event> {
-    private final IconGenerator mIconGenerator;
+    private final IconGenerator iconGenerator;
 
     public EventMarkerClusterRenderer(Context context, GoogleMap map, ClusterManager<Event> clusterManager) {
         super(context, map, clusterManager);
-        mIconGenerator = new IconGenerator(context);
-        mIconGenerator.setBackground(ResourcesCompat.getDrawable(context.getResources(),
+        iconGenerator = new IconGenerator(context);
+        iconGenerator.setBackground(ResourcesCompat.getDrawable(context.getResources(),
                 R.drawable.ic_marker_red_32px, null));
     }
 
@@ -42,6 +42,6 @@ public class EventMarkerClusterRenderer extends DefaultClusterRenderer<Event> {
     @Override
     protected void onBeforeClusterItemRendered(Event item, MarkerOptions markerOptions) {
         markerOptions.icon(BitmapDescriptorFactory
-                .fromBitmap(mIconGenerator.makeIcon()));
+                .fromBitmap(iconGenerator.makeIcon()));
     }
 }

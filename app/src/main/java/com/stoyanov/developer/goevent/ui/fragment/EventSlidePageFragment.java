@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.utill.DateUtil;
@@ -19,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class SlidePageFragment extends Fragment {
+public class EventSlidePageFragment extends Fragment {
 
     public static final String KEY_PARCELABLE_DATA = "KEY_PARCELABLE_DATA";
     @BindView(R.id.slide_page_date)
@@ -32,8 +33,8 @@ public class SlidePageFragment extends Fragment {
     ProgressBar progressBar;
     private Unbinder unbinder;
 
-    public static SlidePageFragment newInstance(Event event) {
-        SlidePageFragment fragment = new SlidePageFragment();
+    public static EventSlidePageFragment newInstance(Event event) {
+        EventSlidePageFragment fragment = new EventSlidePageFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_PARCELABLE_DATA, event);
         fragment.setArguments(bundle);
@@ -46,6 +47,13 @@ public class SlidePageFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(
                 R.layout.fragment_slide_page_event, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+        rootView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavigationManager.goToDetailEvent(getActivity().getSupportFragmentManager(),
+                        (Event) getArguments().getParcelable(KEY_PARCELABLE_DATA));
+            }
+        });
         return rootView;
     }
 
@@ -63,18 +71,20 @@ public class SlidePageFragment extends Fragment {
                         .into(image, new Callback() {
                             @Override
                             public void onSuccess() {
-                                progressBar.setVisibility(View.INVISIBLE);
+                                if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
                             }
 
                             @Override
                             public void onError() {
-                                progressBar.setVisibility(View.INVISIBLE);
+                                if (progressBar != null) progressBar.setVisibility(View.INVISIBLE);
                             }
                         });
             }
             name.setText(event.getName());
-            date.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
-                    DateUtil.toDate(event.getEndTime())));
+            if (event.getStartTime() != null && event.getEndTime() != null) {
+                date.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
+                        DateUtil.toDate(event.getEndTime())));
+            }
         }
     }
 

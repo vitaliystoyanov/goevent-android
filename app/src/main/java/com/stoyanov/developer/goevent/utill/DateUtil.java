@@ -16,7 +16,7 @@ public class DateUtil {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",
                 Locale.getDefault());
         try {
-            return format.parse(date);
+            return date != null ? format.parse(date) : null;
         } catch (ParseException e) {
             e.printStackTrace();
         }

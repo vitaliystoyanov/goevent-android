@@ -9,7 +9,7 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import java.util.List;
 import java.util.Set;
 
-public interface EventsStorage {
+public interface EventsLocalStorage {
 
     @Nullable
     List<Event> getEvents();

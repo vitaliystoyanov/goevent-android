@@ -21,16 +21,16 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
     private static final String TAG = "EventsLoader";
     @Inject
     EventsRepository repository;
+    private Set<Category> categories;
     private SORTING_PARAM sortingParam;
     private FILTER_PARAM filter;
-    private Set<Category> categories;
 
     public EventsLoader(Context context, FILTER_PARAM filter) {
         super(context);
         this.filter = filter;
         sortingParam = SORTING_PARAM.NOT;
         (MainApplication.getApplicationComponent(context)).inject(this);
-        repository.addOnNetworkErrorListener(this);
+        repository.setOnNetworkErrorListener(this);
     }
 
     @Override
@@ -39,7 +39,7 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
         if (filter == FILTER_PARAM.ALL) {
             loaded = repository.getEvents();
         } else if (filter == FILTER_PARAM.ELIMINATE_NULL_LOCATION) {
-            loaded = repository.getEventsEliminateNullLocation();
+            loaded = repository.getEventsEliminateNullLocations();
         }
 
         if (loaded == null) return null;
@@ -76,7 +76,7 @@ public abstract class EventsLoader extends AsyncTaskLoader<List<Event>>
     @Override
     protected void onReset() {
         Log.d(TAG, "onReset: OnNotReceiveRemoteListener is null");
-        repository.addOnNetworkErrorListener(null);
+        repository.setOnNetworkErrorListener(null);
     }
 
     public enum FILTER_PARAM {

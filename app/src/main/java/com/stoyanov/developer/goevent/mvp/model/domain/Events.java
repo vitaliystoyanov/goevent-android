@@ -30,7 +30,7 @@ public final class Events {
             builder.append(e.toString());
             builder.append("\n");
         }
-        return "EventsStorage{" +
+        return "EventsLocalStorage{" +
                 "count=" + count +
                 ", [array size]=" + events.size() +
                 ", events=" + builder.toString() +

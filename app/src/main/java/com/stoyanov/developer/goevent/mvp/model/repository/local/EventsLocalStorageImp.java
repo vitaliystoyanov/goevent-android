@@ -12,7 +12,7 @@ import java.util.Set;
 import co.uk.rushorm.core.RushCore;
 import co.uk.rushorm.core.RushSearch;
 
-public class EventsLocalStorageImp implements EventsStorage {
+public class EventsLocalStorageImp implements EventsLocalStorage {
 
     @Nullable
     @Override

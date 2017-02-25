@@ -3,50 +3,47 @@ package com.stoyanov.developer.goevent.mvp.model.repository;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class EventsRepositoryImp implements EventsRepository {
-    private static final String TAG = "EventsRepositoryImp";
-    private final EventsStorage localEventsStorage;
+    private final EventsLocalStorage localEventsLocalStorage;
     private final EventsBackendService remoteBackendService;
     private OnNotReceiveRemoteListener listener;
 
-    public EventsRepositoryImp(EventsStorage localDataSource,
+    public EventsRepositoryImp(EventsLocalStorage localDataSource,
                                EventsBackendService remoteBackendService) {
-        this.localEventsStorage = localDataSource;
+        this.localEventsLocalStorage = localDataSource;
         this.remoteBackendService = remoteBackendService;
     }
 
     @Nullable
     @Override
     public List<Event> getEvents() {
-        getAndSaveEvents();
-        return localEventsStorage.getEvents();
+        List<Event> freshEvents = remoteBackendService.getEvents();
+        if (freshEvents != null) {
+            persist(freshEvents);
+            return freshEvents;
+        } else if (listener != null) {
+            listener.notReceive();
+        }
+        return localEventsLocalStorage.getEvents();
+    }
+
+    @Override
+    public List<Event> getEventsEliminateNullLocations() {
+        List<Event> freshOrPersistedEvents = getEvents();
+        return freshOrPersistedEvents != null ? removeNullLocation(freshOrPersistedEvents) : null;
     }
 
     @Nullable
-    @Override
-    public List<Event> getEvents(@NonNull Set<Category> categories) {
-        getAndSaveEvents();
-        return localEventsStorage.getEvents(categories);
-    }
-
-    @Override
-    public List<Event> getEventsEliminateNullLocation() {
-        getAndSaveEvents();
-        return removeNullLocation(localEventsStorage.getEvents());
-    }
-
     public List<Event> getEventsByLocation(double latitude, double longitude) {
         List<Event> events = remoteBackendService.getEventsByLocation(latitude, longitude);
-        return removeNullLocation(events);
+        return events != null ? removeNullLocation(events) : null;
     }
 
     @NonNull
@@ -61,18 +58,12 @@ public class EventsRepositoryImp implements EventsRepository {
         return data;
     }
 
-    private void getAndSaveEvents() {
-        List<Event> events = remoteBackendService.getEvents();
-        if (events != null) {
-            localEventsStorage.saveEvents(events);
-        }
-        if (events == null && listener != null) {
-            listener.notReceive();
-        }
+    private void persist(List<Event> data) {
+        localEventsLocalStorage.saveEvents(data);
     }
 
     @Override
-    public void addOnNetworkErrorListener(OnNotReceiveRemoteListener listener) {
+    public void setOnNetworkErrorListener(OnNotReceiveRemoteListener listener) {
         this.listener = listener;
     }
 }

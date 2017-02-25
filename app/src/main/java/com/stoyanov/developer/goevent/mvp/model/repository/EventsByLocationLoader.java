@@ -24,7 +24,7 @@ public abstract class EventsByLocationLoader extends AsyncTaskLoader<List<Event>
         super(context);
         definedLocation = location;
         (MainApplication.getApplicationComponent(context)).inject(this);
-        repository.addOnNetworkErrorListener(this);
+        repository.setOnNetworkErrorListener(this);
     }
 
     @Override
@@ -50,6 +50,6 @@ public abstract class EventsByLocationLoader extends AsyncTaskLoader<List<Event>
     @Override
     protected void onReset() {
         Log.d(TAG, "onReset: OnNotReceiveRemoteListener is null");
-        repository.addOnNetworkErrorListener(null);
+        repository.setOnNetworkErrorListener(null);
     }
 }
