@@ -1,86 +1,118 @@
 [
   {
-    "featureType": "landscape",
+    "featureType": "administrative.land_parcel",
+    "elementType": "all",
     "stylers": [
       {
-        "hue": "#FFBB00"
-      },
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.man_made",
+    "elementType": "all",
+    "stylers": [
       {
-        "saturation": 43.400000000000006
-      },
-      {
-        "lightness": 37.599999999999994
-      },
-      {
-        "gamma": 1
+        "visibility": "off"
       }
     ]
   },
   {
     "featureType": "poi",
+    "elementType": "labels",
     "stylers": [
       {
-        "hue": "#00FF6A"
-      },
-      {
-        "saturation": -1.0989010989011234
-      },
-      {
-        "lightness": 11.200000000000017
-      },
-      {
-        "gamma": 1
+        "visibility": "off"
       }
     ]
   },
   {
-    "featureType": "road.arterial",
+    "featureType": "road",
+    "elementType": "labels",
     "stylers": [
       {
-        "hue": "#ff0300"
+        "visibility": "simplified"
       },
       {
-        "saturation": -100
-      },
-      {
-        "lightness": 50
+        "lightness": 20
       }
     ]
   },
   {
     "featureType": "road.highway",
+    "elementType": "geometry",
     "stylers": [
       {
-        "hue": "#ffc200"
-      },
+        "hue": "#f49935"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway",
+    "elementType": "labels",
+    "stylers": [
       {
-        "lightness": 45
+        "visibility": "simplified"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "hue": "#fad959"
+      }
+    ]
+  },
+  {
+    "featureType": "road.arterial",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
   {
     "featureType": "road.local",
-    "elementType": "labels.text",
+    "elementType": "geometry",
     "stylers": [
       {
-        "saturation": -5
+        "visibility": "simplified"
+      }
+    ]
+  },
+  {
+    "featureType": "road.local",
+    "elementType": "labels",
+    "stylers": [
+      {
+        "visibility": "simplified"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "elementType": "all",
+    "stylers": [
+      {
+        "visibility": "off"
       }
     ]
   },
   {
     "featureType": "water",
+    "elementType": "all",
     "stylers": [
       {
-        "hue": "#0078FF"
+        "hue": "#a1cdfc"
       },
       {
-        "saturation": -13.200000000000003
+        "saturation": 30
       },
       {
-        "lightness": 2.4000000000000057
-      },
-      {
-        "gamma": 1
+        "lightness": 49
       }
     ]
   }

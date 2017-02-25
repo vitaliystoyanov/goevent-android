@@ -1,6 +1,9 @@
 package com.stoyanov.developer.goevent.ui.fragment;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
@@ -31,7 +34,14 @@ import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -68,7 +78,11 @@ import butterknife.Unbinder;
 public class NearbyEventsFragment extends Fragment
         implements NearbyEventsView, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
+    public static final int REQUEST_CHECK_SETTINGS = 1;
     private static final String TAG = "NearbyEventsFragment";
+    private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
+            UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     @Inject
     NearbyEventsPresenter presenter;
     @Inject
@@ -79,8 +93,8 @@ public class NearbyEventsFragment extends Fragment
     FloatingSearchView searchView;
     @BindView(R.id.nearby_events_viewpager)
     ViewPager viewPager;
-
     boolean isConnectedGoogleApi;
+    private boolean isLocationSettingsSatisfied;
     private GoogleMap map;
     private Unbinder unbinder;
     private ClusterManager<Event> clusterManager;
@@ -238,7 +252,7 @@ public class NearbyEventsFragment extends Fragment
 
     @Override
     public void showMarkers(List<Event> events) {
-        Log.d(TAG, "showMarkers: events size = " + events.size());
+        if (events == null) return;
         clusterManager.clearItems();
         clusterManager.addItems(events);
         clusterManager.cluster();
@@ -262,16 +276,77 @@ public class NearbyEventsFragment extends Fragment
 
     @Override
     public void myLocation() {
-        if (isConnectedGoogleApi) {
-            updateMyLocation();
-        } else {
-            Toast.makeText(getContext(), "Google Location Service isn't connected. Try again",
-                    Toast.LENGTH_SHORT).show();
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(createLocationRequest());
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(googleApiClient,
+                        builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+                Status status = locationSettingsResult.getStatus();
+//                LocationSettingsStates states = locationSettingsResult.getLocationSettingsStates();
+                if (status.getStatusCode() == LocationSettingsStatusCodes.SUCCESS) {
+                    isLocationSettingsSatisfied = true;
+                } else if (status.getStatusCode() == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                    try {
+                        locationSettingsResult.getStatus().startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException e) {
+                        Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (status.getStatusCode() == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
+                    isLocationSettingsSatisfied = false;
+                    Toast.makeText(getContext(), "SETTINGS_CHANGE_UNAVAILABLE", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        if (isLocationSettingsSatisfied) {
+            checkManifestPermissionsAndGetLocation();
+        }
+    }
+
+    private void checkManifestPermissionsAndGetLocation() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "checkManifestPermissionsAndGetLocation: null");
+            return;
+        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (location != null) {
+            Log.d(TAG, "onResult: location != null");
+            presenter.onUpdateSearchLocation(new DefinedLocation(location.getLatitude(),
+                    location.getLongitude()));
+            Log.d(TAG, "onResult: Your location is: " + location.getLongitude()
+                    + ", " + location.getLatitude());
+        }
+    }
+
+    public LocationRequest createLocationRequest() {
+        LocationRequest request = new LocationRequest();
+        request.setInterval(UPDATE_INTERVAL_IN_MILLISECONDS);
+        request.setFastestInterval(FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS);
+        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        return request;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult: requestCode - " + requestCode);
+        if (requestCode == REQUEST_CHECK_SETTINGS) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    Log.i(TAG, "User agreed to make required location settings changes.");
+                    isLocationSettingsSatisfied = true;
+                    break;
+                case Activity.RESULT_CANCELED:
+                    Log.i(TAG, "User chose not to make required location settings changes.");
+                    break;
+            }
         }
     }
 
     @Override
-    public void updateMapCamera(DefinedLocation location) {
+    public void updateMapCamera(DefinedLocation location, boolean isCurrentLocation) {
         LatLng position = new LatLng(location.getLatitude(),
                 location.getLongitude());
         if (pointerPositionMarker != null) pointerPositionMarker.remove();
@@ -352,27 +427,9 @@ public class NearbyEventsFragment extends Fragment
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-//        if (mapView != null) mapView.onDestroy();
-    }
-
-    @Override
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
-    }
-
-    private void updateMyLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (location != null) {
-            presenter.onUpdateSearchLocation(new DefinedLocation(location.getLatitude(),
-                    location.getLongitude()));
-        }
     }
 
     @Override
@@ -395,23 +452,23 @@ public class NearbyEventsFragment extends Fragment
     private class SlidePagerAdapter extends FragmentStatePagerAdapter {
         private List<Event> events;
 
-        public SlidePagerAdapter(FragmentManager fm) {
+        SlidePagerAdapter(FragmentManager fm) {
             super(fm);
             events = new ArrayList<>();
         }
 
-        public void removeAndAdd(List<Event> data) {
+        void removeAndAdd(List<Event> data) {
             events.clear();
             events.addAll(data);
             notifyDataSetChanged();
         }
 
-        public void clear() {
+        void clear() {
             events.clear();
             notifyDataSetChanged();
         }
 
-        public void singleItem(Event event) {
+        void singleItem(Event event) {
             events.clear();
             events.add(event);
             notifyDataSetChanged();
@@ -424,7 +481,7 @@ public class NearbyEventsFragment extends Fragment
 
         @Override
         public Fragment getItem(int position) {
-            return SlidePageFragment.newInstance(events.get(position));
+            return EventSlidePageFragment.newInstance(events.get(position));
         }
 
         @Override

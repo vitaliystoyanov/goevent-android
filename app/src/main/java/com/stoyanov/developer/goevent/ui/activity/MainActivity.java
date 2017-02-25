@@ -1,5 +1,6 @@
 package com.stoyanov.developer.goevent.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -86,6 +87,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     public void removeDrawerLayoutListener(DrawerLayout.DrawerListener listener) {
         drawerLayout.removeDrawerListener(listener);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        navigationManager.delegateOnActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

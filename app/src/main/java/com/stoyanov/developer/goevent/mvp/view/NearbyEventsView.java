@@ -13,6 +13,6 @@ public interface NearbyEventsView extends BaseView {
 
     void myLocation();
 
-    void updateMapCamera(DefinedLocation location);
+    void updateMapCamera(DefinedLocation location, boolean isCurrentLocation);
 
 }

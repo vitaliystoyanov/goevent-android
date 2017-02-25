@@ -21,9 +21,11 @@ public class NavigationManager {
     private static final String TAG = "NavigationManager";
 
     private FragmentManager manager;
+    private NearbyEventsFragment nearbyEventsFragment;
 
     public NavigationManager(FragmentManager manager) {
         this.manager = manager;
+        nearbyEventsFragment = new NearbyEventsFragment();
     }
 
     public static void openGoogleMapApp(Context context, LatLng location) {
@@ -35,11 +37,20 @@ public class NavigationManager {
         }
     }
 
-    private void open(Fragment fragment) {
+    public static void goToDetailEvent(FragmentManager manager, Event event) {
+        Fragment fragment = DetailEventFragment.newInstance(event);
+        runReplaceTransaction(manager, fragment);
+    }
+
+    private static void runReplaceTransaction(FragmentManager manager, Fragment fragment) {
         manager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .addToBackStack(fragment.toString())
                 .commit();
+    }
+
+    private void open(Fragment fragment) {
+        runReplaceTransaction(manager, fragment);
     }
 
     private void openAsRoot(Fragment fragment) {
@@ -82,7 +93,7 @@ public class NavigationManager {
     }
 
     public void goToNearby() {
-        openAsRoot(new NearbyEventsFragment());
+        openAsRoot(nearbyEventsFragment);
     }
 
     public void goToDetailEvent(Event event) {
@@ -103,5 +114,11 @@ public class NavigationManager {
 
     public void goToAddEvent() {
 
+    }
+
+    public void delegateOnActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == NearbyEventsFragment.REQUEST_CHECK_SETTINGS) {
+            nearbyEventsFragment.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

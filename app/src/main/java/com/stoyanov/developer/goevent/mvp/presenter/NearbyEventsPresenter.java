@@ -65,7 +65,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
     public void onUpdateSearchLocation(DefinedLocation location) {
         lastDefinedLocation = location;
         loaderManager.restartLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
-        getView().updateMapCamera(lastDefinedLocation);
+        getView().updateMapCamera(lastDefinedLocation, false);
     }
 
     public void onPageSelected(Event event) {
@@ -81,7 +81,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
         if (latLng != null) {
             DefinedLocation location = new DefinedLocation(latLng.getLatitude(),
                     latLng.getLongitude());
-            getView().updateMapCamera(location);
+            getView().updateMapCamera(location, false);
         }
     }
 }

@@ -6,8 +6,8 @@ import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorageImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
@@ -22,7 +22,7 @@ import dagger.Provides;
 public class EventsModule {
 
     @Provides
-    EventsStorage provideEventsLocalDataSource() {
+    EventsLocalStorage provideEventsLocalDataSource() {
         return new EventsLocalStorageImp();
     }
 
@@ -42,7 +42,7 @@ public class EventsModule {
     }
 
     @Provides
-    EventsRepository provideEventsRepository(EventsStorage local,
+    EventsRepository provideEventsRepository(EventsLocalStorage local,
                                              EventsBackendService remote) {
         return new EventsRepositoryImp(local, remote);
     }
