@@ -17,11 +17,11 @@
             android:icon="@drawable/ic_near_me"
             android:title="@string/drawer_nearby" />
 
-        <item
+<!--        <item
             android:id="@+id/drawer_item_notification"
             android:icon="@drawable/ic_notifications"
             android:title="@string/drawer_notifications"
-            app:actionLayout="@layout/switch_drawer_item" />
+            app:actionLayout="@layout/switch_drawer_item" />-->
     </group>
     <group
         android:id="@+id/submenu_drawer_items"

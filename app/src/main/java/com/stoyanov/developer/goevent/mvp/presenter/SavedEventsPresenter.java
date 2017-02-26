@@ -20,7 +20,7 @@ public class SavedEventsPresenter extends BasePresenter<SavedEventsView> {
     }
 
     public void onStart() {
-//        getView().showProgress(true);
+//        getView().visibleProgress(true);
         List<Event> savedEvents = savedEventsManager.get();
         if (savedEvents != null && savedEvents.size() > 0) {
             getView().showSaved(savedEvents);

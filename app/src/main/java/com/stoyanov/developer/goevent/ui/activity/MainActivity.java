@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity implements MainView {
                     presenter.onItemLogin();
                 } else if (i == R.id.drawer_item_nearby) {
                     presenter.onItemNearby();
-                } else if (i == R.id.drawer_item_notification) {
+                } /*else if (i == R.id.drawer_item_notification) {
                     presenter.onItemNotifications();
-                } else if (i == R.id.drawer_item_saved) {
+                }*/ else if (i == R.id.drawer_item_saved) {
                     presenter.onItemFavorites();
                 } else if (i == R.id.drawer_item_defined_location) {
                     presenter.onItemDefineLocation();

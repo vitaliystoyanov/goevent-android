@@ -178,7 +178,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
             ((TextView) getView().findViewById(R.id.toolbar_location_textview))
                     .setText(definedLocation.getCity() + ", " + definedLocation.getCountry());
 
-        presenter.onStart(definedLocation);
+        presenter.onStart(locationManager.getLastDefinedLocation()); // FIXME: 26.02.2017
     }
 
     @Override

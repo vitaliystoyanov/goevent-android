@@ -34,12 +34,12 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
 
     public void onStop() {
         Log.d(TAG, "onStop: ");
-        loaderManager.destroyLoader(EVENTS_BY_LOCATION_LOADER_ID);
     }
 
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: id - " + id);
+        getView().visibleProgress(true);
         return new EventsByLocationLoader(context, lastDefinedLocation) {
             @Override
             public void onNetworkError() {
@@ -51,6 +51,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         getView().showMarkers(data);
+        getView().visibleProgress(false);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
     public void onUpdateSearchLocation(DefinedLocation location) {
         lastDefinedLocation = location;
         loaderManager.restartLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
-        getView().updateMapCamera(lastDefinedLocation, false);
+        getView().updateMapCamera(lastDefinedLocation, true);
     }
 
     public void onPageSelected(Event event) {
@@ -83,5 +84,9 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
                     latLng.getLongitude());
             getView().updateMapCamera(location, false);
         }
+    }
+
+    public void onDestroy() {
+        loaderManager.destroyLoader(EVENTS_BY_LOCATION_LOADER_ID);
     }
 }

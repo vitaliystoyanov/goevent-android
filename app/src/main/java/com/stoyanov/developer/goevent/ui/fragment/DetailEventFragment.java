@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,8 +24,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.ui.IconGenerator;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.NavigationManager;
@@ -46,6 +51,7 @@ import butterknife.Unbinder;
 public class DetailEventFragment extends Fragment
         implements DetailEventView, OnMapReadyCallback {
     public static final String EXTRA_PARCELABLE_EVENT = "EXTRA_PARCELABLE_EVENT";
+    public static final int ZOOM_LEVEL = 16;
     @Inject
     NavigationManager navigationManager;
     @Inject
@@ -77,6 +83,7 @@ public class DetailEventFragment extends Fragment
     private GoogleMap map;
     private LatLng location;
     private Unbinder unbinder;
+    private IconGenerator generator;
 
     public static Fragment newInstance(Event event) {
         Bundle bundle = new Bundle();
@@ -105,11 +112,19 @@ public class DetailEventFragment extends Fragment
         setupToolbar();
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        generator = new IconGenerator(getContext());
+        generator.setBackground(ResourcesCompat.getDrawable(getResources(),
+                R.drawable.ic_marker_red_32px, null));
     }
 
     @OnClick(R.id.detail_event_fab)
     public void onClickSaveFab() {
         presenter.onSaveClick();
+    }
+
+    @OnClick(R.id.event_map_button_open_map)
+    public void onClickOpenMap() {
+        presenter.onOpenMapClick(location);
     }
 
     private void setupToolbar() {
@@ -140,9 +155,9 @@ public class DetailEventFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.toolbar_action_add_to_calendar) {
+/*        if (itemId == R.id.toolbar_action_add_to_calendar) {
             presenter.onCalendarAddClick();
-        }
+        }*/
         return true;
     }
 
@@ -205,9 +220,9 @@ public class DetailEventFragment extends Fragment
     }
 
     @Override
-    public void showMessageAddedToFavorites() {
+    public void showMessageAdded() {
         Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_favorite, new View.OnClickListener() {
+                .setAction(R.string.action_saved, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         navigationManager.goToFavorites();
@@ -233,15 +248,15 @@ public class DetailEventFragment extends Fragment
         map.getUiSettings().setMyLocationButtonEnabled(false);
         map.getUiSettings().setAllGesturesEnabled(false);
         map.getUiSettings().setMapToolbarEnabled(false);
-        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                presenter.onMapClick(latLng);
-            }
-        });
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_maps_style);
+        map.setMapStyle(style);
+
         if (location != null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 14));
-            map.addMarker(new MarkerOptions().position(location));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, ZOOM_LEVEL));
+            MarkerOptions marker =
+                    new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(generator.makeIcon()));
+            marker.position(location);
+            map.addMarker(marker);
         }
     }
 
@@ -260,7 +275,7 @@ public class DetailEventFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mapView != null) mapView.onDestroy(); // FIXME: 05.12.2016
+        if (mapView != null) mapView.onDestroy();
     }
 
     @Override

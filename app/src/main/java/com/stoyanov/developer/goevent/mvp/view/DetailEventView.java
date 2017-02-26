@@ -17,7 +17,7 @@ public interface DetailEventView extends BaseView {
 
     void showCategory(String category);
 
-    void showMessageAddedToFavorites();
+    void showMessageAdded();
 
     void addToCalendar();
 

@@ -22,7 +22,7 @@
     <string name="registration_log_in">Already have an account? Log in.</string>
     <string name="description_time">Duration time</string>
     <string name="event_map_directions">Directions</string>
-    <string name="event_map_open_directions">See directions</string>
+    <string name="event_map_open">Open map</string>
     <string name="event_info_location">Location</string>
     <string name="event_info_category">Category</string>
     <string name="registration_create">Create</string>
@@ -31,7 +31,6 @@
     <string name="title_detail_event">Detail event</string>
     <string name="location_field_full_format">%1$s, %2$s, %3$s</string>
     <string name="location_country_city_format">%1$s, %2$s</string>
-    <string name="action_favorite">Favorite</string>
     <string name="message_action_update">Update</string>
     <string name="title_notification_settings">Notification settings</string>
     <string name="title_settings">Settings</string>
