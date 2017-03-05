@@ -2,22 +2,21 @@ package com.stoyanov.developer.goevent.mvp.model.domain;
 
 import co.uk.rushorm.core.RushObject;
 
-public class DefinedLocation extends RushObject {
-
+public class LocationPref extends RushObject {
     private String city;
     private String country;
     private double latitude;
     private double longitude;
 
-    public DefinedLocation() {
+    public LocationPref() {
     }
 
-    public DefinedLocation(double latitude, double longitude) {
+    public LocationPref(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public DefinedLocation(String city, String country, double latitude, double longitude) {
+    public LocationPref(String city, String country, double latitude, double longitude) {
         this.city = city;
         this.country = country;
         this.latitude = latitude;
@@ -58,7 +57,7 @@ public class DefinedLocation extends RushObject {
 
     @Override
     public String toString() {
-        return "DefinedLocation{" +
+        return "LocationPref{" +
                 "city='" + city + '\'' +
                 ", country='" + country + '\'' +
                 ", latitude=" + latitude +

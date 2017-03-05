@@ -5,17 +5,18 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.stoyanov.developer.goevent.LocationPreferences;
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.presenter.MainPresenter;
 import com.stoyanov.developer.goevent.mvp.view.MainView;
 
@@ -25,12 +26,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private static final String TAG = "MainActivity";
     @Inject
     NavigationManager navigationManager;
-    @Inject
-    LocationManager locationManager;
     private MainPresenter presenter;
     private ActivityComponent activityComponent;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private Bundle savedInstance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         presenter = new MainPresenter(); // FIXME: 10/16/16 to dagger
         setupDagger();
         setupNavigationDrawer();
+        Log.d(TAG, "onCreate: ");
+        savedInstance = savedInstanceState;
     }
 
     public void setupNavigationDrawer() {
@@ -98,20 +100,27 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(TAG, "onStart: ");
         presenter.attach(this);
         presenter.onStart();
+        if (savedInstance != null) {
+            Log.d(TAG, "onStart: savedInstanceState != null");
+            navigationManager.restoreFragmentState(savedInstance);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop: ");
         presenter.detach();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        DefinedLocation location = locationManager.getLastDefinedLocation();
+        Log.d(TAG, "onResume: ");
+        LocationPref location =  LocationPreferences.get();
         if (location != null) {
             Menu menu = navigationView.getMenu();
             MenuItem item = menu.findItem(R.id.drawer_item_defined_location);
@@ -122,6 +131,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        navigationManager.saveFragmentState(outState);
+        Log.d(TAG, "onSaveInstanceState: ");
+        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -6,7 +6,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 
 import java.util.List;
@@ -18,20 +18,23 @@ public abstract class EventsByLocationLoader extends AsyncTaskLoader<List<Event>
     private static final String TAG = "EventsByLocationLoader";
     @Inject
     EventsRepository repository;
-    private DefinedLocation definedLocation;
+    private LocationPref locationPref;
 
-    public EventsByLocationLoader(Context context, @NonNull DefinedLocation location) {
+    public EventsByLocationLoader(Context context, @NonNull LocationPref location) {
         super(context);
-        definedLocation = location;
+        locationPref = location;
         (MainApplication.getApplicationComponent(context)).inject(this);
         repository.setOnNetworkErrorListener(this);
     }
 
     @Override
     public List<Event> loadInBackground() {
-        if (definedLocation == null) return null;
-        return repository.getEventsByLocation(definedLocation.getLatitude(),
-                definedLocation.getLongitude());
+        if (locationPref == null) {
+            Log.d(TAG, "loadInBackground: locationPref == null");
+            return null;
+        }
+        return repository.getEventsByLocation(locationPref.getLatitude(),
+                locationPref.getLongitude());
     }
 
     @Override

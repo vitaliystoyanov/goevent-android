@@ -47,14 +47,11 @@
 
         <ProgressBar
             android:id="@+id/slide_page_progressbar"
-            style="@android:style/Widget.Material.Light.ProgressBar.Small"
+            style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="24dp"
             android:layout_alignEnd="@+id/slide_page_image"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentStart="false"
             android:layout_alignRight="@+id/slide_page_image"
-            android:layout_centerInParent="false"
             android:layout_centerVertical="true"
             android:indeterminate="true" />
 

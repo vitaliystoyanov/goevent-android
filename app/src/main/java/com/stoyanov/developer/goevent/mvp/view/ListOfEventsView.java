@@ -12,14 +12,14 @@ public interface ListOfEventsView extends BaseView {
 
     void clearEvents();
 
-    void showProgress(boolean state);
+    void visibleProgress(boolean state);
 
-    void showMessageNetworkError();
+    void showError();
 
     void goToDetailEvent(Event event);
 
     void goToSearchEvents();
 
-    void showMessageAddedToFavorite();
+    void showMessageAdded();
 
 }

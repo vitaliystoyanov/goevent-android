@@ -30,15 +30,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.stoyanov.developer.goevent.FetchAddressIntentService;
+import com.stoyanov.developer.goevent.LocationPreferences;
 import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.R;
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,8 +48,7 @@ public class DefaultLocationActivity extends AppCompatActivity
     FloatingSearchView searchView;
     @BindView(R.id.default_location_list_popular)
     RecyclerView recyclerView;
-    @Inject
-    LocationManager locationManager;
+
     private GoogleApiClient googleApiClient;
     private ResultReceiver suggestionAddressResultReceiver;
     private ResultReceiver addressResultReceiver;
@@ -172,15 +169,14 @@ public class DefaultLocationActivity extends AppCompatActivity
                 if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
                     List<Address> definedAddresses = resultData.getParcelableArrayList(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESSES);
                     Address address = definedAddresses.get(0);
-                    DefinedLocation location = new DefinedLocation(address.getLatitude(),
+                    LocationPref location = new LocationPref(address.getLatitude(),
                             address.getLongitude());
                     location.setCity(address.getLocality());
                     location.setCountry(address.getCountryName());
-
                     finish();
+                    Log.d(TAG, "onReceiveResult: LocationPref - " + location.toString());
 
-                    Log.d(TAG, "onReceiveResult: DefinedLocation - " + location.toString());
-                    locationManager.updateLastDefinedLocation(location);
+                    LocationPreferences.put(location);
                 } else if (resultCode == FetchAddressIntentService.Constants.FAILURE_RESULT) {
                     String errorMessage = resultData.getString(FetchAddressIntentService.Constants.ERROR_MESSAGE);
                     Log.d(TAG, "onReceiveResult: error - " + errorMessage);

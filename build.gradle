@@ -18,6 +18,7 @@ allprojects {
             url "http://maven.rushorm.com"
         }
         maven { url "https://jitpack.io" }
+        maven { url "http://dl.bintray.com/pixplicity/maven" }
     }
 }
 

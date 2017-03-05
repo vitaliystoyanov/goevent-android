@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.stoyanov.developer.goevent.di.module.ApplicationModule;
 import com.stoyanov.developer.goevent.di.module.EventsModule;
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsLoader;
@@ -23,8 +22,6 @@ import dagger.Component;
 public interface ApplicationComponent {
 
     Application application();
-
-    LocationManager locationManager();
 
     void inject(EventsBackendServiceImp remoteDataSource);
 

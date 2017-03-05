@@ -27,12 +27,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.like.LikeButton;
+import com.stoyanov.developer.goevent.LocationPreferences;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
 import com.stoyanov.developer.goevent.ui.activity.MainActivity;
@@ -43,6 +43,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import au.com.dardle.widget.BadgeLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
         BadgeLayout.OnBadgeClickedListener {
@@ -51,38 +54,43 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     ListOfEventsPresenter presenter;
     @Inject
     NavigationManager navigationManager;
-    @Inject
-    LocationManager locationManager;
-    private ProgressBar progressBar;
+
+    @BindView(R.id.list_events_progress_bar)
+    ProgressBar progressBar;
+    @BindView(R.id.list_events_swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.list_of_events_coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.list_events_badge_layout)
+    BadgeLayout badgeLayout;
+    @BindView(R.id.list_events_no_upcoming_events)
+    RelativeLayout noUpcomingEventsLayout;
+    @BindView(R.id.list_events_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.list_events_fab)
+    FloatingActionButton fab;
+    @BindView(R.id.list_events_recycle_view)
+    RecyclerView recyclerView;
+
     private EventsAdapter adapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private CoordinatorLayout coordinatorLayout;
-    private Toolbar toolbar;
-    private BadgeLayout badgeLayout;
-    private DefinedLocation definedLocation;
-    private RelativeLayout noUpcomingEventsLayout;
+    private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_list_of_events, null);
+        View view = inflater.inflate(R.layout.fragment_list_of_events, null);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated: ");
-        DaggerFragmentComponent.builder()
-                .activityComponent(((MainActivity) getActivity()).getActivityComponent())
-                .build()
-                .inject(this);
-        noUpcomingEventsLayout = (RelativeLayout) getActivity().findViewById(R.id.list_events_no_upcoming_events);
-        badgeLayout = (BadgeLayout) getActivity().findViewById(R.id.list_events_badge_layout);
+        setupDagger();
         badgeLayout.addOnBadgeClickedListener(this);
-        coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.list_of_events_coordinator_layout);
-        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,10 +101,43 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
         setupEventsAdapter();
         setupToolbarTitle(toolbar);
         setupRecycleView();
+        setupSwipeRefreshLayout();
+
+        LocationPref locationPref = LocationPreferences.get();
+        Log.d(TAG, "onActivityCreated: is locationPref null? - " + (locationPref == null));
+        if (locationPref != null) {
+            ((TextView) getView().findViewById(R.id.toolbar_location_textview))
+                    .setText(locationPref.getCity() + ", " + locationPref.getCountry());
+        }
+        presenter.attach(this);
+        if (savedInstanceState != null) {
+
+        } else {
+            presenter.onStart(locationPref);
+        }
+    }
+
+    private void setupSwipeRefreshLayout() {
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
+        swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setDistanceToTriggerSync(50);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.onRefresh();
+                swipeRefreshLayout.setRefreshing(true);
+            }
+        });
+    }
+
+    private void setupDagger() {
+        DaggerFragmentComponent.builder()
+                .activityComponent(((MainActivity) getActivity()).getActivityComponent())
+                .build()
+                .inject(this);
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) getView().findViewById(R.id.list_events_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
                 ((MainActivity) getActivity()).getDrawerLayout(),
@@ -130,7 +171,6 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     }
 
     private void setupRecycleView() {
-        RecyclerView recyclerView = (RecyclerView) getView().findViewById(R.id.list_events_recycle_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -157,28 +197,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     public void onStart() {
         super.onStart();
         Log.d(TAG, "onStart: ");
-        presenter.attach(this);
         drawerToggle.syncState();
-        progressBar = (ProgressBar) getView().findViewById(R.id.list_events_progress_bar);
-        swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
-                .findViewById(R.id.list_events_swipe_refresh_layout);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
-        swipeRefreshLayout.setEnabled(false);
-        swipeRefreshLayout.setDistanceToTriggerSync(50);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.onRefresh();
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
-
-        definedLocation = locationManager.getLastDefinedLocation();
-        if (definedLocation != null)
-            ((TextView) getView().findViewById(R.id.toolbar_location_textview))
-                    .setText(definedLocation.getCity() + ", " + definedLocation.getCountry());
-
-        presenter.onStart(locationManager.getLastDefinedLocation()); // FIXME: 26.02.2017
     }
 
     @Override
@@ -191,9 +210,6 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.toolbar_action_search) {
-//            presenter.onActionSearch();
-        }
         return true;
     }
 
@@ -218,8 +234,14 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        presenter.onDestroyView();
         ((MainActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+        unbinder.unbind();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
     }
 
     @Override
@@ -229,15 +251,18 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
 
     @Override
     public void showEvents(List<Event> events) {
-        Log.d(TAG, "showSaved: Loaded events: " + events.size());
-        noUpcomingEventsLayout.setVisibility(View.INVISIBLE);
+        if (events != null) {
+            Log.d(TAG, "showSaved: Loaded events: " + events.size());
+            noUpcomingEventsLayout.setVisibility(View.INVISIBLE);
+            adapter.removeAndAdd(events);
+        }
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
-        adapter.removeAndAdd(events);
     }
 
     @Override
     public void showEmpty() {
+        Log.d(TAG, "showEmpty: ");
         noUpcomingEventsLayout.setVisibility(View.VISIBLE);
     }
 
@@ -247,7 +272,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     }
 
     @Override
-    public void showMessageAddedToFavorite() {
+    public void showMessageAdded() {
         Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
                 .setAction(R.string.action_saved, new View.OnClickListener() {
                     @Override
@@ -270,14 +295,15 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     }
 
     @Override
-    public void showProgress(boolean state) {
+    public void visibleProgress(boolean state) {
+        Log.d(TAG, "visibleProgress: Is visible view: " + state);
         progressBar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
-    public void showMessageNetworkError() {
+    public void showError() {
         Snackbar.make(coordinatorLayout,
-                R.string.message_bad_connection, Snackbar.LENGTH_LONG)
+                R.string.message_error, Snackbar.LENGTH_LONG)
                 .show();
         getActivity().runOnUiThread(new Runnable() {
             @Override

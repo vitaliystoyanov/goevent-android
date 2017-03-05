@@ -53,14 +53,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
+import com.pixplicity.easyprefs.library.Prefs;
 import com.stoyanov.developer.goevent.FetchAddressIntentService;
+import com.stoyanov.developer.goevent.LocationPreferences;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
@@ -89,8 +91,6 @@ public class NearbyEventsFragment extends Fragment
             UPDATE_INTERVAL_IN_MILLISECONDS / 2;
     @Inject
     NearbyEventsPresenter presenter;
-    @Inject
-    LocationManager locationManager;
     @BindView(R.id.nearby_events_mapview)
     MapView mapView;
     @BindView(R.id.nearby_floating_search_view)
@@ -127,11 +127,7 @@ public class NearbyEventsFragment extends Fragment
         setupDagger();
         locationRequest = createLocationRequest();
         buildLocationSettingsRequest();
-        googleApiClient = new GoogleApiClient.Builder(getContext())
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        buildGoogleApiClient();
         generator = new IconGenerator(getContext());
         searchView.attachNavigationDrawerToMenuButton(((MainActivity) getActivity()).getDrawerLayout());
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
@@ -216,7 +212,7 @@ public class NearbyEventsFragment extends Fragment
                     List<Address> definedAddresses = resultData.getParcelableArrayList(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESSES);
                     Address address = definedAddresses.get(0);
 
-                    presenter.onUpdateSearchLocation(new DefinedLocation(address.getLatitude(),
+                    presenter.onUpdateSearchLocation(new LocationPref(address.getLatitude(),
                             address.getLongitude()));
                 } else if (resultCode == FetchAddressIntentService.Constants.FAILURE_RESULT) {
                     String errorMessage = resultData.getString(FetchAddressIntentService.Constants.ERROR_MESSAGE);
@@ -253,6 +249,14 @@ public class NearbyEventsFragment extends Fragment
         if (savedInstanceState != null) updateValuesFromBundle(savedInstanceState);
     }
 
+    private void buildGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(getContext())
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
     private void setupDagger() {
         DaggerFragmentComponent.builder()
                 .activityComponent(((MainActivity) getActivity()).getActivityComponent())
@@ -263,6 +267,7 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void showMarkers(List<Event> events) {
         if (events == null) return;
+        Log.d(TAG, "showMarkers: events size is " + events.size());
         clusterManager.addItems(events);
         clusterManager.cluster();
         slidePagerAdapter.removeAndAdd(events);
@@ -276,7 +281,7 @@ public class NearbyEventsFragment extends Fragment
             @Override
             public void run() {
                 Toast.makeText(getContext(),
-                        R.string.message_bad_connection,
+                        R.string.message_error,
                         Toast.LENGTH_SHORT)
                         .show();
             }
@@ -365,7 +370,7 @@ public class NearbyEventsFragment extends Fragment
     public void onLocationChanged(Location location) {
         stopLocationUpdates();
 
-        presenter.onUpdateSearchLocation(new DefinedLocation(location.getLatitude(),
+        presenter.onUpdateSearchLocation(new LocationPref(location.getLatitude(),
                 location.getLongitude()));
         Log.d(TAG, "onLocationChanged:  onLocationChanged: Location updated: " + location.getLatitude()
                 + ", " + location.getLongitude());
@@ -389,7 +394,7 @@ public class NearbyEventsFragment extends Fragment
     }
 
     @Override
-    public void updateMapCamera(DefinedLocation location, boolean isCurrentLocation) {
+    public void updateMapCamera(LocationPref location, boolean isCurrentLocation) {
         LatLng position = new LatLng(location.getLatitude(),
                 location.getLongitude());
         if (selectedPositionMarker != null) selectedPositionMarker.remove();
@@ -421,6 +426,28 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        setupCluster();
+
+        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_maps_style);
+        map.setMapStyle(style);
+        map.getUiSettings().setMyLocationButtonEnabled(false);
+        map.getUiSettings().setMapToolbarEnabled(false);
+
+        if (isLoadedFirstStartLocation) {
+            LocationPref location = LocationPreferences.get();
+            if (location != null) {
+                LatLng cameraPosition = new LatLng(location.getLatitude(),
+                        location.getLongitude());
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition, 13));
+                presenter.onMapReady(location);
+                isLoadedFirstStartLocation = false;
+            }
+        }
+        if (cameraPosition != null)
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    private void setupCluster() {
         clusterManager = new ClusterManager<>(getActivity(), map);
         clusterManager.setRenderer(new EventMarkerClusterRenderer(getContext(), map, clusterManager));
         clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
@@ -440,23 +467,6 @@ public class NearbyEventsFragment extends Fragment
         });
         map.setOnMarkerClickListener(clusterManager);
         map.setOnCameraChangeListener(clusterManager);
-
-        MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_maps_style);
-        map.setMapStyle(style);
-        map.getUiSettings().setMyLocationButtonEnabled(false);
-        map.getUiSettings().setMapToolbarEnabled(false);
-
-        if (isLoadedFirstStartLocation) {
-            DefinedLocation location = locationManager.getLastDefinedLocation();
-            if (location != null) {
-                LatLng cameraPosition = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition, 13));
-                presenter.onMapReady(location);
-                isLoadedFirstStartLocation = false;
-            }
-        }
-        if (cameraPosition != null) map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     private boolean isMapReady() {

@@ -2,7 +2,9 @@ package com.stoyanov.developer.goevent;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.ContextWrapper;
 
+import com.pixplicity.easyprefs.library.Prefs;
 import com.stoyanov.developer.goevent.di.component.ApplicationComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerApplicationComponent;
 import com.stoyanov.developer.goevent.di.module.ApplicationModule;
@@ -25,6 +27,13 @@ public class MainApplication extends Application {
 
         applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
+                .build();
+
+        new Prefs.Builder()
+                .setContext(this)
+                .setMode(ContextWrapper.MODE_PRIVATE)
+                .setPrefsName(getPackageName())
+                .setUseDefaultSharedPreference(true)
                 .build();
 
 //        if (LeakCanary.isInAnalyzerProcess(this)) {

@@ -7,7 +7,7 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 
 import com.stoyanov.developer.goevent.MainApplication;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
@@ -31,7 +31,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     SavedEventsManager savedEventsManager;
     private Event savedEvent;
     private EventsLoader.SORTING_PARAM sortingParam;
-    private DefinedLocation definedLocation;
+    private LocationPref locationPref;
 
     public ListOfEventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
@@ -39,11 +39,10 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         (MainApplication.getApplicationComponent(context)).inject(this);
     }
 
-    public void onStart(DefinedLocation location) {
-        Log.d(TAG, "onStart: ");
-        definedLocation = location;
+    public void onStart(LocationPref location) {
+        if (location != null) Log.d(TAG, "onStart: location arg is " + location.toString());
+        locationPref = location;
         loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
-        getView().showProgress(true);
     }
 
     public void onRefresh() {
@@ -51,18 +50,19 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
         loaderManager.restartLoader(ID_LOADER_EVENTS, null, this);
     }
 
-    public void onDestroyView() {
-        Log.d(TAG, "onDestroyView: ");
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: ");
         loaderManager.destroyLoader(ID_LOADER_EVENTS);
     }
 
     @Override
     public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
         Log.d(TAG, "onCreateLoader: ");
-        EventsByLocationLoader loader = new EventsByLocationLoader(context, definedLocation) {
+        getView().visibleProgress(true);
+        EventsByLocationLoader loader = new EventsByLocationLoader(context, locationPref) {
             @Override
             public void onNetworkError() {
-                if (getView() != null) getView().showMessageNetworkError();
+                if (getView() != null) getView().showError();
             }
         };
 //        loader.setSortingParam(sortingParam != null ? sortingParam : EventsLoader.SORTING_PARAM.DATE);
@@ -71,13 +71,18 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
 
     @Override
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        if (data != null && data.size() > 0) {
-            getView().showEvents(data);
+        Log.d(TAG, "onLoadFinished: Is data null?" + (data == null));
+        if (data != null) {
+            if (data.size() > 0) {
+                getView().showEvents(data);
+                Log.d(TAG, "onLoadFinished: data size is :" + data.size());
+            } else {
+                getView().showEmpty();
+            }
         } else {
-            getView().showEmpty();
+            getView().showError();
         }
-        getView().showProgress(false);
-        if (data != null) Log.d(TAG, "onLoadFinished: data size:" + data.size());
+        getView().visibleProgress(false);
     }
 
     @Override
@@ -98,7 +103,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     }
 
     public void onLike() {
-//        getView().showMessageAddedToFavorite();
+//        getView().showMessageAdded();
         if (savedEvent != null) {
             Log.d(TAG, "onLike: savedEventsManager.add(savedEvent);");
             savedEventsManager.add(savedEvent);
@@ -110,7 +115,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     }
 
     public void onClickViewPager(int page) {
-        getView().showProgress(true);
+        getView().visibleProgress(true);
         getView().clearEvents();
         if (page == PAGE_EVENTS_BY_DATE) {
             sortingParam = EventsLoader.SORTING_PARAM.DATE;
