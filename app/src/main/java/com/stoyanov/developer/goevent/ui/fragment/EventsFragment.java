@@ -31,24 +31,26 @@ import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
-import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
-import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+import com.stoyanov.developer.goevent.mvp.presenter.EventsPresenter;
+import com.stoyanov.developer.goevent.mvp.view.EventsView;
+import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import au.com.dardle.widget.BadgeLayout;
 
-public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
+public class EventsFragment extends Fragment implements EventsView,
         BadgeLayout.OnBadgeClickedListener {
-    private static final String TAG = "ListOfEventsFragment";
+    private static final String TAG = "EventsFragment";
     @Inject
-    ListOfEventsPresenter presenter;
+    EventsPresenter presenter;
     @Inject
     NavigationManager navigationManager;
     @Inject
@@ -75,7 +77,7 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated: ");
         DaggerFragmentComponent.builder()
-                .activityComponent(((MainActivity) getActivity()).getActivityComponent())
+                .activityComponent(((ContainerActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
         noUpcomingEventsLayout = (RelativeLayout) getActivity().findViewById(R.id.list_events_no_upcoming_events);
@@ -99,9 +101,9 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
         toolbar = (Toolbar) getView().findViewById(R.id.list_events_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
-                ((MainActivity) getActivity()).getDrawerLayout(),
+                ((ContainerActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
-        ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
+        ((ContainerActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
     }
 
     private void setupEventsAdapter() {
@@ -219,12 +221,19 @@ public class ListOfEventsFragment extends Fragment implements ListOfEventsView,
     public void onDestroyView() {
         super.onDestroyView();
         presenter.onDestroyView();
-        ((MainActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+        ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
     }
 
     @Override
     public void onBadgeClicked(BadgeLayout.Badge badge) {
 
+    }
+
+    @Override
+    public void showCategories(Set<Category> categories) {
+        for (Category cat : categories) {
+            badgeLayout.addBadge(badgeLayout.newBadge().setText(cat.getName()));
+        }
     }
 
     @Override

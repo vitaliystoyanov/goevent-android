@@ -1,5 +1,7 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import co.uk.rushorm.core.RushObject;
 
 public class DefinedLocation extends RushObject {
@@ -10,6 +12,11 @@ public class DefinedLocation extends RushObject {
     private double longitude;
 
     public DefinedLocation() {
+    }
+
+    public DefinedLocation(LatLng latLng) {
+        latitude = latLng.latitude;
+        longitude = latLng.longitude;
     }
 
     public DefinedLocation(double latitude, double longitude) {

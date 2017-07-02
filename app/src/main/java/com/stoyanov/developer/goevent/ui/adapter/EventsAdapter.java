@@ -12,7 +12,7 @@ import com.like.IconType;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.Picasso;
-import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
@@ -34,7 +34,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     public EventsAdapter(Context context, OnItemClickListener onItemClickListener,
                          OnLikeItemClickListener onLikeItemClickListener) {
-        (MainApplication.getApplicationComponent(context)).inject(this);
+        (GoeventApplication.getApplicationComponent(context)).inject(this);
         this.onLikeItemClickListener = onLikeItemClickListener;
         this.onItemClickListener = onItemClickListener;
         this.context = context;

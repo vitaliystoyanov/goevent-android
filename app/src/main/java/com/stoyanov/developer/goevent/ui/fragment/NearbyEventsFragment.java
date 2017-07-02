@@ -56,7 +56,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
-import com.stoyanov.developer.goevent.FetchAddressIntentService;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
@@ -65,7 +64,8 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.NearbyEventsView;
-import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+import com.stoyanov.developer.goevent.service.FetchAddressIntentService;
+import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
 import com.stoyanov.developer.goevent.ui.common.EventMarkerClusterRenderer;
 
 import java.util.ArrayList;
@@ -133,7 +133,7 @@ public class NearbyEventsFragment extends Fragment
                 .addApi(LocationServices.API)
                 .build();
         generator = new IconGenerator(getContext());
-        searchView.attachNavigationDrawerToMenuButton(((MainActivity) getActivity()).getDrawerLayout());
+        searchView.attachNavigationDrawerToMenuButton(((ContainerActivity) getActivity()).getDrawerLayout());
         searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
 
             @Override
@@ -255,7 +255,7 @@ public class NearbyEventsFragment extends Fragment
 
     private void setupDagger() {
         DaggerFragmentComponent.builder()
-                .activityComponent(((MainActivity) getActivity()).getActivityComponent())
+                .activityComponent(((ContainerActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
     }
@@ -421,6 +421,12 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                presenter.onUpdateSearchLocation(new DefinedLocation(latLng));
+            }
+        });
         clusterManager = new ClusterManager<>(getActivity(), map);
         clusterManager.setRenderer(new EventMarkerClusterRenderer(getContext(), map, clusterManager));
         clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
@@ -456,7 +462,8 @@ public class NearbyEventsFragment extends Fragment
                 isLoadedFirstStartLocation = false;
             }
         }
-        if (cameraPosition != null) map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        if (cameraPosition != null)
+            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     private boolean isMapReady() {

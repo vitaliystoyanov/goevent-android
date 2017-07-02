@@ -13,7 +13,7 @@ import com.stoyanov.developer.goevent.ui.activity.DefaultLocationActivity;
 import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SettingsActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
-import com.stoyanov.developer.goevent.ui.fragment.ListOfEventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.EventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
 
@@ -81,7 +81,7 @@ public class NavigationManager {
     }
 
     public void goToListOfEvents() {
-        openAsRoot(new ListOfEventsFragment());
+        openAsRoot(new EventsFragment());
     }
 
     public void goToLoginForm(Context context) {

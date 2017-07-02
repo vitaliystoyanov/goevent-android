@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,9 +35,9 @@ import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
-import com.stoyanov.developer.goevent.mvp.presenter.DetailPresenter;
+import com.stoyanov.developer.goevent.mvp.presenter.EventDetailPresenter;
 import com.stoyanov.developer.goevent.mvp.view.DetailEventView;
-import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
 import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import javax.inject.Inject;
@@ -55,7 +54,7 @@ public class DetailEventFragment extends Fragment
     @Inject
     NavigationManager navigationManager;
     @Inject
-    DetailPresenter presenter;
+    EventDetailPresenter presenter;
 
     @BindView(R.id.detail_event_routes_map)
     MapView mapView;
@@ -106,7 +105,7 @@ public class DetailEventFragment extends Fragment
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         DaggerFragmentComponent.builder()
-                .activityComponent(((MainActivity) getActivity()).getActivityComponent())
+                .activityComponent(((ContainerActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
         setupToolbar();
@@ -129,8 +128,8 @@ public class DetailEventFragment extends Fragment
 
     private void setupToolbar() {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((MainActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

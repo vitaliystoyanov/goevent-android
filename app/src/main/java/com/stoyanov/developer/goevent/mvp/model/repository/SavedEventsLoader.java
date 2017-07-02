@@ -3,7 +3,7 @@ package com.stoyanov.developer.goevent.mvp.model.repository;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.SavedEvent;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class SavedEventsLoader extends AsyncTaskLoader<List<SavedEvent>> {
 
     public SavedEventsLoader(Context context) {
         super(context);
-        (MainApplication.getApplicationComponent(context)).inject(this);
+        (GoeventApplication.getApplicationComponent(context)).inject(this);
     }
 
     @Override

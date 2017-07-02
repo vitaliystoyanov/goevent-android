@@ -10,11 +10,11 @@ import com.stoyanov.developer.goevent.di.module.ApplicationModule;
 import co.uk.rushorm.android.AndroidInitializeConfig;
 import co.uk.rushorm.core.RushCore;
 
-public class MainApplication extends Application {
+public class GoeventApplication extends Application {
     private ApplicationComponent applicationComponent;
 
     public static ApplicationComponent getApplicationComponent(Context context) {
-        return ((MainApplication) context.getApplicationContext()).applicationComponent; // FIXME: 09.10.2016
+        return ((GoeventApplication) context.getApplicationContext()).applicationComponent; // FIXME: 09.10.2016
     }
 
     @Override

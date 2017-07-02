@@ -3,8 +3,8 @@ package com.stoyanov.developer.goevent.di.module;
 import android.app.Application;
 import android.support.v4.app.LoaderManager;
 
-import com.stoyanov.developer.goevent.mvp.presenter.DetailPresenter;
-import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
+import com.stoyanov.developer.goevent.mvp.presenter.EventDetailPresenter;
+import com.stoyanov.developer.goevent.mvp.presenter.EventsPresenter;
 import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.presenter.SavedEventsPresenter;
 
@@ -15,13 +15,13 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    ListOfEventsPresenter providePresenter(Application application, LoaderManager manager) {
-        return new ListOfEventsPresenter(application, manager);
+    EventsPresenter providePresenter(Application application, LoaderManager manager) {
+        return new EventsPresenter(application, manager);
     }
 
     @Provides
-    DetailPresenter provideDetailPresenter() {
-        return new DetailPresenter();
+    EventDetailPresenter provideDetailPresenter() {
+        return new EventDetailPresenter();
     }
 
     @Provides

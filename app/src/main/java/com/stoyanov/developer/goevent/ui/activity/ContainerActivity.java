@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.ActivityComponent;
@@ -21,8 +21,8 @@ import com.stoyanov.developer.goevent.mvp.view.MainView;
 
 import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity implements MainView {
-    private static final String TAG = "MainActivity";
+public class ContainerActivity extends AppCompatActivity implements MainView {
+    private static final String TAG = "ContainerActivity";
     @Inject
     NavigationManager navigationManager;
     @Inject
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_container);
         presenter = new MainPresenter(); // FIXME: 10/16/16 to dagger
         setupDagger();
         setupNavigationDrawer();
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     private void setupDagger() {
         activityComponent = DaggerActivityComponent.builder()
-                .applicationComponent((MainApplication.getApplicationComponent(this)))
+                .applicationComponent((GoeventApplication.getApplicationComponent(this)))
                 .activityModule(new ActivityModule(this))
                 .build();
         activityComponent.inject(this);
@@ -117,11 +117,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
             MenuItem item = menu.findItem(R.id.drawer_item_defined_location);
             item.setTitle(location.getCity() + ", " + location.getCountry());
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
     }
 
     @Override

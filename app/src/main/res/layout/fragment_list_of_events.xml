@@ -62,7 +62,7 @@
         <au.com.dardle.widget.BadgeLayout
             android:id="@+id/list_events_badge_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingBottom="8dp"
             android:paddingLeft="8dp"
             android:paddingStart="8dp"
@@ -72,35 +72,6 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:spacing="8dp">
 
-            <au.com.dardle.widget.BadgeItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ALL" />
-
-            <au.com.dardle.widget.BadgeItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CONCERT" />
-
-            <au.com.dardle.widget.BadgeItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="MOVIE" />
-
-            <au.com.dardle.widget.BadgeItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="EARLY ACCESS" />
-
-            <au.com.dardle.widget.BadgeItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FAMILY" />
-
-            <au.com.dardle.widget.BadgeItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="EDITORS' CHOICE" />
 
         </au.com.dardle.widget.BadgeLayout>
 

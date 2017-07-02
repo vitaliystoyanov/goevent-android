@@ -9,7 +9,7 @@ import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoade
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
-import com.stoyanov.developer.goevent.mvp.presenter.ListOfEventsPresenter;
+import com.stoyanov.developer.goevent.mvp.presenter.EventsPresenter;
 import com.stoyanov.developer.goevent.mvp.presenter.SavedEventsPresenter;
 import com.stoyanov.developer.goevent.ui.activity.DefaultLocationActivity;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
@@ -32,7 +32,7 @@ public interface ApplicationComponent {
 
     void inject(SavedEventsLoader loader);
 
-    void inject(ListOfEventsPresenter presenter);
+    void inject(EventsPresenter presenter);
 
     void inject(SavedEventsPresenter presenter);
 

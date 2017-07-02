@@ -5,7 +5,7 @@ import android.support.v4.app.LoaderManager;
 
 import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.di.scope.ActivityScope;
-import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
 
 import dagger.Module;
 import dagger.Provides;
@@ -13,21 +13,21 @@ import dagger.Provides;
 @Module
 public class ActivityModule {
 
-    private MainActivity mainActivity;
+    private ContainerActivity containerActivity;
 
-    public ActivityModule(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
+    public ActivityModule(ContainerActivity containerActivity) {
+        this.containerActivity = containerActivity;
     }
 
     @Provides
     @ActivityScope
-    MainActivity provideMainActivity() {
-        return mainActivity;
+    ContainerActivity provideMainActivity() {
+        return containerActivity;
     }
 
     @Provides
     @ActivityScope
-    FragmentManager provideFragmentManager(MainActivity activity) {
+    FragmentManager provideFragmentManager(ContainerActivity activity) {
         return activity.getSupportFragmentManager();
     }
 
@@ -39,7 +39,7 @@ public class ActivityModule {
 
     @Provides
     @ActivityScope
-    LoaderManager provideLoaderManager(MainActivity activity) {
+    LoaderManager provideLoaderManager(ContainerActivity activity) {
         return activity.getSupportLoaderManager();
     }
 }

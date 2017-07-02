@@ -23,7 +23,7 @@ import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.presenter.SavedEventsPresenter;
 import com.stoyanov.developer.goevent.mvp.view.SavedEventsView;
-import com.stoyanov.developer.goevent.ui.activity.MainActivity;
+import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
 import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class SavedEventsFragment extends Fragment implements SavedEventsView {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         DaggerFragmentComponent.builder()
-                .activityComponent(((MainActivity) getActivity()).getActivityComponent())
+                .activityComponent(((ContainerActivity) getActivity()).getActivityComponent())
                 .build()
                 .inject(this);
         setupToolbar();
@@ -66,9 +66,9 @@ public class SavedEventsFragment extends Fragment implements SavedEventsView {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         progressBar = (ProgressBar) getActivity().findViewById(R.id.saved_events_progress_bar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
-                ((MainActivity) getActivity()).getDrawerLayout(),
+                ((ContainerActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
-        ((MainActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
+        ((ContainerActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
     }
 
     private void setupRecycleView() {
@@ -124,7 +124,7 @@ public class SavedEventsFragment extends Fragment implements SavedEventsView {
     public void onDestroyView() {
         super.onDestroyView();
         presenter.onDestroyView();
-        ((MainActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+        ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
     }
 
     @Override

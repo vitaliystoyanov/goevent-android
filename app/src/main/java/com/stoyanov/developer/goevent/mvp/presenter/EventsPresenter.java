@@ -6,25 +6,25 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 
-import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
-import com.stoyanov.developer.goevent.mvp.view.ListOfEventsView;
+import com.stoyanov.developer.goevent.mvp.view.EventsView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
+public class EventsPresenter extends BasePresenter<EventsView>
         implements LoaderManager.LoaderCallbacks<List<Event>> {
     public static final int PAGE_EVENTS_CUSTOM_FILTER = 2;
     public static final int PAGE_EVENTS_BY_LOCATION = 1;
     public static final int PAGE_EVENTS_BY_DATE = 0;
     public final static int ID_LOADER_EVENTS = 11;
-    private final static String TAG = "ListOfEventsPresenter";
+    private final static String TAG = "EventsPresenter";
     private final LoaderManager loaderManager;
     private final Context context;
     @Inject
@@ -33,10 +33,10 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     private EventsLoader.SORTING_PARAM sortingParam;
     private DefinedLocation definedLocation;
 
-    public ListOfEventsPresenter(Context context, LoaderManager loaderManager) {
+    public EventsPresenter(Context context, LoaderManager loaderManager) {
         this.loaderManager = loaderManager;
         this.context = context;
-        (MainApplication.getApplicationComponent(context)).inject(this);
+        (GoeventApplication.getApplicationComponent(context)).inject(this);
     }
 
     public void onStart(DefinedLocation location) {
@@ -73,6 +73,7 @@ public class ListOfEventsPresenter extends BasePresenter<ListOfEventsView>
     public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
         if (data != null && data.size() > 0) {
             getView().showEvents(data);
+            getView().showCategories(((EventsByLocationLoader)loader).getCategories());
         } else {
             getView().showEmpty();
         }

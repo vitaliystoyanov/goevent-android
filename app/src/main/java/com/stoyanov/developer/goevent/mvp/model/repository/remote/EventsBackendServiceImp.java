@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.api.EventsApi;
@@ -24,7 +24,7 @@ public class EventsBackendServiceImp implements EventsBackendService {
     Retrofit retrofit;
 
     public EventsBackendServiceImp(Context context) {
-        MainApplication.getApplicationComponent(context).inject(this);
+        GoeventApplication.getApplicationComponent(context).inject(this);
         Log.d(TAG, "EventsBackendServiceImp: retrofit instance is null? - " + (retrofit == null));
         eventsApi = retrofit.create(EventsApi.class);
     }

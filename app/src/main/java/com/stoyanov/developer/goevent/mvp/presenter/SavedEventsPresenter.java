@@ -2,7 +2,7 @@ package com.stoyanov.developer.goevent.mvp.presenter;
 
 import android.content.Context;
 
-import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
 import com.stoyanov.developer.goevent.mvp.view.SavedEventsView;
@@ -16,7 +16,7 @@ public class SavedEventsPresenter extends BasePresenter<SavedEventsView> {
     SavedEventsManager savedEventsManager;
 
     public SavedEventsPresenter(Context context) {
-        (MainApplication.getApplicationComponent(context)).inject(this);
+        (GoeventApplication.getApplicationComponent(context)).inject(this);
     }
 
     public void onStart() {

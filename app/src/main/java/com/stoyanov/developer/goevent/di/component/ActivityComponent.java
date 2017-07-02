@@ -7,8 +7,8 @@ import com.stoyanov.developer.goevent.NavigationManager;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
 import com.stoyanov.developer.goevent.di.scope.ActivityScope;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
 import com.stoyanov.developer.goevent.ui.activity.DefaultLocationActivity;
-import com.stoyanov.developer.goevent.ui.activity.MainActivity;
 
 import dagger.Component;
 
@@ -24,7 +24,7 @@ public interface ActivityComponent {
 
     LocationManager locationManager();
 
-    void inject(MainActivity activity);
+    void inject(ContainerActivity activity);
 
     void inject(DefaultLocationActivity activity);
 

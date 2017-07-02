@@ -1,11 +1,10 @@
 package com.stoyanov.developer.goevent.mvp.presenter;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.stoyanov.developer.goevent.MainApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.view.DetailEventView;
 
-public class DetailPresenter extends BasePresenter<DetailEventView> {
+public class EventDetailPresenter extends BasePresenter<DetailEventView> {
 
     public void onStart(Event event) {
         getView().showImage(event.getPicture());

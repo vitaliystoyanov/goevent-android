@@ -1,10 +1,12 @@
 package com.stoyanov.developer.goevent.mvp.view;
 
+import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 
 import java.util.List;
+import java.util.Set;
 
-public interface ListOfEventsView extends BaseView {
+public interface EventsView extends BaseView {
 
     void showEvents(List<Event> events);
 
@@ -19,6 +21,8 @@ public interface ListOfEventsView extends BaseView {
     void goToDetailEvent(Event event);
 
     void goToSearchEvents();
+
+    void showCategories(Set<Category> categories);
 
     void showMessageAddedToFavorite();
 

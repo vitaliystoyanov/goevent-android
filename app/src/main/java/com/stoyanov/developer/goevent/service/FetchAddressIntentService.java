@@ -1,4 +1,4 @@
-package com.stoyanov.developer.goevent;
+package com.stoyanov.developer.goevent.service;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
 import android.util.Log;
+
+import com.stoyanov.developer.goevent.R;
 
 import java.io.IOException;
 import java.util.ArrayList;

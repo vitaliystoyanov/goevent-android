@@ -29,12 +29,12 @@ import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.stoyanov.developer.goevent.FetchAddressIntentService;
-import com.stoyanov.developer.goevent.MainApplication;
+import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
+import com.stoyanov.developer.goevent.service.FetchAddressIntentService;
 
 import java.util.List;
 
@@ -63,7 +63,7 @@ public class DefaultLocationActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default_location);
         ButterKnife.bind(this);
-        (MainApplication.getApplicationComponent(this)).inject(this);
+        (GoeventApplication.getApplicationComponent(this)).inject(this);
         googleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
