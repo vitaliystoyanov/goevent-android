@@ -16,18 +16,18 @@ import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
 import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
-import com.stoyanov.developer.goevent.mvp.presenter.MainPresenter;
-import com.stoyanov.developer.goevent.mvp.view.MainView;
+import com.stoyanov.developer.goevent.mvp.presenter.ContainerPresenter;
+import com.stoyanov.developer.goevent.mvp.view.ContainerView;
 
 import javax.inject.Inject;
 
-public class ContainerActivity extends AppCompatActivity implements MainView {
+public class ContainerActivity extends AppCompatActivity implements ContainerView {
     private static final String TAG = "ContainerActivity";
     @Inject
     NavigationManager navigationManager;
     @Inject
     LocationManager locationManager;
-    private MainPresenter presenter;
+    private ContainerPresenter presenter;
     private ActivityComponent activityComponent;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
@@ -36,7 +36,7 @@ public class ContainerActivity extends AppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_container);
-        presenter = new MainPresenter(); // FIXME: 10/16/16 to dagger
+        presenter = new ContainerPresenter(); // FIXME: 10/16/16 to dagger
         setupDagger();
         setupNavigationDrawer();
     }

@@ -30,7 +30,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-
 public class SavedEventsFragment extends Fragment implements SavedEventsView {
     private static final String TAG = "SavedEventsFragment";
     @Inject
@@ -69,6 +68,7 @@ public class SavedEventsFragment extends Fragment implements SavedEventsView {
                 ((ContainerActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
         ((ContainerActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
+        toolbar.setTitle(R.string.title_favorite);
     }
 
     private void setupRecycleView() {
@@ -157,16 +157,15 @@ public class SavedEventsFragment extends Fragment implements SavedEventsView {
     @Override
     public void showSaved(List<Event> events) {
         if (emptyLayout.getVisibility() == View.VISIBLE) emptyLayout.setVisibility(View.INVISIBLE);
-        toolbar.setTitle(getString(R.string.toolbar_title_saved_events, events.size()));
         adapter.removeAndAdd(events);
 //        Snackbar.make(getView(), "Synchronization...", Snackbar.LENGTH_SHORT).show();
-        Snackbar.make(getView(), "Please, log in to update saved events", Snackbar.LENGTH_LONG)
-                .setAction("Log in", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                }).show();
+//        Snackbar.make(getView(), "Please, log in to update saved events", Snackbar.LENGTH_LONG)
+//                .setAction("Log in", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//
+//                    }
+//                }).show();
     }
 
     @Override

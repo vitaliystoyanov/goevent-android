@@ -1,9 +1,9 @@
 package com.stoyanov.developer.goevent.mvp.presenter;
 
-import com.stoyanov.developer.goevent.mvp.view.MainView;
+import com.stoyanov.developer.goevent.mvp.view.ContainerView;
 
-public class MainPresenter extends BasePresenter<MainView> {
-    private static final String TAG = "MainPresenter";
+public class ContainerPresenter extends BasePresenter<ContainerView> {
+    private static final String TAG = "ContainerPresenter";
 
     public void onItemListOfEvents() {
         getView().goToListOfEvents();

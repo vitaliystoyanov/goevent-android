@@ -9,28 +9,26 @@
     <string name="drawer_map">Карта</string>
     <string name="drawer_notifications">Сповіщення</string>
     <string name="drawer_login">Вхід</string>
-    <string name="drawer_help">Help</string>
-    <string name="drawer_about">Feedback</string>
 
-    <string name="title_activity_search">Search events</string>
+    <string name="title_activity_search">Пошук заходів</string>
 
     <string name="toolbar_title_saved_events">%1$d збережених подій</string>
     <string name="toolbar_title_no_saved_events">Збережені події</string>
 
-    <string name="card_item_more">MORE</string>
-    <string name="card_item_share">SHARE</string>
-    <string name="login_password_field">Password</string>
-    <string name="login_login_button">Login</string>
-    <string name="no_account_yet_create_one">No account yet? Create one</string>
-    <string name="login_username">Username</string>
+    <string name="card_item_filter">Фільтр</string>
+    <string name="card_item_share">Поширити</string>
+    <string name="login_password_field">Пароль</string>
+    <string name="login_login_button">Логін</string>
+    <string name="no_account_yet_create_one">Немає акаунту? Створи його</string>
+    <string name="login_username">Логін</string>
     <string name="registration_log_in">Already have an account? Log in.</string>
     <string name="description_time">Duration time</string>
     <string name="event_map_directions">Directions</string>
-    <string name="event_map_open">Open map</string>
-    <string name="event_info_location">Location</string>
-    <string name="event_info_category">Category</string>
-    <string name="registration_create">Create</string>
-    <string name="message_event_added_saved">This event added to Saved</string>
+    <string name="event_map_open">Відкрити карту</string>
+    <string name="event_info_location">Місце</string>
+    <string name="event_info_category">Категорія</string>
+    <string name="registration_create">Створити</string>
+    <string name="message_event_added_saved">Захід додано до збережених</string>
     <string name="message_bad_connection">Check your connection or try again later</string>
     <string name="title_detail_event">Detail event</string>
     <string name="location_field_full_format">%1$s, %2$s, %3$s</string>
@@ -52,6 +50,8 @@
     <string name="geocoding_no_address_found">No address found</string>
     <string name="geocoding_address_found">Address found</string>
     <string name="title_home">Головна</string>
+    <string name="title_category">Категорії</string>
+    <string name="title_favorite">Збереженні</string>
 
     <string-array name="items_category_of_events_for_spinner">
         <item>Nightlife</item>

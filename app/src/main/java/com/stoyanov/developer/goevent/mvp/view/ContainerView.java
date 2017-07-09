@@ -1,6 +1,6 @@
 package com.stoyanov.developer.goevent.mvp.view;
 
-public interface MainView extends BaseView {
+public interface ContainerView extends BaseView {
 
     void goToListOfEvents();
 

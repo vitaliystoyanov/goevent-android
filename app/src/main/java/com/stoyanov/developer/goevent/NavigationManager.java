@@ -14,7 +14,7 @@ import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SettingsActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
 import com.stoyanov.developer.goevent.ui.fragment.EventsFragment;
-import com.stoyanov.developer.goevent.ui.fragment.MainFragment;
+import com.stoyanov.developer.goevent.ui.main.MainFragment;
 import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
 
