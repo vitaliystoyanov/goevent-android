@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -23,6 +24,8 @@ public class NavigationManager {
 
     private FragmentManager manager;
     private NearbyEventsFragment nearbyEventsFragment;
+    private Fragment restore;
+    private ListOfEventsFragment listOfEventsFragment;
 
     public NavigationManager(FragmentManager manager) {
         this.manager = manager;
@@ -115,6 +118,14 @@ public class NavigationManager {
 
     public void goToAddEvent() {
 
+    }
+
+    public void saveFragmentState(Bundle savedInstanceState) {
+        restore = manager.getFragment(savedInstanceState, "myFragmentName");
+    }
+
+    public void restoreFragmentState(Bundle state) {
+        manager.putFragment(state, "myFragmentName", restore);
     }
 
     public void delegateOnActivityResult(int requestCode, int resultCode, Intent data) {

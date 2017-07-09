@@ -2,7 +2,6 @@ package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
 
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
@@ -45,11 +44,5 @@ public class EventsModule {
     EventsRepository provideEventsRepository(EventsLocalStorage local,
                                              EventsBackendService remote) {
         return new EventsRepositoryImp(local, remote);
-    }
-
-    @Provides
-    @Singleton
-    LocationManager provideLocationManager() {
-        return new LocationManager();
     }
 }

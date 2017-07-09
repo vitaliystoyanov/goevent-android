@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.like.IconType;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.R;
@@ -69,16 +71,26 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         Event event = data.get(position);
+        holder.progressBar.setVisibility(View.VISIBLE);
         String urlPicture = event.getPicture();
-        if (urlPicture != null) {
             Picasso.with(context)
                     .load(urlPicture)
                     .fit()
                     .centerCrop()
-                    .into(holder.image);
-        }
+                    .into(holder.image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.progressBar.setVisibility(View.INVISIBLE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            holder.progressBar.setVisibility(View.INVISIBLE);
+                            holder.image.setImageResource(R.drawable.background_splash);
+                        }
+                    });
         if (event.getStartTime() != null && event.getEndTime() != null) {
             holder.when.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
                     DateUtil.toDate(event.getEndTime())));
@@ -122,6 +134,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         public ImageView image;
         public TextView location;
         public TextView category;
+        public ProgressBar progressBar;
         private LikeButton star;
         private OnItemClickListener itemClickListener;
         private OnLikeItemClickListener onLikeItemClickListener;
@@ -137,6 +150,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             location = (TextView) view.findViewById(R.id.item_event_where);
             image = (ImageView) view.findViewById(R.id.card_item_image);
             star = (LikeButton) view.findViewById(R.id.card_item_star);
+            progressBar = (ProgressBar) view.findViewById(R.id.card_item_progress_bar);
             star.setIconSizeDp(22);
             star.setIcon(IconType.Star); // FIXME: 22.11.2016 to xml
 

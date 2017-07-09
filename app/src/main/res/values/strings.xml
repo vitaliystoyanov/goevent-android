@@ -31,7 +31,7 @@
     <string name="event_info_category">Category</string>
     <string name="registration_create">Create</string>
     <string name="message_event_added_saved">This event added to Saved</string>
-    <string name="message_bad_connection">Check your connection or try again later</string>
+    <string name="message_error">Something happened. Check your connection</string>
     <string name="title_detail_event">Detail event</string>
     <string name="location_field_full_format">%1$s, %2$s, %3$s</string>
     <string name="location_country_city_format">%1$s, %2$s</string>
