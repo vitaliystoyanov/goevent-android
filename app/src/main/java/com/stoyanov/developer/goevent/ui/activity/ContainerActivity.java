@@ -63,6 +63,8 @@ public class ContainerActivity extends AppCompatActivity implements MainView {
                     presenter.onItemFavorites();
                 } else if (i == R.id.drawer_item_defined_location) {
                     presenter.onItemDefineLocation();
+                } else if (i == R.id.drawer_item_home) {
+                    presenter.onItemHome();
                 }
                 return true;
             }
@@ -152,6 +154,11 @@ public class ContainerActivity extends AppCompatActivity implements MainView {
     @Override
     public void goToNotificationSettings() {
         navigationManager.goToNotificationSettings(this);
+    }
+
+    @Override
+    public void goToHome() {
+        navigationManager.goToHome();
     }
 
     public ActivityComponent getActivityComponent() {

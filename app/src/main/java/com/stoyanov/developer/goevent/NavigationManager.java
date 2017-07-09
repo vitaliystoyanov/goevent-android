@@ -14,6 +14,7 @@ import com.stoyanov.developer.goevent.ui.activity.LoginActivity;
 import com.stoyanov.developer.goevent.ui.activity.SettingsActivity;
 import com.stoyanov.developer.goevent.ui.fragment.DetailEventFragment;
 import com.stoyanov.developer.goevent.ui.fragment.EventsFragment;
+import com.stoyanov.developer.goevent.ui.fragment.MainFragment;
 import com.stoyanov.developer.goevent.ui.fragment.NearbyEventsFragment;
 import com.stoyanov.developer.goevent.ui.fragment.SavedEventsFragment;
 
@@ -120,5 +121,9 @@ public class NavigationManager {
         if (requestCode == NearbyEventsFragment.REQUEST_CHECK_SETTINGS) {
             nearbyEventsFragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void goToHome() {
+        open(MainFragment.newInstance());
     }
 }

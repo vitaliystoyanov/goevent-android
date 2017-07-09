@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/drawer_item_list_events"
+            android:id="@+id/drawer_item_home"
             android:checked="true"
+            android:icon="@drawable/ic_home"
+            android:title="@string/drawer_home" />
+
+        <item
+            android:id="@+id/drawer_item_list_events"
             android:icon="@drawable/ic_list"
             android:title="@string/drawer_list_of_events" />
         <item
@@ -17,11 +21,11 @@
             android:icon="@drawable/ic_near_me"
             android:title="@string/drawer_nearby" />
 
-<!--        <item
-            android:id="@+id/drawer_item_notification"
-            android:icon="@drawable/ic_notifications"
-            android:title="@string/drawer_notifications"
-            app:actionLayout="@layout/switch_drawer_item" />-->
+        <!--        <item
+                    android:id="@+id/drawer_item_notification"
+                    android:icon="@drawable/ic_notifications"
+                    android:title="@string/drawer_notifications"
+                    app:actionLayout="@layout/switch_drawer_item" />-->
     </group>
     <group
         android:id="@+id/submenu_drawer_items"
@@ -32,8 +36,7 @@
             android:title="@string/drawer_login" />
         <item
             android:id="@+id/drawer_item_defined_location"
-            android:checkable="false"
             android:icon="@drawable/ic_home_map_marker_24px"
-            android:title="No location" />
+            android:title="Місцезнаходження" />
     </group>
 </menu>

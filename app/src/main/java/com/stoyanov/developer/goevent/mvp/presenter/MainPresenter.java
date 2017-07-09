@@ -26,10 +26,14 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     public void onStart() {
-        getView().goToListOfEvents();
+        getView().goToHome();
     }
 
     public void onItemDefineLocation() {
         getView().goToDefineLocation();
+    }
+
+    public void onItemHome() {
+        getView().goToHome();
     }
 }
