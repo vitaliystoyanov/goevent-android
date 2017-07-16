@@ -15,7 +15,7 @@ import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
 import com.stoyanov.developer.goevent.manager.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 
 import javax.inject.Inject;
 
@@ -110,7 +110,7 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
     @Override
     protected void onResume() {
         super.onResume();
-        DefinedLocation location = locationManager.getLastDefinedLocation();
+        LocationPref location = locationManager.getLastDefinedLocation();
         if (location != null) {
             Menu menu = navigationView.getMenu();
             MenuItem item = menu.findItem(R.id.drawer_item_defined_location);

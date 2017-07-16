@@ -32,7 +32,7 @@ import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.manager.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.Category;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 
@@ -59,7 +59,7 @@ public class EventsFragment extends Fragment implements EventsView,
     private CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
     private BadgeLayout badgeLayout;
-    private DefinedLocation definedLocation;
+    private LocationPref definedLocation;
     private RelativeLayout noUpcomingEventsLayout;
 
     @Override

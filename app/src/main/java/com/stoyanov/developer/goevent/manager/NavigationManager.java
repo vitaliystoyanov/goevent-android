@@ -23,7 +23,6 @@ public class NavigationManager extends BaseNavigationManager {
 
     private NearbyEventsFragment nearbyEventsFragment;
     private Fragment restore;
-    private ListOfEventsFragment listOfEventsFragment;
 
     public NavigationManager(FragmentManager manager) {
         super(manager);
@@ -78,14 +77,6 @@ public class NavigationManager extends BaseNavigationManager {
 
     public void goToAddEvent() {
 
-    }
-
-    public void saveFragmentState(Bundle savedInstanceState) {
-        restore = manager.getFragment(savedInstanceState, "myFragmentName");
-    }
-
-    public void restoreFragmentState(Bundle state) {
-        manager.putFragment(state, "myFragmentName", restore);
     }
 
     public void delegateOnActivityResult(int requestCode, int resultCode, Intent data) {

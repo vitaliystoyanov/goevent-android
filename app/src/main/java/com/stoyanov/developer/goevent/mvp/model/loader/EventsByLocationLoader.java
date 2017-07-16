@@ -3,11 +3,10 @@ package com.stoyanov.developer.goevent.mvp.model.loader;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
 import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Category;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 
@@ -22,10 +21,10 @@ public abstract class EventsByLocationLoader extends AsyncTaskLoader<List<Event>
     private static final String TAG = "EventsByLocationLoader";
     @Inject
     EventsRepository repository;
-    private DefinedLocation definedLocation;
+    private LocationPref definedLocation;
     private Set<Category> categories;
 
-    public EventsByLocationLoader(Context context, @NonNull DefinedLocation location) {
+    public EventsByLocationLoader(Context context, @NonNull LocationPref location) {
         super(context);
         definedLocation = location;
         (GoeventApplication.getApplicationComponent(context)).inject(this);

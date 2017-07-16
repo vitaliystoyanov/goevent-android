@@ -59,7 +59,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.manager.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 import com.stoyanov.developer.goevent.service.FetchAddressIntentService;
@@ -214,7 +214,7 @@ public class NearbyEventsFragment extends Fragment
                     List<Address> definedAddresses = resultData.getParcelableArrayList(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESSES);
                     Address address = definedAddresses.get(0);
 
-                    presenter.onUpdateSearchLocation(new DefinedLocation(address.getLatitude(),
+                    presenter.onUpdateSearchLocation(new LocationPref(address.getLatitude(),
                             address.getLongitude()));
                 } else if (resultCode == FetchAddressIntentService.Constants.FAILURE_RESULT) {
                     String errorMessage = resultData.getString(FetchAddressIntentService.Constants.ERROR_MESSAGE);
@@ -363,7 +363,7 @@ public class NearbyEventsFragment extends Fragment
     public void onLocationChanged(Location location) {
         stopLocationUpdates();
 
-        presenter.onUpdateSearchLocation(new DefinedLocation(location.getLatitude(),
+        presenter.onUpdateSearchLocation(new LocationPref(location.getLatitude(),
                 location.getLongitude()));
         Log.d(TAG, "onLocationChanged:  onLocationChanged: Location updated: " + location.getLatitude()
                 + ", " + location.getLongitude());
@@ -387,7 +387,7 @@ public class NearbyEventsFragment extends Fragment
     }
 
     @Override
-    public void updateMapCamera(DefinedLocation location, boolean isCurrentLocation) {
+    public void updateMapCamera(LocationPref location, boolean isCurrentLocation) {
         LatLng position = new LatLng(location.getLatitude(),
                 location.getLongitude());
         if (selectedPositionMarker != null) selectedPositionMarker.remove();
@@ -422,7 +422,7 @@ public class NearbyEventsFragment extends Fragment
         map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                presenter.onUpdateSearchLocation(new DefinedLocation(latLng));
+                presenter.onUpdateSearchLocation(new LocationPref(latLng));
             }
         });
         clusterManager = new ClusterManager<>(getActivity(), map);
@@ -451,7 +451,7 @@ public class NearbyEventsFragment extends Fragment
         map.getUiSettings().setMapToolbarEnabled(false);
 
         if (isLoadedFirstStartLocation) {
-            DefinedLocation location = locationManager.getLastDefinedLocation();
+            LocationPref location = locationManager.getLastDefinedLocation();
             if (location != null) {
                 LatLng cameraPosition = new LatLng(location.getLatitude(),
                         location.getLongitude());

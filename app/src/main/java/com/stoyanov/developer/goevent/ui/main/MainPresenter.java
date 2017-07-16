@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.loader.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
@@ -16,7 +16,7 @@ public class MainPresenter extends BasePresenter<MainView>
         implements LoaderManager.LoaderCallbacks<List<Event>> {
     private final static int ID_LOADER_EVENTS = 14;
 
-    private DefinedLocation definedLocation;
+    private LocationPref definedLocation;
     private LoaderManager loaderManager;
     private Context context;
 
@@ -25,7 +25,7 @@ public class MainPresenter extends BasePresenter<MainView>
         this.context = context;
     }
 
-    public void provideData(DefinedLocation location) {
+    public void provideData(LocationPref location) {
         definedLocation = location;
         loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
         getView().showProgress(true);

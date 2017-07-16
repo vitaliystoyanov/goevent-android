@@ -5,11 +5,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
-import android.util.Log;
 
 import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.manager.FavoriteEventManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.loader.EventsByLocationLoader;
 import com.stoyanov.developer.goevent.mvp.model.loader.EventsLoader;
@@ -29,7 +28,7 @@ public class EventsPresenter extends BasePresenter<EventsView>
     FavoriteEventManager favoriteEventManager;
     private Event savedEvent;
     private EventsLoader.SORTING_PARAM sortingParam;
-    private DefinedLocation definedLocation;
+    private LocationPref definedLocation;
     private final LoaderManager loaderManager;
     private final Context context;
 
@@ -39,7 +38,7 @@ public class EventsPresenter extends BasePresenter<EventsView>
         (GoeventApplication.getApplicationComponent(context)).inject(this);
     }
 
-    public void onStart(DefinedLocation location) {
+    public void onStart(LocationPref location) {
         definedLocation = location;
         loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
         getView().showProgress(true);

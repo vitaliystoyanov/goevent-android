@@ -32,7 +32,7 @@ import com.google.android.gms.location.LocationServices;
 import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.manager.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 import com.stoyanov.developer.goevent.service.FetchAddressIntentService;
 
@@ -172,7 +172,7 @@ public class DefaultLocationActivity extends AppCompatActivity
                 if (resultCode == FetchAddressIntentService.Constants.SUCCESS_RESULT) {
                     List<Address> definedAddresses = resultData.getParcelableArrayList(FetchAddressIntentService.Constants.RESULT_DATA_ADDRESSES);
                     Address address = definedAddresses.get(0);
-                    DefinedLocation location = new DefinedLocation(address.getLatitude(),
+                    LocationPref location = new LocationPref(address.getLatitude(),
                             address.getLongitude());
                     location.setCity(address.getLocality());
                     location.setCountry(address.getCountryName());
