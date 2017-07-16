@@ -11,9 +11,6 @@ public interface EventsRepository {
     @Nullable
     List<Event> getEvents();
 
-//    @Nullable
-//    List<Event> getEvents(@NonNull Set<Category> categories);
-
     void setOnNetworkErrorListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
 
     @Nullable

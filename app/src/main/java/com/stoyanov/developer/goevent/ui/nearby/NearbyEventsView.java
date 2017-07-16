@@ -1,6 +1,6 @@
 package com.stoyanov.developer.goevent.ui.nearby;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.DefinedLocation;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.view.BaseView;
 
@@ -14,7 +14,7 @@ public interface NearbyEventsView extends BaseView {
 
     void myLocation();
 
-    void updateMapCamera(DefinedLocation location, boolean isCurrentLocation);
+    void updateMapCamera(LocationPref location, boolean isCurrentLocation);
 
     void visibleProgress(boolean state);
 }

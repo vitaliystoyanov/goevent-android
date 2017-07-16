@@ -31,14 +31,13 @@ public class EventsBackendServiceImp implements EventsBackendService {
 
     @Nullable
     public List<Event> getEvents() {
+        Events events = null;
         try {
-            Events body = eventsApi.getEvents().execute().body();
-            if (body == null) return null;
-            return body.list();
+            events = eventsApi.getEvents().execute().body();
         } catch (IOException e) {
             Log.d(TAG, "getEvents: Error has occurred!", e);
         }
-        return null;
+        return events != null ? events.list() : null;
     }
 
     @Nullable
@@ -54,11 +53,10 @@ public class EventsBackendServiceImp implements EventsBackendService {
     @Nullable
     public List<Event> getEventsByLocation(double latitude, double longitude, int distance) {
         try {
-            Events responseBody = eventsApi.getEventsByLocation(latitude, longitude, distance)
+            Events events = eventsApi.getEventsByLocation(latitude, longitude, distance)
                     .execute()
                     .body();
-            if (responseBody == null) return null;
-            return responseBody.list();
+            return events != null ? events.list() : null;
         } catch (IOException e) {
             Log.d(TAG, "getEvents: Error has occurred!", e);
         }
@@ -68,9 +66,8 @@ public class EventsBackendServiceImp implements EventsBackendService {
     @Nullable
     public List<Event> getEventsByLocation(double latitude, double longitude) {
         try {
-            Events body = eventsApi.getEventsByLocation(latitude, longitude, 5000).execute().body(); // FIXME: 1/2/17
-            if (body == null) return null;
-            return body.list();
+            Events events = eventsApi.getEventsByLocation(latitude, longitude, 5000).execute().body();
+            return events != null ? events.list() : null;
         } catch (IOException e) {
             Log.d(TAG, "getEvents: Error has occurred!", e);
         }
