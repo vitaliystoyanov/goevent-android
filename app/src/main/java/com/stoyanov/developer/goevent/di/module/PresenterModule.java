@@ -3,10 +3,10 @@ package com.stoyanov.developer.goevent.di.module;
 import android.app.Application;
 import android.support.v4.app.LoaderManager;
 
-import com.stoyanov.developer.goevent.mvp.presenter.EventDetailPresenter;
-import com.stoyanov.developer.goevent.mvp.presenter.EventsPresenter;
-import com.stoyanov.developer.goevent.mvp.presenter.NearbyEventsPresenter;
-import com.stoyanov.developer.goevent.mvp.presenter.SavedEventsPresenter;
+import com.stoyanov.developer.goevent.ui.eventdetail.EventDetailPresenter;
+import com.stoyanov.developer.goevent.ui.events.EventsPresenter;
+import com.stoyanov.developer.goevent.ui.favorite.FavoriteEventsPresenter;
+import com.stoyanov.developer.goevent.ui.nearby.NearbyEventsPresenter;
 
 import dagger.Module;
 import dagger.Provides;
@@ -25,8 +25,8 @@ public class PresenterModule {
     }
 
     @Provides
-    SavedEventsPresenter provideFavoriteEventsPresenter(Application application) {
-        return new SavedEventsPresenter(application);
+    FavoriteEventsPresenter provideFavoriteEventsPresenter(Application application) {
+        return new FavoriteEventsPresenter(application);
     }
 
     @Provides

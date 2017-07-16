@@ -5,7 +5,7 @@
     android:id="@+id/slide_page_events_cardview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="4dp"
     card_view:cardCornerRadius="4dp">
 
 
@@ -23,6 +23,7 @@
             android:layout_centerHorizontal="true"
             android:textColor="@color/colorWhiteText"
             android:textStyle="bold"
+            android:visibility="gone"
             tools:text="25+" />
 
         <TextView

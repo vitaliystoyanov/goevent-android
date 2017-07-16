@@ -13,7 +13,7 @@
     <string name="title_activity_search">Пошук заходів</string>
 
     <string name="toolbar_title_saved_events">%1$d збережених подій</string>
-    <string name="toolbar_title_no_saved_events">Збережені події</string>
+    <string name="title_favorite_events">Збережені події</string>
 
     <string name="card_item_filter">Фільтр</string>
     <string name="card_item_share">Поширити</string>

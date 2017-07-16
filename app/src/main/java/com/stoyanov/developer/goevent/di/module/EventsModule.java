@@ -2,14 +2,14 @@ package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
 
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
+import com.stoyanov.developer.goevent.manager.FavoriteEventManager;
+import com.stoyanov.developer.goevent.manager.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorage;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorageImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteEventLocalStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteEventLocalStorageImp;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
 
@@ -32,13 +32,13 @@ public class EventsModule {
     }
 
     @Provides
-    SavedEventsLocalStorage provideFavoritesEventsStorage() {
-        return new SavedEventsLocalStorageImp();
+    FavoriteEventLocalStorage provideFavoritesEventsStorage() {
+        return new FavoriteEventLocalStorageImp();
     }
 
     @Provides
-    SavedEventsManager provideFavoriteEventsManager(SavedEventsLocalStorage storage) {
-        return new SavedEventsManager(storage);
+    FavoriteEventManager provideFavoriteEventsManager(FavoriteEventLocalStorage storage) {
+        return new FavoriteEventManager(storage);
     }
 
     @Provides

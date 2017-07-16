@@ -2,32 +2,34 @@ package com.stoyanov.developer.goevent.ui.main;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.stoyanov.developer.goevent.R;
+import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
+import com.stoyanov.developer.goevent.manager.LocationManager;
+import com.stoyanov.developer.goevent.manager.NavigationManager;
+import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsManager;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.SavedEventsLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
-import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
+import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,15 +37,24 @@ import butterknife.Unbinder;
 
 public class MainFragment extends Fragment implements MainView {
     private Unbinder unbinder;
-    private Toolbar toolbar;
     private ActionBarDrawerToggle drawerToggle;
     private CategoryAdapter adapter;
+    @Inject
+    NavigationManager navigationManager;
+    @Inject
+    LocationManager locationManager;
 
     @BindView(R.id.rv_category)
     RecyclerView rvCategory;
+    @BindView(R.id.pb_top)
+    ProgressBar pbTop;
+    @BindView(R.id.pb_bottom)
+    ProgressBar pbBottom;
     @BindView(R.id.viewpager)
     ViewPager pager;
     private SlidePagerAdapter pagerAdapter;
+    private MainPresenter presenter;
+    private Toolbar toolbar;
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -53,9 +64,18 @@ public class MainFragment extends Fragment implements MainView {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        DaggerFragmentComponent.builder()
+                .activityComponent(((ContainerActivity) getActivity()).getActivityComponent())
+                .build()
+                .inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, null);
+        View view = inflater.inflate(R.layout.fragment_main, null);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -65,6 +85,14 @@ public class MainFragment extends Fragment implements MainView {
         super.onViewCreated(view, savedInstanceState);
         setupRecycleView();
         setupViewPager();
+        setupToolbar();
+        presenter = new MainPresenter(getActivity().getSupportLoaderManager(), getContext());
+        presenter.attach(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     private void setupViewPager() {
@@ -76,12 +104,6 @@ public class MainFragment extends Fragment implements MainView {
         RecyclerView.LayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         rvCategory.setLayoutManager(layoutManager);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        setupToolbar();
     }
 
     private void setupToolbar() {
@@ -97,33 +119,54 @@ public class MainFragment extends Fragment implements MainView {
     @Override
     public void onStart() {
         super.onStart();
+        presenter.provideData(locationManager.getLastDefinedLocation());
         drawerToggle.syncState();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        List<CategoryAdapter.Item> items = new ArrayList<>();
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concert").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Art Entertament").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Community organizations").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concert3434").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concert346666").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concert346756").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concerthtyjtjtyty").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concertt").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concerttyj").build());
-        items.add(CategoryAdapter.Item.newBuilder().amount(10).name("Concerttj").build());
-        rvCategory.setAdapter(new CategoryAdapter(items, getContext()));
-
-        pagerAdapter.setEvents(new SavedEventsManager(new SavedEventsLocalStorageImp()).get());
-        pagerAdapter.setEvents(new SavedEventsManager(new SavedEventsLocalStorageImp()).get()); // FIXME: 7/9/17 bug
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        presenter.detach();
+        ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
         unbinder.unbind();
+    }
+
+    @Override
+    public void showCategories(Set<Category> categories) {
+        List<CategoryAdapter.Item> items = new ArrayList<>();
+        for (Category c : categories) {
+            items.add(CategoryAdapter.Item.newBuilder().name(c.getName()).build());
+        }
+        rvCategory.setAdapter(new CategoryAdapter(items, getContext()));
+    }
+
+    @Override
+    public void showPopularEvents(List<Event> data) {
+        pagerAdapter.setEvents(data);
+        pagerAdapter.setEvents(data);
+    }
+
+    @Override
+    public void showEmpty() {
+    }
+
+    @Override
+    public void showProgress(boolean state) {
+        pbTop.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+        pbBottom.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void showMessageNetworkError() {
+        Snackbar.make(getView(),
+                R.string.message_bad_connection,
+                Snackbar.LENGTH_LONG)
+                .show();
     }
 
     private class SlidePagerAdapter extends FragmentPagerAdapter {

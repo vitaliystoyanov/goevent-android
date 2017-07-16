@@ -24,7 +24,7 @@
 
     <fragment
         android:id="@+id/fragment_notification_settings"
-        android:name="com.stoyanov.developer.goevent.ui.fragment.SettingsFragment"
+        android:name="com.stoyanov.developer.goevent.ui.settings.SettingsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

@@ -3,9 +3,9 @@ package com.stoyanov.developer.goevent.di.module;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 
-import com.stoyanov.developer.goevent.NavigationManager;
+import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.di.scope.ActivityScope;
-import com.stoyanov.developer.goevent.ui.activity.ContainerActivity;
+import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 
 import dagger.Module;
 import dagger.Provides;

@@ -4,15 +4,15 @@ import android.app.Application;
 
 import com.stoyanov.developer.goevent.di.module.ApplicationModule;
 import com.stoyanov.developer.goevent.di.module.EventsModule;
-import com.stoyanov.developer.goevent.mvp.model.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsByLocationLoader;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsLoader;
-import com.stoyanov.developer.goevent.mvp.model.repository.SavedEventsLoader;
+import com.stoyanov.developer.goevent.manager.LocationManager;
+import com.stoyanov.developer.goevent.mvp.model.loader.EventsByLocationLoader;
+import com.stoyanov.developer.goevent.mvp.model.loader.EventsLoader;
+import com.stoyanov.developer.goevent.mvp.model.loader.FavoriteEventsLoader;
 import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
-import com.stoyanov.developer.goevent.mvp.presenter.EventsPresenter;
-import com.stoyanov.developer.goevent.mvp.presenter.SavedEventsPresenter;
-import com.stoyanov.developer.goevent.ui.activity.DefaultLocationActivity;
-import com.stoyanov.developer.goevent.ui.adapter.EventsAdapter;
+import com.stoyanov.developer.goevent.ui.events.EventsPresenter;
+import com.stoyanov.developer.goevent.ui.favorite.FavoriteEventsPresenter;
+import com.stoyanov.developer.goevent.ui.location.DefaultLocationActivity;
+import com.stoyanov.developer.goevent.ui.events.EventsAdapter;
 
 import javax.inject.Singleton;
 
@@ -30,11 +30,11 @@ public interface ApplicationComponent {
 
     void inject(EventsLoader loader);
 
-    void inject(SavedEventsLoader loader);
+    void inject(FavoriteEventsLoader loader);
 
     void inject(EventsPresenter presenter);
 
-    void inject(SavedEventsPresenter presenter);
+    void inject(FavoriteEventsPresenter presenter);
 
     void inject(EventsAdapter adapter);
 

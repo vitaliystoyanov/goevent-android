@@ -9,6 +9,7 @@ import com.stoyanov.developer.goevent.di.module.ApplicationModule;
 
 import co.uk.rushorm.android.AndroidInitializeConfig;
 import co.uk.rushorm.core.RushCore;
+import timber.log.Timber;
 
 public class GoeventApplication extends Application {
     private ApplicationComponent applicationComponent;
@@ -27,9 +28,8 @@ public class GoeventApplication extends Application {
                 .applicationModule(new ApplicationModule(this))
                 .build();
 
-//        if (LeakCanary.isInAnalyzerProcess(this)) {
-//            return;
-//        }
-//        LeakCanary.install(this);
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
 }
