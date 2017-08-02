@@ -20,7 +20,7 @@
             android:paddingRight="16dp"
             android:paddingStart="16dp"
             android:paddingTop="32dp"
-            android:textColor="@color/colorPrimaryText"
+            android:textColor="@color/primaryText"
             android:textSize="24sp"
             tool:text="English Movie Night" />
 

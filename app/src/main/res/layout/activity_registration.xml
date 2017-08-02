@@ -31,13 +31,13 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:hint="@string/login_username"
-        app:met_baseColor="@color/colorWhiteText"
+        app:met_baseColor="@color/textWhite"
         app:met_clearButton="true"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelText="@string/login_username"
         app:met_floatingLabelTextColor="@color/colorAccent"
         app:met_primaryColor="@color/colorAccent"
-        app:met_underlineColor="@color/colorWhiteText"
+        app:met_underlineColor="@color/textWhite"
         tool:text="stoyanov" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
@@ -55,13 +55,13 @@
         android:layout_marginStart="16dp"
         android:hint="@string/login_password_field"
         android:inputType="textPassword"
-        app:met_baseColor="@color/colorWhiteText"
+        app:met_baseColor="@color/textWhite"
         app:met_clearButton="true"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelText="@string/login_password_field"
         app:met_floatingLabelTextColor="@color/colorAccent"
         app:met_primaryColor="@color/colorAccent"
-        app:met_underlineColor="@color/colorWhiteText"
+        app:met_underlineColor="@color/textWhite"
         tool:text="qwerty1234" />
 
     <Button
@@ -91,6 +91,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/registration_log_in"
-        android:textColor="@color/colorWhiteText" />
+        android:textColor="@color/textWhite" />
 
 </RelativeLayout>

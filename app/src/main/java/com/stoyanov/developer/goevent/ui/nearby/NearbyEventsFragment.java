@@ -53,7 +53,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.ui.IconGenerator;
 import com.stoyanov.developer.goevent.R;
@@ -113,7 +112,7 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_nearby_events, null);
+        View view = inflater.inflate(R.layout.fragment_nearby, null);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -328,20 +327,15 @@ public class NearbyEventsFragment extends Fragment
     private void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "startLocationUpdates: checkSelfPermission failed!");
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(
                 googleApiClient,
                 locationRequest,
                 this
-        ).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-                Log.d(TAG, "onResult: startLocationUpdates");
-                searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
-                        R.color.colorLightBlue, null));
-            }
+        ).setResultCallback(status -> {
+            searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
+                    R.color.colorLightBlue, null));
         });
     }
 
@@ -349,20 +343,15 @@ public class NearbyEventsFragment extends Fragment
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 googleApiClient,
                 this
-        ).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-                Log.d(TAG, "onResult: stopLocationUpdates");
-                searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
-                        R.color.colorPrimary, null));
-            }
+        ).setResultCallback(status -> {
+            searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
+                    R.color.colorPrimary, null));
         });
     }
 
     @Override
     public void onLocationChanged(Location location) {
         stopLocationUpdates();
-
         presenter.onUpdateSearchLocation(new LocationPref(location.getLatitude(),
                 location.getLongitude()));
         Log.d(TAG, "onLocationChanged:  onLocationChanged: Location updated: " + location.getLatitude()
@@ -419,28 +408,17 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                presenter.onUpdateSearchLocation(new LocationPref(latLng));
-            }
-        });
+        map.setOnMapLongClickListener(latLng -> presenter.onUpdateSearchLocation(new LocationPref(latLng)));
         clusterManager = new ClusterManager<>(getActivity(), map);
         clusterManager.setRenderer(new EventMarkerClusterRenderer(getContext(), map, clusterManager));
-        clusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<Event>() {
-            @Override
-            public boolean onClusterClick(Cluster<Event> cluster) {
-                slidePagerAdapter.removeAndAdd(new ArrayList<>(cluster.getItems()));
-                return false;
-            }
+        clusterManager.setOnClusterClickListener(cluster -> {
+            slidePagerAdapter.removeAndAdd(new ArrayList<>(cluster.getItems()));
+            return false;
         });
-        clusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<Event>() {
-            @Override
-            public boolean onClusterItemClick(Event event) {
-                slidePagerAdapter.singleItem(event);
-                presenter.onClusterItemClick(event);
-                return false;
-            }
+        clusterManager.setOnClusterItemClickListener(event -> {
+            slidePagerAdapter.singleItem(event);
+            presenter.onClusterItemClick(event);
+            return false;
         });
         map.setOnMarkerClickListener(clusterManager);
         map.setOnCameraChangeListener(clusterManager);
@@ -479,7 +457,6 @@ public class NearbyEventsFragment extends Fragment
     public void onStop() {
         super.onStop();
         googleApiClient.disconnect();
-        presenter.onStop();
         presenter.detach();
         cameraPosition = map.getCameraPosition();
     }
@@ -493,6 +470,7 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void onPause() {
         super.onPause();
+        presenter.pause();
         if (googleApiClient.isConnected()) {
             stopLocationUpdates();
         }
@@ -507,7 +485,6 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
     }
 
     @Override

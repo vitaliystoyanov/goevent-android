@@ -2,18 +2,15 @@
     <string name="app_name">Goevent</string>
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
-    <string name="drawer_home">Головна</string>
-    <string name="drawer_list_of_events">Список подій</string>
-    <string name="drawer_saved">Збереженні</string>
-    <string name="drawer_nearby">Карта</string>
-    <string name="drawer_map">Карта</string>
-    <string name="drawer_notifications">Сповіщення</string>
-    <string name="drawer_login">Вхід</string>
-
-    <string name="title_activity_search">Пошук заходів</string>
-
-    <string name="toolbar_title_saved_events">%1$d збережених подій</string>
-    <string name="title_favorite_events">Збережені події</string>
+    <string name="drawer_home">Main</string>
+    <string name="drawer_list_of_events">Events</string>
+    <string name="drawer_saved">Saved</string>
+    <string name="drawer_nearby">Nearby</string>
+    <string name="drawer_map">Map</string>
+    <string name="drawer_notifications">Notifications</string>
+    <string name="drawer_login">Login</string>
+    <string name="title_activity_search">Search events</string>
+    <string name="title_favorite_events">Saved events</string>
 
     <string name="card_item_filter">Фільтр</string>
     <string name="card_item_share">Поширити</string>
@@ -24,11 +21,11 @@
     <string name="registration_log_in">Already have an account? Log in.</string>
     <string name="description_time">Duration time</string>
     <string name="event_map_directions">Directions</string>
-    <string name="event_map_open">Відкрити карту</string>
+    <string name="event_map_open">Open map</string>
     <string name="event_info_location">Місце</string>
     <string name="event_info_category">Категорія</string>
     <string name="registration_create">Створити</string>
-    <string name="message_event_added_saved">Захід додано до збережених</string>
+    <string name="message_event_added_saved">Event saved</string>
     <string name="message_bad_connection">Check your connection or try again later</string>
     <string name="title_detail_event">Detail event</string>
     <string name="location_field_full_format">%1$s, %2$s, %3$s</string>
@@ -46,12 +43,13 @@
     <string name="field_no_category">No category</string>
     <string name="action_saved">Saved</string>
     <string name="geocoding_service_not_available">Service not available</string>
-    <string name="geocoding_invalid_lat_long_used">Invalid lattitude or longitude used</string>
+    <string name="geocoding_invalid_lat_long_used">Invalid latitude or longitude used</string>
     <string name="geocoding_no_address_found">No address found</string>
     <string name="geocoding_address_found">Address found</string>
-    <string name="title_home">Головна</string>
-    <string name="title_category">Категорії</string>
-    <string name="title_favorite">Збереженні</string>
+
+    <string name="title_home">Main</string>
+    <string name="title_category">Categories</string>
+    <string name="title_favorite">Saved</string>
 
     <string-array name="items_category_of_events_for_spinner">
         <item>Nightlife</item>

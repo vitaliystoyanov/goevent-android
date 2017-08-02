@@ -1,21 +1,32 @@
 package com.stoyanov.developer.goevent.ui.main;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.transition.CircularPropagation;
+import android.transition.Fade;
+import android.transition.SidePropagation;
+import android.transition.Slide;
+import android.transition.TransitionSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
@@ -24,6 +35,7 @@ import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
+import com.stoyanov.developer.goevent.utill.transition.PropagatingTransition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,25 +48,30 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public class MainFragment extends Fragment implements MainView {
+    @BindView(R.id.txt_popular_events)
+    TextView txtPopularEvents;
     private Unbinder unbinder;
     private ActionBarDrawerToggle drawerToggle;
-    private CategoryAdapter adapter;
     @Inject
     NavigationManager navigationManager;
     @Inject
     LocationManager locationManager;
+    @Inject
+    MainPresenter presenter;
 
+    @BindView(R.id.nested_scroll_view)
+    NestedScrollView nestedScrollView;
     @BindView(R.id.rv_category)
     RecyclerView rvCategory;
-    @BindView(R.id.pb_top)
-    ProgressBar pbTop;
-    @BindView(R.id.pb_bottom)
-    ProgressBar pbBottom;
+    @BindView(R.id.root_content)
+    ConstraintLayout rootContent;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     @BindView(R.id.viewpager)
     ViewPager pager;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private SlidePagerAdapter pagerAdapter;
-    private MainPresenter presenter;
-    private Toolbar toolbar;
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
@@ -86,8 +103,8 @@ public class MainFragment extends Fragment implements MainView {
         setupRecycleView();
         setupViewPager();
         setupToolbar();
-        presenter = new MainPresenter(getActivity().getSupportLoaderManager(), getContext());
         presenter.attach(this);
+        presenter.provideData(locationManager.getLastDefinedLocation());
     }
 
     @Override
@@ -104,10 +121,10 @@ public class MainFragment extends Fragment implements MainView {
         RecyclerView.LayoutManager layoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         rvCategory.setLayoutManager(layoutManager);
+        rvCategory.setNestedScrollingEnabled(false);
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
                 ((ContainerActivity) getActivity()).getDrawerLayout(),
@@ -119,7 +136,6 @@ public class MainFragment extends Fragment implements MainView {
     @Override
     public void onStart() {
         super.onStart();
-        presenter.provideData(locationManager.getLastDefinedLocation());
         drawerToggle.syncState();
     }
 
@@ -156,13 +172,22 @@ public class MainFragment extends Fragment implements MainView {
     }
 
     @Override
-    public void showProgress(boolean state) {
-        pbTop.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
-        pbBottom.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+    public void showProgress(boolean isLoading) {
+        progressBar.setVisibility(isLoading ? View.VISIBLE : View.INVISIBLE);
+        rootContent.setVisibility(!isLoading ? View.VISIBLE : View.INVISIBLE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TransitionSet set = new TransitionSet();
+            set.setPropagation(new SidePropagation());
+            set.addTransition(new Fade(Fade.IN).setDuration(300));
+            set.addTransition(new Slide(Gravity.BOTTOM));
+            new PropagatingTransition(rootContent, txtPopularEvents, set,
+                    650, new LinearInterpolator(), new CircularPropagation()).start();
+        }
     }
 
     @Override
-    public void showMessageNetworkError() {
+    public void showError() {
         Snackbar.make(getView(),
                 R.string.message_bad_connection,
                 Snackbar.LENGTH_LONG)

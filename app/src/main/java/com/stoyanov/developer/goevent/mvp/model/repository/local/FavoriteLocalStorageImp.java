@@ -12,7 +12,7 @@ import java.util.List;
 import co.uk.rushorm.core.RushCore;
 import co.uk.rushorm.core.RushSearch;
 
-public class FavoriteEventLocalStorageImp implements FavoriteEventLocalStorage {
+public class FavoriteLocalStorageImp implements FavoriteLocalStorage {
     private static final String TAG = "FavoritesEventsLocalSto";
 
     @Override

@@ -18,7 +18,7 @@ import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
-import com.stoyanov.developer.goevent.manager.FavoriteEventManager;
+import com.stoyanov.developer.goevent.manager.FavoriteManager;
 import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import javax.inject.Inject;
 
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
     @Inject
-    FavoriteEventManager favoriteEventManager;
+    FavoriteManager favoriteManager;
     private List<Event> data;
     private Context context;
     private OnLikeItemClickListener onLikeItemClickListener;
@@ -110,7 +110,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         } else {
             holder.location.setText(R.string.field_no_location);
         }
-        holder.star.setLiked(favoriteEventManager.isSaved(event));
+        holder.star.setLiked(favoriteManager.isSaved(event));
         holder.name.setText(event.getName());
     }
 

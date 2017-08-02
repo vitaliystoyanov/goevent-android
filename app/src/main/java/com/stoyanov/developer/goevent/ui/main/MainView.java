@@ -15,7 +15,7 @@ public interface MainView extends BaseView {
 
     void showEmpty();
 
-    void showProgress(boolean state);
+    void showProgress(boolean isLoading);
 
-    void showMessageNetworkError();
+    void showError();
 }

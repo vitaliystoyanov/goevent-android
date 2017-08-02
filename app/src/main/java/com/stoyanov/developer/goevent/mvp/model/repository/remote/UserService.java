@@ -8,7 +8,7 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Token;
 
 import java.util.List;
 
-public interface UserBackendService {
+public interface UserService {
 
     @Nullable
     Token login();

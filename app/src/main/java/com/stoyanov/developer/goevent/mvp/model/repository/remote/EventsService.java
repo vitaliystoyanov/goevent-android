@@ -4,21 +4,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 
 import java.util.List;
 
-public interface EventsBackendService {
+import io.reactivex.Observable;
+import io.reactivex.Single;
+
+public interface EventsService {
 
     @Nullable
     List<Event> getEvents();
 
-    @Nullable
     Event getEvent(@NonNull String id);
 
-    @Nullable
-    List<Event> getEventsByLocation(double latitude, double longitude, int distance);
+    Single<Events> getEventsByLocation(double latitude, double longitude, int distance);
 
-    @Nullable
-    List<Event> getEventsByLocation(double latitude, double longitude);
+    Single<Events> getEventsByLocation(double latitude, double longitude);
 
 }

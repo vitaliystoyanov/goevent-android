@@ -8,7 +8,7 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Token;
 
 import java.util.List;
 
-public class UserBackendServiceImp implements UserBackendService {
+public class UserServiceImp implements UserService {
 
     @Nullable
     @Override

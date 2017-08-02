@@ -1,58 +1,57 @@
 package com.stoyanov.developer.goevent.ui.main;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
+import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.loader.EventsByLocationLoader;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public class MainPresenter extends BasePresenter<MainView>
-        implements LoaderManager.LoaderCallbacks<List<Event>> {
-    private final static int ID_LOADER_EVENTS = 14;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-    private LocationPref definedLocation;
-    private LoaderManager loaderManager;
+public class MainPresenter extends BasePresenter<MainView> {
+    private EventsRepository repository;
+    private LocationPref location;
     private Context context;
+    private Disposable disposable;
 
-    public MainPresenter(LoaderManager loaderManager, Context context) {
-        this.loaderManager = loaderManager;
+    public MainPresenter(Context context, EventsRepository repository) {
         this.context = context;
+        this.repository = repository;
     }
 
-    public void provideData(LocationPref location) {
-        definedLocation = location;
-        loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
-        getView().showProgress(true);
-    }
-
-    @Override
-    public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
-        return new EventsByLocationLoader(context, definedLocation) {
-            @Override
-            public void onNetworkError() {
-                if (getView() != null) getView().showMessageNetworkError();
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        if (data != null && data.size() > 0) {
-            getView().showPopularEvents(data);
-            getView().showCategories(((EventsByLocationLoader) loader).getCategories());
-        } else {
-            getView().showEmpty();
+    public void provideData(LocationPref pref) {
+        location = pref;
+        if (pref != null) {
+            disposable = repository.getEventsByLocation(pref.getLatitude(), pref.getLongitude(), true)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(e -> getView().showProgress(true))
+                    .subscribe(events -> {
+                        if (events != null && events.size() > 0) {
+                            getView().showPopularEvents(events);
+                            Set<Category> set = new HashSet<>();
+                            for (Event e : events) {
+                                set.add(new Category(e.getCategory()));
+                            }
+                            getView().showCategories(set);
+                        } else {
+                            getView().showEmpty();
+                        }
+                        getView().showProgress(false);
+                    }, throwable -> getView().showError());
         }
-        getView().showProgress(false);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Event>> loader) {
+    public void onDetach() {
+        super.onDetach();
+        disposable.dispose();
     }
 }

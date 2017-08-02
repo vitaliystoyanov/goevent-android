@@ -3,6 +3,8 @@ package com.stoyanov.developer.goevent.mvp.model.repository.remote.api;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -17,10 +19,10 @@ public interface EventsApi {
     Call<Event> getEvent(@Path("id") String id);
 
     @GET("events-location")
-    Call<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude);
+    Observable<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude);
 
     @GET("events-location")
-    Call<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude,
-                                     @Query("distance") float distance);
+    Single<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude,
+                                       @Query("distance") float distance);
 
 }

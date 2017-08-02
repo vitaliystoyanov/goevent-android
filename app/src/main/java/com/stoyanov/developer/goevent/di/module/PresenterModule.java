@@ -1,11 +1,13 @@
 package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
-import android.support.v4.app.LoaderManager;
 
+import com.stoyanov.developer.goevent.manager.FavoriteManager;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.ui.eventdetail.EventDetailPresenter;
 import com.stoyanov.developer.goevent.ui.events.EventsPresenter;
 import com.stoyanov.developer.goevent.ui.favorite.FavoriteEventsPresenter;
+import com.stoyanov.developer.goevent.ui.main.MainPresenter;
 import com.stoyanov.developer.goevent.ui.nearby.NearbyEventsPresenter;
 
 import dagger.Module;
@@ -15,8 +17,14 @@ import dagger.Provides;
 public class PresenterModule {
 
     @Provides
-    EventsPresenter providePresenter(Application application, LoaderManager manager) {
-        return new EventsPresenter(application, manager);
+    MainPresenter provideMainPresenter(Application context, EventsRepository repository) {
+        return new MainPresenter(context, repository);
+    }
+
+    @Provides
+    EventsPresenter providePresenter(Application application, FavoriteManager manager,
+                                     EventsRepository repository) {
+        return new EventsPresenter(application, manager, repository);
     }
 
     @Provides
@@ -30,7 +38,7 @@ public class PresenterModule {
     }
 
     @Provides
-    NearbyEventsPresenter provideNearbyEventsPresenter(Application application, LoaderManager manager) {
-        return new NearbyEventsPresenter(application, manager);
+    NearbyEventsPresenter provideNearbyEventsPresenter(Application application, EventsRepository repository) {
+        return new NearbyEventsPresenter(application, repository);
     }
 }

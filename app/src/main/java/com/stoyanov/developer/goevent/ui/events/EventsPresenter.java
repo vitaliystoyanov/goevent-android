@@ -1,54 +1,56 @@
 package com.stoyanov.developer.goevent.ui.events;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
+import android.support.annotation.NonNull;
 
-import com.stoyanov.developer.goevent.GoeventApplication;
-import com.stoyanov.developer.goevent.manager.FavoriteEventManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
+import com.stoyanov.developer.goevent.manager.FavoriteManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.mvp.model.loader.EventsByLocationLoader;
-import com.stoyanov.developer.goevent.mvp.model.loader.EventsLoader;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
 
-import java.util.List;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-import javax.inject.Inject;
-
-public class EventsPresenter extends BasePresenter<EventsView>
-        implements LoaderManager.LoaderCallbacks<List<Event>> {
-    public static final int PAGE_EVENTS_CUSTOM_FILTER = 2;
-    public static final int PAGE_EVENTS_BY_LOCATION = 1;
-    public static final int PAGE_EVENTS_BY_DATE = 0;
-    public final static int ID_LOADER_EVENTS = 11;
-    @Inject
-    FavoriteEventManager favoriteEventManager;
+public class EventsPresenter extends BasePresenter<EventsView> {
     private Event savedEvent;
-    private EventsLoader.SORTING_PARAM sortingParam;
-    private LocationPref definedLocation;
-    private final LoaderManager loaderManager;
-    private final Context context;
+    private LocationPref cachedLocation;
+    private CompositeDisposable disposable;
+    private EventsRepository repository;
+    private FavoriteManager favoriteManager;
 
-    public EventsPresenter(Context context, LoaderManager loaderManager) {
-        this.loaderManager = loaderManager;
-        this.context = context;
-        (GoeventApplication.getApplicationComponent(context)).inject(this);
+    public EventsPresenter(Context context, FavoriteManager manager, EventsRepository repository) {
+        disposable = new CompositeDisposable();
+        this.favoriteManager = manager;
+        this.repository = repository;
     }
 
-    public void onStart(LocationPref location) {
-        definedLocation = location;
-        loaderManager.initLoader(ID_LOADER_EVENTS, null, this);
-        getView().showProgress(true);
+    public void provideData(LocationPref location) {
+        cachedLocation = location;
+        disposable.add(getEvents(location, false));
+    }
+
+    @NonNull
+    private Disposable getEvents(@NonNull LocationPref location, boolean refreshCache) {
+        return repository.getEventsByLocation(location.getLatitude(), location.getLongitude(), refreshCache)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(e -> getView().showProgress(true))
+                .subscribe(events -> {
+                    if (events != null && events.size() > 0) {
+                        getView().showEvents(events);
+                    } else {
+                        getView().showEmpty();
+                    }
+                    getView().showProgress(false);
+                });
     }
 
     public void onRefresh() {
-        loaderManager.restartLoader(ID_LOADER_EVENTS, null, this);
-    }
-
-    public void onDestroyView() {
+        disposable.clear();
+        disposable.add(getEvents(cachedLocation, true));
     }
 
     public void onItem(Event event) {
@@ -64,39 +66,16 @@ public class EventsPresenter extends BasePresenter<EventsView>
     }
 
     public void onLike() {
-//        getView().showMessageAddedToFavorite();
         if (savedEvent != null) {
-            favoriteEventManager.add(savedEvent);
+            favoriteManager.add(savedEvent);
         }
     }
 
     public void onUnlike() {
-        if (savedEvent != null) favoriteEventManager.remove(savedEvent);
+        if (savedEvent != null) favoriteManager.remove(savedEvent);
     }
 
-    @SuppressLint("StaticFieldLeak")
-    @Override
-    public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
-        return new EventsByLocationLoader(context, definedLocation) {
-            @Override
-            public void onNetworkError() {
-                if (getView() != null) getView().showMessageNetworkError();
-            }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        if (data != null && data.size() > 0) {
-            getView().showEvents(data);
-            getView().showCategories(((EventsByLocationLoader) loader).getCategories());
-        } else {
-            getView().showEmpty();
-        }
-        getView().showProgress(false);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Event>> loader) {
+    public void pause() {
+        disposable.clear();
     }
 }

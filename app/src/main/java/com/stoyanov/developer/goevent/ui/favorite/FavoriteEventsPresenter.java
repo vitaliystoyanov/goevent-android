@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.manager.FavoriteEventManager;
+import com.stoyanov.developer.goevent.manager.FavoriteManager;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 
 public class FavoriteEventsPresenter extends BasePresenter<FavoriteView> {
     @Inject
-    FavoriteEventManager favoriteEventManager;
+    FavoriteManager favoriteManager;
 
     public FavoriteEventsPresenter(Context context) {
         (GoeventApplication.getApplicationComponent(context)).inject(this);
@@ -21,7 +21,7 @@ public class FavoriteEventsPresenter extends BasePresenter<FavoriteView> {
 
     public void onStart() {
 //        getView().visibleProgress(true);
-        List<Event> savedEvents = favoriteEventManager.get();
+        List<Event> savedEvents = favoriteManager.get();
         if (savedEvents != null && savedEvents.size() > 0) {
             getView().showSaved(savedEvents);
         } else {
@@ -37,15 +37,15 @@ public class FavoriteEventsPresenter extends BasePresenter<FavoriteView> {
     }
 
     public void onUndoClick(Event event) {
-        favoriteEventManager.add(event);
+        favoriteManager.add(event);
     }
 
     public void onItem(Event item, int position) {
-        favoriteEventManager.remove(item);
+        favoriteManager.remove(item);
         getView().removeItem(item, position);
     }
 
     public void deleteItem(Event event) {
-        favoriteEventManager.remove(event);
+        favoriteManager.remove(event);
     }
 }

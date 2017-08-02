@@ -21,9 +21,6 @@ import butterknife.ButterKnife;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     private List<Item> data;
     private Context context;
-    private int[] colors = new int[]{R.color.brown, R.color.blue, R.color.red, R.color.cyan,
-            R.color.teal, R.color.yellow, R.color.deepOrange, R.color.purple, R.color.pink,
-            R.color.deepPurple};
 
     public CategoryAdapter(@NonNull List<Item> data, Context context) {
         this.data = data;
@@ -41,7 +38,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Item i = data.get(position);
 
-        holder.card.setCardBackgroundColor(ContextCompat.getColor(context, colors[position % 10]));
+        holder.card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAccent));
         holder.txtAmount.setText(String.format(Locale.getDefault(), "%d+", i.getAmount()));
         holder.txtName.setText(i.getName());
     }

@@ -7,7 +7,7 @@ import com.stoyanov.developer.goevent.mvp.model.domain.SavedEvent;
 
 import java.util.List;
 
-public interface FavoriteEventLocalStorage {
+public interface FavoriteLocalStorage {
 
     void add(@NonNull SavedEvent event);
 

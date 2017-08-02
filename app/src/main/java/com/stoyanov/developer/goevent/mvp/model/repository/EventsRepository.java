@@ -3,8 +3,12 @@ package com.stoyanov.developer.goevent.mvp.model.repository;
 import android.support.annotation.Nullable;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.Events;
 
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Single;
 
 public interface EventsRepository {
 
@@ -13,11 +17,9 @@ public interface EventsRepository {
 
     void setOnNetworkErrorListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
 
-    @Nullable
-    List<Event> getEventsEliminateNullLocations();
+    Single<List<Event>> getEventsByLocation(double latitude, double longitude, boolean updateCache);
 
-    @Nullable
-    List<Event> getEventsByLocation(double latitude, double longitude);
+    Single<List<Event>> getEventsByLocation(double latitude, double longitude, int distance, boolean updateCache);
 
     interface OnNotReceiveRemoteListener {
 

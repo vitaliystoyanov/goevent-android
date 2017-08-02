@@ -1,65 +1,52 @@
 package com.stoyanov.developer.goevent.mvp.model.repository;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorage;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsService;
 
-import java.util.Iterator;
 import java.util.List;
 
-public class EventsRepositoryImp implements EventsRepository {
-    private final EventsLocalStorage localEventsLocalStorage;
-    private final EventsBackendService remoteBackendService;
-    private OnNotReceiveRemoteListener listener;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.rx_cache2.EvictProvider;
 
-    public EventsRepositoryImp(EventsLocalStorage localDataSource,
-                               EventsBackendService remoteBackendService) {
-        this.localEventsLocalStorage = localDataSource;
-        this.remoteBackendService = remoteBackendService;
+public class EventsRepositoryImp implements EventsRepository {
+    private static final String KEY_EVENTS = "events";
+    private final EventsLocalStorage localStorage;
+    private final EventsService remoteService;
+    private OnNotReceiveRemoteListener listener;
+    private RxProviders cacheProviders;
+
+    public EventsRepositoryImp(EventsLocalStorage local,
+                               EventsService remote, RxProviders rxProviders) {
+        localStorage = local;
+        remoteService = remote;
+        cacheProviders = rxProviders;
     }
 
-    @Nullable
     @Override
     public List<Event> getEvents() {
-        List<Event> freshEvents = remoteBackendService.getEvents();
-        if (freshEvents != null) {
-            persist(freshEvents);
-            return freshEvents;
-        } else if (listener != null) {
-            listener.notReceive();
-        }
-        return localEventsLocalStorage.getEvents();
-    }
-
-    @Override
-    public List<Event> getEventsEliminateNullLocations() {
-        List<Event> freshOrPersistedEvents = getEvents();
-        return freshOrPersistedEvents != null ? removeNullLocation(freshOrPersistedEvents) : null;
+        return null;
     }
 
     @Nullable
-    public List<Event> getEventsByLocation(double latitude, double longitude) {
-        List<Event> events = remoteBackendService.getEventsByLocation(latitude, longitude);
-        return events != null ? removeNullLocation(events) : null;
+    public Single<List<Event>> getEventsByLocation(double latitude, double longitude, boolean updateCache) {
+        Single<List<Event>> single = remoteService.getEventsByLocation(latitude, longitude).toObservable()
+                .flatMap(events -> Observable.fromIterable(events.list()))
+                .toList();
+        return cacheProviders.getEventsEvictProvider(single, new EvictProvider(updateCache));
     }
 
-    @NonNull
-    private List<Event> removeNullLocation(List<Event> data) {
-        Iterator<Event> iterator = data.iterator();
-        while (iterator.hasNext()) {
-            Event next = iterator.next();
-            if (next.getLocation() == null) {
-                iterator.remove();
-            }
-        }
-        return data;
-    }
-
-    private void persist(List<Event> data) {
-        localEventsLocalStorage.saveEvents(data);
+    @Override
+    public Single<List<Event>> getEventsByLocation(double latitude, double longitude,
+                                                   int distance, boolean updateCache) {
+        Single<List<Event>> single = remoteService.getEventsByLocation(latitude, longitude, distance)
+                .toObservable()
+                .flatMap(events -> Observable.fromIterable(events.list()))
+                .toList();
+        return cacheProviders.getEventsEvictProvider(single, new EvictProvider(updateCache));
     }
 
     @Override

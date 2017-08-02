@@ -23,7 +23,7 @@
             android:layout_toRightOf="@+id/slide_page_image"
             android:gravity="center"
             android:padding="5dp"
-            android:textColor="@color/colorSecondaryText"
+            android:textColor="@color/textSecondary"
             android:textSize="14sp" />
 
         <TextView
@@ -42,7 +42,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingStart="5dp"
-            android:textColor="@color/colorPrimaryText"
+            android:textColor="@color/primaryText"
             android:textStyle="normal|bold" />
 
         <ProgressBar

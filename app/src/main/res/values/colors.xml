@@ -5,14 +5,14 @@
     <color name="colorAccent">#02b875</color>
     <color name="colorSpecialText">#2962ff</color>
     <color name="colorLightBlue">#2196f3</color>
+    <color name="colorWhite">#ffffff</color>
 
     <color name="colorDivider">#1f000000</color>
 
-    <color name="colorPrimaryText">#e3000000</color>
-    <color name="colorWhiteText">#ffffff</color>
-    <color name="colorSecondaryText">#8a000000</color>
-    <color name="colorActionText">#ecd004</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="primaryText">#e3000000</color>
+    <color name="textWhite">#ffffff</color>
+    <color name="textSecondary">#8a000000</color>
+    <color name="textAction">#ecd004</color>
 
     <color name="red">#d32f2f</color>
     <color name="pink">#c2185b</color>

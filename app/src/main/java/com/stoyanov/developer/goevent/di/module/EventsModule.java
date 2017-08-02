@@ -2,16 +2,17 @@ package com.stoyanov.developer.goevent.di.module;
 
 import android.app.Application;
 
-import com.stoyanov.developer.goevent.manager.FavoriteEventManager;
+import com.stoyanov.developer.goevent.manager.FavoriteManager;
 import com.stoyanov.developer.goevent.manager.LocationManager;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.RxProviders;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorage;
 import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteEventLocalStorage;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteEventLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendService;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsBackendServiceImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteLocalStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteLocalStorageImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsService;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsServiceImp;
 
 import javax.inject.Singleton;
 
@@ -27,24 +28,25 @@ public class EventsModule {
     }
 
     @Provides
-    EventsBackendService provideEventsRemoteDataSource(Application application) {
-        return new EventsBackendServiceImp(application);
+    EventsService provideEventsRemoteDataSource(Application application) {
+        return new EventsServiceImp(application);
     }
 
     @Provides
-    FavoriteEventLocalStorage provideFavoritesEventsStorage() {
-        return new FavoriteEventLocalStorageImp();
+    FavoriteLocalStorage provideFavoritesEventsStorage() {
+        return new FavoriteLocalStorageImp();
     }
 
     @Provides
-    FavoriteEventManager provideFavoriteEventsManager(FavoriteEventLocalStorage storage) {
-        return new FavoriteEventManager(storage);
+    FavoriteManager provideFavoriteEventsManager(FavoriteLocalStorage storage) {
+        return new FavoriteManager(storage);
     }
 
     @Provides
     EventsRepository provideEventsRepository(EventsLocalStorage local,
-                                             EventsBackendService remote) {
-        return new EventsRepositoryImp(local, remote);
+                                             EventsService remote,
+                                             RxProviders rxProviders) {
+        return new EventsRepositoryImp(local, remote, rxProviders);
     }
 
     @Provides

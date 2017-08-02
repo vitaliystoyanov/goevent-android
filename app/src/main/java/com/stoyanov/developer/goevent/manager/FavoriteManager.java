@@ -4,15 +4,15 @@ import android.support.annotation.Nullable;
 
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.SavedEvent;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteEventLocalStorage;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.FavoriteLocalStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoriteEventManager {
-    private FavoriteEventLocalStorage storage;
+public class FavoriteManager {
+    private FavoriteLocalStorage storage;
 
-    public FavoriteEventManager(FavoriteEventLocalStorage storage) {
+    public FavoriteManager(FavoriteLocalStorage storage) {
         this.storage = storage;
     }
 

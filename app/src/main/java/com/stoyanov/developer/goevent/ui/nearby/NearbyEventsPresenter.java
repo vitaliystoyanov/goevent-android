@@ -1,64 +1,63 @@
 package com.stoyanov.developer.goevent.ui.nearby;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
-import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
-import com.stoyanov.developer.goevent.mvp.model.loader.EventsByLocationLoader;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
+import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
+import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsServiceImp;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
 
+import java.util.Iterator;
 import java.util.List;
 
-public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
-        implements LoaderManager.LoaderCallbacks<List<Event>> {
-    private static final String TAG = "NearbyEventsPresenter";
-    private static final int EVENTS_BY_LOCATION_LOADER_ID = 4;
-    private final LoaderManager loaderManager;
-    private final Context context;
-    private LocationPref lastLocationPref;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
-    public NearbyEventsPresenter(Context context, LoaderManager loaderManager) {
-        this.loaderManager = loaderManager;
-        this.context = context;
+public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView> {
+    private LocationPref lastLocationPref;
+    private EventsRepository repository;
+    private CompositeDisposable disposable;
+
+    public NearbyEventsPresenter(Context context, EventsRepository repository) {
+        disposable = new CompositeDisposable();
+        this.repository = repository;
     }
 
     public void onMapReady(LocationPref location) {
-        Log.d(TAG, "onMapReady: ");
         lastLocationPref = location;
-        loaderManager.initLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
+        disposable.add(getEvents(location));
     }
 
-    public void onStop() {
-        Log.d(TAG, "onStop: ");
+    private Disposable getEvents(LocationPref location) {
+        return repository.getEventsByLocation(location.getLatitude(), location.getLongitude(), false)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(e -> getView().visibleProgress(true))
+                .subscribe(events -> {
+                    if (events != null && events.size() > 0) {
+                        getView().showMarkers(removeNullLocation(events));
+                    }
+                    getView().visibleProgress(false);
+                });
     }
 
-    @Override
-    public Loader<List<Event>> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG, "onCreateLoader: id - " + id);
-        getView().visibleProgress(true);
-        return new EventsByLocationLoader(context, lastLocationPref) {
-            @Override
-            public void onNetworkError() {
-                if (getView() != null) getView().showMessageNetworkError();
+    @NonNull
+    private List<Event> removeNullLocation(List<Event> data) {
+        Iterator<Event> iterator = data.iterator();
+        while (iterator.hasNext()) {
+            Event next = iterator.next();
+            if (next.getLocation() == null) {
+                iterator.remove();
             }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(Loader<List<Event>> loader, List<Event> data) {
-        if (data != null) Log.d(TAG, "onLoadFinished: data size is " + data.size());
-        getView().showMarkers(data);
-        getView().visibleProgress(false);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<List<Event>> loader) {
-        Log.d(TAG, "onLoaderReset: Loader was reset");
+        }
+        return data;
     }
 
     public void onActionMenuMyLocation() {
@@ -67,7 +66,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
 
     public void onUpdateSearchLocation(LocationPref location) {
         lastLocationPref = location;
-        loaderManager.restartLoader(EVENTS_BY_LOCATION_LOADER_ID, null, this);
+        disposable.add(getEvents(location));
         getView().updateMapCamera(lastLocationPref, true);
     }
 
@@ -80,16 +79,15 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView>
     }
 
     private void updateMapCamera(Event event) {
-        Location latLng = event.getLocation();
-        if (latLng != null) {
-            LocationPref location = new LocationPref(latLng.getLatitude(),
-                    latLng.getLongitude());
-            getView().updateMapCamera(location, false);
+        Location loc = event.getLocation();
+        if (loc != null) {
+            LocationPref pref = new LocationPref(loc.getLatitude(),
+                    loc.getLongitude());
+            getView().updateMapCamera(pref, false);
         }
     }
 
-    public void onDestroy() {
-        Log.d(TAG, "onDestroy: Destroying loader");
-        loaderManager.destroyLoader(EVENTS_BY_LOCATION_LOADER_ID);
+    public void pause() {
+        disposable.clear();
     }
 }

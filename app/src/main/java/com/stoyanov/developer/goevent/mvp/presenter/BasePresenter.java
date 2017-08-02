@@ -15,6 +15,11 @@ public abstract class BasePresenter<T extends BaseView> {
     }
 
     public void detach() {
+        onDetach();
         view = null;
+    }
+
+    public void onDetach() {
+
     }
 }

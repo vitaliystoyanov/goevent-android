@@ -13,7 +13,7 @@
         android:drawableRight="@drawable/ic_triangle_white"
         android:gravity="center_vertical"
         android:text="Click to set location"
-        android:textColor="@color/colorWhiteText"
+        android:textColor="@color/textWhite"
         android:textSize="18sp"
         android:textStyle="bold" />
 

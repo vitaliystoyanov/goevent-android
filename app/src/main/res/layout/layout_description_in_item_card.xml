@@ -15,7 +15,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="24dp"
-        android:textColor="@color/colorPrimaryText"
+        android:textColor="@color/primaryText"
         android:textSize="18sp"
         tool:text="Event name " />
 

@@ -225,7 +225,7 @@ public class DetailEventFragment extends Fragment
                         navigationManager.goToFavorites();
                     }
                 })
-                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorActionText))
+                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.textAction))
                 .show();
     }
 

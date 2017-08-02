@@ -26,13 +26,13 @@
         android:layout_below="@+id/imageView"
         android:layout_margin="15dp"
         android:hint="@string/contact_us_your_message"
-        app:met_baseColor="@color/colorWhiteText"
+        app:met_baseColor="@color/textWhite"
         app:met_clearButton="true"
         app:met_floatingLabel="highlight"
         app:met_floatingLabelText="@string/contact_us_title_in_text_field"
         app:met_floatingLabelTextColor="@color/colorAccent"
         app:met_primaryColor="@color/colorAccent"
-        app:met_underlineColor="@color/colorWhiteText" />
+        app:met_underlineColor="@color/textWhite" />
 
     <Button
         android:id="@+id/contact_us_button_send"

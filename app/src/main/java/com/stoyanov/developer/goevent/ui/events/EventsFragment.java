@@ -88,12 +88,8 @@ public class EventsFragment extends Fragment implements EventsView,
     }
 
     private void setupEventsAdapter() {
-        adapter = new EventsAdapter(getContext(), new EventsAdapter.OnItemClickListener() {
-            @Override
-            public void onItem(int position) {
-                presenter.onItem(adapter.getItem(position));
-            }
-        }, new EventsAdapter.OnLikeItemClickListener() {
+        adapter = new EventsAdapter(getContext(), position -> presenter.onItem(adapter.getItem(position)),
+                new EventsAdapter.OnLikeItemClickListener() {
 
             @Override
             public void onItem(int position) {
@@ -128,12 +124,7 @@ public class EventsFragment extends Fragment implements EventsView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         toolbar.addView(toolbarContainer, lp);
         toolbarContainer.findViewById(R.id.toolbar_location_textview)
-                .setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        navigationManager.goToDefineLocation(getContext());
-                    }
-                });
+                .setOnClickListener(view -> navigationManager.goToDefineLocation(getContext()));
     }
 
     @Override
@@ -144,12 +135,7 @@ public class EventsFragment extends Fragment implements EventsView,
         badgeLayout.addOnBadgeClickedListener(this);
         coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.list_of_events_coordinator_layout);
         FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigationManager.goToAddEvent();
-            }
-        });
+        fab.setOnClickListener(view1 -> navigationManager.goToAddEvent());
         setupToolbar();
         setupEventsAdapter();
         setupToolbarTitle(toolbar);
@@ -161,12 +147,9 @@ public class EventsFragment extends Fragment implements EventsView,
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setDistanceToTriggerSync(50);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.onRefresh();
-                swipeRefreshLayout.setRefreshing(true);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            presenter.onRefresh();
+            swipeRefreshLayout.setRefreshing(true);
         });
 
         definedLocation = locationManager.getLastDefinedLocation();
@@ -174,7 +157,7 @@ public class EventsFragment extends Fragment implements EventsView,
             ((TextView) getView().findViewById(R.id.toolbar_location_textview))
                     .setText(definedLocation.getCity() + ", " + definedLocation.getCountry());
         presenter.attach(this);
-        presenter.onStart(locationManager.getLastDefinedLocation()); // FIXME: 26.02.2017
+        presenter.provideData(locationManager.getLastDefinedLocation()); // FIXME: 26.02.2017
     }
 
     @Override
@@ -205,6 +188,12 @@ public class EventsFragment extends Fragment implements EventsView,
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        presenter.pause();
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         badgeLayout.removeOnBadgeClickedListener(this);
@@ -219,7 +208,6 @@ public class EventsFragment extends Fragment implements EventsView,
 
     @Override
     public void onBadgeClicked(BadgeLayout.Badge badge) {
-
     }
 
     @Override
@@ -251,13 +239,6 @@ public class EventsFragment extends Fragment implements EventsView,
     @Override
     public void showMessageAddedToFavorite() {
         Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_saved, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        navigationManager.goToFavorites();
-                    }
-                })
-                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.colorActionText))
                 .show();
     }
 
@@ -281,12 +262,9 @@ public class EventsFragment extends Fragment implements EventsView,
         Snackbar.make(coordinatorLayout,
                 R.string.message_bad_connection, Snackbar.LENGTH_LONG)
                 .show();
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (swipeRefreshLayout.isRefreshing()) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
+        getActivity().runOnUiThread(() -> {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
