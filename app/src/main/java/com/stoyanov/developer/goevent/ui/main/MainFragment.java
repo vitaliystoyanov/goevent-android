@@ -100,16 +100,16 @@ public class MainFragment extends Fragment implements MainView {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupRecycleView();
-        setupViewPager();
-        setupToolbar();
-        presenter.attach(this);
-        presenter.provideData(locationManager.getLastDefinedLocation());
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        presenter.attach(this);
+        presenter.provideData(locationManager.getLastDefinedLocation());
+        setupRecycleView();
+        setupViewPager();
+        setupToolbar();
     }
 
     private void setupViewPager() {
@@ -131,12 +131,12 @@ public class MainFragment extends Fragment implements MainView {
                 toolbar, R.string.drawer_open, R.string.drawer_close);
         ((ContainerActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
         toolbar.setTitle(R.string.title_home);
+        drawerToggle.syncState();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        drawerToggle.syncState();
     }
 
     @Override
@@ -145,9 +145,14 @@ public class MainFragment extends Fragment implements MainView {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        presenter.detach();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        presenter.detach();
         ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
         unbinder.unbind();
     }

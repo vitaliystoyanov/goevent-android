@@ -39,34 +39,32 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
         presenter = new ContainerPresenter(); // FIXME: 10/16/16 to dagger
         setupDagger();
         setupNavigationDrawer();
+        presenter.attach(this);
+
     }
 
     public void setupNavigationDrawer() {
         drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                drawerLayout.closeDrawers();
-                int i = menuItem.getItemId();
-                if (i == R.id.drawer_item_list_events) {
-                    presenter.onItemListOfEvents();
-                } else if (i == R.id.drawer_item_login) {
-                    presenter.onItemLogin();
-                } else if (i == R.id.drawer_item_nearby) {
-                    presenter.onItemNearby();
-                } /*else if (i == R.id.drawer_item_notification) {
-                    presenter.onItemNotifications();
-                }*/ else if (i == R.id.drawer_item_saved) {
-                    presenter.onItemFavorites();
-                } else if (i == R.id.drawer_item_defined_location) {
-                    presenter.onItemDefineLocation();
-                } else if (i == R.id.drawer_item_home) {
-                    presenter.onItemHome();
-                }
-                return true;
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            drawerLayout.closeDrawers();
+            int i = menuItem.getItemId();
+            if (i == R.id.drawer_item_list_events) {
+                presenter.onItemListOfEvents();
+            } else if (i == R.id.drawer_item_login) {
+                presenter.onItemLogin();
+            } else if (i == R.id.drawer_item_nearby) {
+                presenter.onItemNearby();
+            } /*else if (i == R.id.drawer_item_notification) {
+                presenter.onItemNotifications();
+            }*/ else if (i == R.id.drawer_item_saved) {
+                presenter.onItemFavorites();
+            } else if (i == R.id.drawer_item_defined_location) {
+                presenter.onItemDefineLocation();
+            } else if (i == R.id.drawer_item_home) {
+                presenter.onItemHome();
             }
+            return true;
         });
     }
 
@@ -99,13 +97,21 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
     @Override
     protected void onStart() {
         super.onStart();
-        presenter.attach(this);
-        presenter.openHome();
+        if (locationManager.getLastDefinedLocation() == null) {
+            navigationManager.goToDefineLocation(this);
+        } else {
+            presenter.openHome();
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         presenter.detach();
     }
 

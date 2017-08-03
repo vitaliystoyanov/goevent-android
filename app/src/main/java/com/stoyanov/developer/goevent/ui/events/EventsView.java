@@ -25,6 +25,6 @@ public interface EventsView extends BaseView {
 
     void showCategories(Set<Category> categories);
 
-    void showMessageAddedToFavorite();
+    void showAddedToSaved();
 
 }

@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,12 +59,12 @@ import com.google.maps.android.ui.IconGenerator;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
 import com.stoyanov.developer.goevent.manager.LocationManager;
-import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationSuggestion;
 import com.stoyanov.developer.goevent.service.FetchAddressIntentService;
-import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 import com.stoyanov.developer.goevent.ui.common.EventMarkerClusterRenderer;
+import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +95,8 @@ public class NearbyEventsFragment extends Fragment
     FloatingSearchView searchView;
     @BindView(R.id.nearby_events_viewpager)
     ViewPager viewPager;
+    @BindView(R.id.progress_bar)
+    ProgressBar progressBar;
     private GoogleMap map;
     private Unbinder unbinder;
     private ClusterManager<Event> clusterManager;
@@ -399,9 +402,9 @@ public class NearbyEventsFragment extends Fragment
             clusterManager.clearItems();
             clusterManager.cluster();
             slidePagerAdapter.clear();
-            searchView.showProgress();
+            progressBar.setVisibility(View.VISIBLE);
         } else {
-            searchView.hideProgress();
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 

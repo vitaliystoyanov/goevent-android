@@ -66,8 +66,6 @@ public class EventSlidePageFragment extends Fragment {
                 progressBar.setVisibility(View.VISIBLE);
                 Picasso.with(getContext())
                         .load(event.getPicture())
-                        .fit()
-                        .centerCrop()
                         .into(image, new Callback() {
                             @Override
                             public void onSuccess() {

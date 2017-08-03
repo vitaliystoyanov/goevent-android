@@ -26,6 +26,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
     @Inject
     FavoriteManager favoriteManager;
@@ -34,11 +37,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private OnLikeItemClickListener onLikeItemClickListener;
     private OnItemClickListener onItemClickListener;
 
-    public EventsAdapter(Context context, OnItemClickListener onItemClickListener,
-                         OnLikeItemClickListener onLikeItemClickListener) {
+    public EventsAdapter(Context context, OnItemClickListener itemClickListener,
+                         OnLikeItemClickListener likeItemClickListener) {
         (GoeventApplication.getApplicationComponent(context)).inject(this);
-        this.onLikeItemClickListener = onLikeItemClickListener;
-        this.onItemClickListener = onItemClickListener;
+        this.onLikeItemClickListener = likeItemClickListener;
+        this.onItemClickListener = itemClickListener;
         this.context = context;
         data = new ArrayList<>();
     }
@@ -75,22 +78,22 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         Event event = data.get(position);
         holder.progressBar.setVisibility(View.VISIBLE);
         String urlPicture = event.getPicture();
-            Picasso.with(context)
-                    .load(urlPicture)
-                    .fit()
-                    .centerCrop()
-                    .into(holder.image, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            holder.progressBar.setVisibility(View.INVISIBLE);
-                        }
+        Picasso.with(context)
+                .load(urlPicture)
+                .fit()
+                .centerCrop()
+                .into(holder.image, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.progressBar.setVisibility(View.INVISIBLE);
+                    }
 
-                        @Override
-                        public void onError() {
-                            holder.progressBar.setVisibility(View.INVISIBLE);
-                            holder.image.setImageResource(R.drawable.background_splash);
-                        }
-                    });
+                    @Override
+                    public void onError() {
+                        holder.progressBar.setVisibility(View.INVISIBLE);
+                        holder.image.setImageResource(R.drawable.background_splash);
+                    }
+                });
         if (event.getStartTime() != null && event.getEndTime() != null) {
             holder.when.setText(DateUtil.toDuration(DateUtil.toDate(event.getStartTime()),
                     DateUtil.toDate(event.getEndTime())));
@@ -133,31 +136,32 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-        public TextView name;
-        public TextView when;
-        public ImageView image;
-        public TextView location;
-        public TextView category;
-        public ProgressBar progressBar;
-        private LikeButton star;
+        @BindView(R.id.item_event_name)
+        TextView name;
+        @BindView(R.id.item_event_when)
+        TextView when;
+        @BindView(R.id.card_item_image)
+        ImageView image;
+        @BindView(R.id.item_event_where)
+        TextView location;
+        @BindView(R.id.item_event_category)
+        TextView category;
+        @BindView(R.id.card_item_progress_bar)
+        ProgressBar progressBar;
+        @BindView(R.id.card_item_star)
+        LikeButton star;
         private OnItemClickListener itemClickListener;
         private OnLikeItemClickListener onLikeItemClickListener;
 
         public ViewHolder(View view, OnItemClickListener itemClickListener,
                           OnLikeItemClickListener onLikeItemClickListener) {
             super(view);
+            ButterKnife.bind(this, view);
             this.itemClickListener = itemClickListener;
             this.onLikeItemClickListener = onLikeItemClickListener;
-            name = (TextView) view.findViewById(R.id.item_event_name);
-            when = (TextView) view.findViewById(R.id.item_event_when);
-            category = (TextView) view.findViewById(R.id.item_event_category);
-            location = (TextView) view.findViewById(R.id.item_event_where);
-            image = (ImageView) view.findViewById(R.id.card_item_image);
-            star = (LikeButton) view.findViewById(R.id.card_item_star);
-            progressBar = (ProgressBar) view.findViewById(R.id.card_item_progress_bar);
-            star.setIconSizeDp(22);
-            star.setIcon(IconType.Star); // FIXME: 22.11.2016 to xml
 
+            star.setIconSizeDp(22);
+            star.setIcon(IconType.Star);
             star.setOnLikeListener(onLikeItemClickListener);
             star.setOnClickListener(this);
             image.setOnClickListener(this);

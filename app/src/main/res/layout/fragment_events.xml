@@ -39,8 +39,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_events_recycle_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:behavior_overlapTop="100dp" />
+            android:layout_height="match_parent" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
@@ -69,7 +68,7 @@
             android:paddingTop="8dp"
             app:badgeBackground="@drawable/background_app_badge"
             app:badgeTextColor="@android:color/white"
-            app:layout_scrollFlags="scroll|enterAlways"
+            app:layout_scrollFlags="enterAlways"
             app:spacing="8dp">
 
         </au.com.dardle.widget.BadgeLayout>
@@ -79,7 +78,7 @@
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:gravity="center_vertical"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="exitUntilCollapsed|enterAlways">
 
             <Button
                 android:id="@+id/button2"
@@ -101,7 +100,8 @@
                 android:layout_centerInParent="false"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="16dp"
-                android:text="Date: Jun 10 - Jul 12, 12:30-13:45 PM"
+                android:layout_marginStart="16dp"
+                android:text="Date: Jun 10 - Jul 12"
                 android:textColor="@color/textWhite"
                 android:textSize="16sp" />
         </RelativeLayout>

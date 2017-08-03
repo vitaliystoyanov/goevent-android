@@ -7,7 +7,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -42,31 +40,38 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import au.com.dardle.widget.BadgeLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class EventsFragment extends Fragment implements EventsView,
         BadgeLayout.OnBadgeClickedListener {
-    private static final String TAG = "EventsFragment";
     @Inject
     EventsPresenter presenter;
     @Inject
     NavigationManager navigationManager;
     @Inject
     LocationManager locationManager;
-    private ProgressBar progressBar;
+    @BindView(R.id.list_events_progress_bar)
+    ProgressBar progressBar;
     private EventsAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBarDrawerToggle drawerToggle;
-    private CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.list_of_events_coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
     private Toolbar toolbar;
-    private BadgeLayout badgeLayout;
-    private LocationPref definedLocation;
+    BadgeLayout badgeLayout;
+    private LocationPref location;
     private RelativeLayout noUpcomingEventsLayout;
+    private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_list_of_events, null);
+        View v = inflater.inflate(R.layout.fragment_events, null);
+        unbinder = ButterKnife.bind(this, v);
+        return v;
     }
 
     @Override
@@ -91,21 +96,21 @@ public class EventsFragment extends Fragment implements EventsView,
         adapter = new EventsAdapter(getContext(), position -> presenter.onItem(adapter.getItem(position)),
                 new EventsAdapter.OnLikeItemClickListener() {
 
-            @Override
-            public void onItem(int position) {
-                presenter.onItemStar(adapter.getItem(position));
-            }
+                    @Override
+                    public void onItem(int position) {
+                        presenter.onItemStar(adapter.getItem(position));
+                    }
 
-            @Override
-            public void liked(LikeButton likeButton) {
-                presenter.onLike();
-            }
+                    @Override
+                    public void liked(LikeButton likeButton) {
+                        presenter.onLike();
+                    }
 
-            @Override
-            public void unLiked(LikeButton likeButton) {
-                presenter.onUnlike();
-            }
-        });
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                        presenter.onUnlike();
+                    }
+                });
     }
 
     private void setupRecycleView() {
@@ -133,7 +138,6 @@ public class EventsFragment extends Fragment implements EventsView,
         noUpcomingEventsLayout = (RelativeLayout) getActivity().findViewById(R.id.list_events_no_upcoming_events);
         badgeLayout = (BadgeLayout) getActivity().findViewById(R.id.list_events_badge_layout);
         badgeLayout.addOnBadgeClickedListener(this);
-        coordinatorLayout = (CoordinatorLayout) getView().findViewById(R.id.list_of_events_coordinator_layout);
         FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
         fab.setOnClickListener(view1 -> navigationManager.goToAddEvent());
         setupToolbar();
@@ -141,7 +145,6 @@ public class EventsFragment extends Fragment implements EventsView,
         setupToolbarTitle(toolbar);
         setupRecycleView();
 
-        progressBar = (ProgressBar) getView().findViewById(R.id.list_events_progress_bar);
         swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
                 .findViewById(R.id.list_events_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -152,12 +155,12 @@ public class EventsFragment extends Fragment implements EventsView,
             swipeRefreshLayout.setRefreshing(true);
         });
 
-        definedLocation = locationManager.getLastDefinedLocation();
-        if (definedLocation != null)
+        location = locationManager.getLastDefinedLocation();
+        if (location != null)
             ((TextView) getView().findViewById(R.id.toolbar_location_textview))
-                    .setText(definedLocation.getCity() + ", " + definedLocation.getCountry());
+                    .setText(location.getCity() + ", " + location.getCountry());
         presenter.attach(this);
-        presenter.provideData(locationManager.getLastDefinedLocation()); // FIXME: 26.02.2017
+        presenter.provideData(locationManager.getLastDefinedLocation());
     }
 
     @Override
@@ -196,18 +199,20 @@ public class EventsFragment extends Fragment implements EventsView,
     @Override
     public void onStop() {
         super.onStop();
-        badgeLayout.removeOnBadgeClickedListener(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         presenter.detach();
+        badgeLayout.removeOnBadgeClickedListener(this);
         ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+        unbinder.unbind();
     }
 
     @Override
     public void onBadgeClicked(BadgeLayout.Badge badge) {
+        badge.setSelected(true);
     }
 
     @Override
@@ -219,7 +224,6 @@ public class EventsFragment extends Fragment implements EventsView,
 
     @Override
     public void showEvents(List<Event> events) {
-        Log.d(TAG, "showSaved: Loaded events: " + events.size());
         noUpcomingEventsLayout.setVisibility(View.INVISIBLE);
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
@@ -237,7 +241,7 @@ public class EventsFragment extends Fragment implements EventsView,
     }
 
     @Override
-    public void showMessageAddedToFavorite() {
+    public void showAddedToSaved() {
         Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
                 .show();
     }
@@ -253,8 +257,8 @@ public class EventsFragment extends Fragment implements EventsView,
     }
 
     @Override
-    public void showProgress(boolean state) {
-        progressBar.setVisibility(state ? View.VISIBLE : View.INVISIBLE);
+    public void showProgress(boolean isLoading) {
+        progressBar.setVisibility(isLoading ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override

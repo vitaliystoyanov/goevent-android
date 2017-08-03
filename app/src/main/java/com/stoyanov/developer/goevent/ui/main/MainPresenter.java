@@ -52,6 +52,9 @@ public class MainPresenter extends BasePresenter<MainView> {
     @Override
     public void onDetach() {
         super.onDetach();
-        disposable.dispose();
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+            disposable = null;
+        }
     }
 }

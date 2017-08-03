@@ -36,7 +36,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView> {
     }
 
     private Disposable getEvents(LocationPref location) {
-        return repository.getEventsByLocation(location.getLatitude(), location.getLongitude(), false)
+        return repository.getEventsByLocation(location.getLatitude(), location.getLongitude(), true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(e -> getView().visibleProgress(true))

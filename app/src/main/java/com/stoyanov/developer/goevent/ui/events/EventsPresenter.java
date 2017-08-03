@@ -4,10 +4,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.stoyanov.developer.goevent.manager.FavoriteManager;
+import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -41,6 +45,11 @@ public class EventsPresenter extends BasePresenter<EventsView> {
                 .subscribe(events -> {
                     if (events != null && events.size() > 0) {
                         getView().showEvents(events);
+                        Set<Category> set = new HashSet<>();
+                        for (Event e : events) {
+                            set.add(new Category(e.getCategory()));
+                        }
+                        getView().showCategories(set);
                     } else {
                         getView().showEmpty();
                     }

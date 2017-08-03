@@ -5,10 +5,13 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/progressBar2"
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding"
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-6dp"
+        android:layout_marginTop="-2dp"
+        android:indeterminate="true" />
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/nearby_events_mapview"
@@ -32,7 +35,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/nearby_events_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="170dp"
         android:layout_alignParentBottom="true"
         android:paddingBottom="5dp"
         android:paddingLeft="5dp" />
