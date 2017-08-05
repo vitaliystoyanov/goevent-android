@@ -1,5 +1,6 @@
 package com.stoyanov.developer.goevent.ui.eventdetail;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -10,13 +11,21 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.transition.CircularPropagation;
+import android.transition.Fade;
+import android.transition.SidePropagation;
+import android.transition.Slide;
+import android.transition.TransitionSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,14 +38,17 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
 import com.ms.square.android.expandabletextview.ExpandableTextView;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
+import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 import com.stoyanov.developer.goevent.utill.DateUtil;
+import com.stoyanov.developer.goevent.utill.transition.DetailTransition;
+import com.stoyanov.developer.goevent.utill.transition.PropagatingTransition;
 
 import javax.inject.Inject;
 
@@ -48,6 +60,7 @@ import butterknife.Unbinder;
 public class DetailEventFragment extends Fragment
         implements DetailEventView, OnMapReadyCallback {
     public static final String EXTRA_PARCELABLE_EVENT = "EXTRA_PARCELABLE_EVENT";
+    public static final String EXTRA_TRANSITION_NAME = "EXTRA_TRANSITION_NAME";
     public static final int ZOOM_LEVEL = 16;
     @Inject
     NavigationManager navigationManager;
@@ -76,18 +89,31 @@ public class DetailEventFragment extends Fragment
     Toolbar toolbar;
     @BindView(R.id.detail_event_card_map)
     CardView cardViewMap;
+    @BindView(R.id.content)
+    LinearLayout content;
 
     private GoogleMap map;
     private LatLng location;
     private Unbinder unbinder;
     private IconGenerator generator;
 
-    public static Fragment newInstance(Event event) {
+    public static Fragment newInstance(Event event, String transitionName) {
         Bundle bundle = new Bundle();
         Fragment fragment = new DetailEventFragment();
         bundle.putParcelable(EXTRA_PARCELABLE_EVENT, event);
+        bundle.putString(EXTRA_TRANSITION_NAME, transitionName);
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        postponeEnterTransition();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setSharedElementEnterTransition(new DetailTransition());
+            setExitTransition(new DetailTransition());
+        }
     }
 
     @Override
@@ -97,6 +123,15 @@ public class DetailEventFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_detail_event, null);
         unbinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        String transitionName = getArguments().getString(EXTRA_TRANSITION_NAME);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            image.setTransitionName(transitionName);
+        }
     }
 
     @Override
@@ -128,12 +163,7 @@ public class DetailEventFragment extends Fragment
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                navigationManager.back(DetailEventFragment.this);
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> navigationManager.back(DetailEventFragment.this));
     }
 
     @Override
@@ -165,7 +195,17 @@ public class DetailEventFragment extends Fragment
                     .load(url)
                     .fit()
                     .centerCrop()
-                    .into(image);
+                    .into(image, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            startPostponedEnterTransition();
+                        }
+
+                        @Override
+                        public void onError() {
+                            startPostponedEnterTransition();
+                        }
+                    });
         } else {
             // FIXME: 05.12.2016
         }
@@ -175,7 +215,7 @@ public class DetailEventFragment extends Fragment
     public void showDescription(String desc, String name) {
         expandableTextView.setText(desc);
         eventName.setText(name);
-        toolbar.setTitle(name);
+        toolbar.setTitle("");
     }
 
     @Override

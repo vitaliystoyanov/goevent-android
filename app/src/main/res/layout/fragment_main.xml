@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-                    android:text="Popular events"
+                    android:text="@string/title_events_on_weekends"
                     android:textColor="@color/textSecondary"
                     android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +118,7 @@
                     android:drawableLeft="@drawable/ic_near_me"
                     android:drawablePadding="4dp"
                     android:drawableStart="@drawable/ic_near_me"
-                    android:text="Near me"
+                    android:text="@string/title_near_me"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/viewpager" />
 

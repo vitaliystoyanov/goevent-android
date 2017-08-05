@@ -44,4 +44,17 @@ public class DateUtil {
 
         return fullFormat.format(dateFrom) + " - " + fullFormat.format(dateTo);
     }
+
+    public static String toDurationWithoutTimeRange(Date dateFrom, Date dateTo) {
+        SimpleDateFormat fullFormat = new SimpleDateFormat("EEE, MMM d",
+                Locale.getDefault());
+
+        Calendar from = new GregorianCalendar();
+        from.setTime(dateFrom);
+
+        Calendar to = new GregorianCalendar();
+        to.setTime(dateTo);
+
+        return fullFormat.format(dateFrom) + " - " + fullFormat.format(dateTo);
+    }
 }

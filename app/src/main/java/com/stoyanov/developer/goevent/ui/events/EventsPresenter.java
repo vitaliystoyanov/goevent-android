@@ -2,6 +2,7 @@ package com.stoyanov.developer.goevent.ui.events;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.widget.ImageView;
 
 import com.stoyanov.developer.goevent.manager.FavoriteManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.Category;
@@ -44,12 +45,12 @@ public class EventsPresenter extends BasePresenter<EventsView> {
                 .doOnSubscribe(e -> getView().showProgress(true))
                 .subscribe(events -> {
                     if (events != null && events.size() > 0) {
-                        getView().showEvents(events);
                         Set<Category> set = new HashSet<>();
                         for (Event e : events) {
                             set.add(new Category(e.getCategory()));
                         }
                         getView().showCategories(set);
+                        getView().showEvents(events);
                     } else {
                         getView().showEmpty();
                     }
@@ -62,8 +63,8 @@ public class EventsPresenter extends BasePresenter<EventsView> {
         disposable.add(getEvents(cachedLocation, true));
     }
 
-    public void onItem(Event event) {
-        getView().goToDetailEvent(event);
+    public void onItem(Event event, ImageView sharedImageView, String transitionName) {
+        getView().goToDetailEvent(event, sharedImageView, transitionName);
     }
 
     public void onActionSearch() {

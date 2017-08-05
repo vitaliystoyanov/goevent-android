@@ -50,4 +50,12 @@ public class BaseNavigationManager {
             manager.popBackStackImmediate();
         }
     }
+
+    public FragmentManager getManager() {
+        return manager;
+    }
+
+    public void setManager(FragmentManager manager) {
+        this.manager = manager;
+    }
 }

@@ -3,11 +3,13 @@ package com.stoyanov.developer.goevent.manager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
+import android.support.v13.view.ViewCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.eventdetail.DetailEventFragment;
 import com.stoyanov.developer.goevent.ui.events.EventsFragment;
@@ -39,7 +41,7 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public static void goToDetailEvent(FragmentManager manager, Event event) {
-        Fragment fragment = DetailEventFragment.newInstance(event);
+        Fragment fragment = DetailEventFragment.newInstance(event, "");
         runReplaceTransaction(manager, fragment);
     }
 
@@ -59,8 +61,12 @@ public class NavigationManager extends BaseNavigationManager {
         openAsRoot(nearbyEventsFragment);
     }
 
-    public void goToDetailEvent(Event event) {
-        open(DetailEventFragment.newInstance(event));
+    public void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName) {
+        getManager().beginTransaction()
+                .addSharedElement(sharedImageView, ViewCompat.getTransitionName(sharedImageView))
+                .replace(R.id.container, DetailEventFragment.newInstance(event, transitionName))
+                .addToBackStack(null)
+                .commit();
     }
 
     public void goToSearchEvents(Context context) {

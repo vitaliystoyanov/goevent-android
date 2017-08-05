@@ -40,7 +40,13 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
         setupDagger();
         setupNavigationDrawer();
         presenter.attach(this);
-
+        if (savedInstanceState == null) {
+            if (locationManager.getLastDefinedLocation() == null) {
+                navigationManager.goToDefineLocation(this);
+            } else {
+                presenter.openHome();
+            }
+        }
     }
 
     public void setupNavigationDrawer() {
@@ -97,11 +103,6 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
     @Override
     protected void onStart() {
         super.onStart();
-        if (locationManager.getLastDefinedLocation() == null) {
-            navigationManager.goToDefineLocation(this);
-        } else {
-            presenter.openHome();
-        }
     }
 
     @Override

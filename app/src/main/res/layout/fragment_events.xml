@@ -48,6 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"
+        android:paddingBottom="10dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <android.support.v7.widget.Toolbar
@@ -59,7 +60,7 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <au.com.dardle.widget.BadgeLayout
-            android:id="@+id/list_events_badge_layout"
+            android:id="@+id/badge_categories"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="8dp"
@@ -69,42 +70,48 @@
             app:badgeBackground="@drawable/background_app_badge"
             app:badgeTextColor="@android:color/white"
             app:layout_scrollFlags="enterAlways"
-            app:spacing="8dp">
+            app:spacing="8dp" />
 
-        </au.com.dardle.widget.BadgeLayout>
-
-        <RelativeLayout
-            android:id="@+id/list_events_layout_params"
+        <au.com.dardle.widget.BadgeLayout
+            android:id="@+id/badge_date"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:gravity="center_vertical"
-            app:layout_scrollFlags="exitUntilCollapsed|enterAlways">
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            app:badgeBackground="@drawable/background_app_badge"
+            app:badgeTextColor="@android:color/white"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:spacing="8dp" />
 
-            <Button
-                android:id="@+id/button2"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentStart="false"
-                android:text="More"
-                app:srcCompat="@drawable/ic_arrow_down_white_25px" />
+        <!--        <RelativeLayout
+                    android:id="@+id/list_events_layout_params"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:gravity="center_vertical"
+                    app:layout_scrollFlags="exitUntilCollapsed|enterAlways">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="false"
-                android:layout_centerInParent="false"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:text="Date: Jun 10 - Jul 12"
-                android:textColor="@color/textWhite"
-                android:textSize="16sp" />
-        </RelativeLayout>
+                    <Button
+                        android:id="@+id/btn_more"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentStart="false"
+                        android:text="More"
+                        app:srcCompat="@drawable/ic_arrow_down_white_25px" />
+
+                   <Button
+                        android:id="@+id/btn_date"
+                        style="@style/Widget.AppCompat.Button.Borderless"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Date: Jun 10 - Jul 12" />
+
+                </RelativeLayout>-->
 
     </android.support.design.widget.AppBarLayout>
 
@@ -112,7 +119,7 @@
         android:id="@+id/list_events_no_upcoming_events"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

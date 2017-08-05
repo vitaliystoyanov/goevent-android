@@ -39,7 +39,7 @@
     <string name="message_you_have_favorite_events">You have %1$d favorite events</string>
     <string name="action_undo">UNDO</string>
     <string name="field_no_location">Location isn\'t specified</string>
-    <string name="text_you_don_t_have_saved_events">You don\'t have saved events.</string>
+    <string name="title_you_don_t_have_favorite_events">You don\'t have favorite events.</string>
     <string name="field_no_category">No category</string>
     <string name="action_saved">Saved</string>
     <string name="geocoding_service_not_available">Service not available</string>
@@ -50,6 +50,15 @@
     <string name="title_home">Main</string>
     <string name="title_category">Categories</string>
     <string name="title_favorite">Saved</string>
+    <string name="title_date">Date</string>
+    <string name="title_custom_date">Custom date</string>
+    <string name="title_weekend">Weekend</string>
+    <string name="title_tomorrow">Tomorrow</string>
+    <string name="title_today">Today</string>
+    <string name="title_all">All</string>
+    <string name="title_explore_events">Explore events</string>
+    <string name="title_events_on_weekends">Events on weekends</string>
+    <string name="title_near_me">Near me</string>
 
     <string-array name="items_category_of_events_for_spinner">
         <item>Nightlife</item>

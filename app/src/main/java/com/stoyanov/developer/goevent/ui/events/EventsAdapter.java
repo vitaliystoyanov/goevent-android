@@ -1,10 +1,13 @@
 package com.stoyanov.developer.goevent.ui.events;
 
 import android.content.Context;
+import android.support.v13.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,13 +32,15 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder>
+        implements Filterable {
     @Inject
     FavoriteManager favoriteManager;
     private List<Event> data;
     private Context context;
     private OnLikeItemClickListener onLikeItemClickListener;
     private OnItemClickListener onItemClickListener;
+    private CategoryFilter categoryFilter;
 
     public EventsAdapter(Context context, OnItemClickListener itemClickListener,
                          OnLikeItemClickListener likeItemClickListener) {
@@ -76,6 +81,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         Event event = data.get(position);
+        ViewCompat.setTransitionName(holder.image, event.getName());
         holder.progressBar.setVisibility(View.VISIBLE);
         String urlPicture = event.getPicture();
         Picasso.with(context)
@@ -126,8 +132,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return data;
     }
 
+    @Override
+    public Filter getFilter() {
+        if (categoryFilter == null) categoryFilter = new CategoryFilter(this, new ArrayList<>(data));
+        return categoryFilter;
+    }
+
     public interface OnItemClickListener {
-        void onItem(int position);
+        void onItem(int position, ImageView sharedImageView, String transitionName);
     }
 
     public interface OnLikeItemClickListener extends OnLikeListener {
@@ -170,11 +182,53 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.card_item_image && itemClickListener != null) {
-                itemClickListener.onItem(getAdapterPosition());
+                itemClickListener.onItem(getAdapterPosition(), image, ViewCompat.getTransitionName(image));
             } else if (view.getId() == R.id.card_item_star && onLikeItemClickListener != null) {
                 onLikeItemClickListener.onItem(getAdapterPosition());
                 star.onClick(view);
             }
+        }
+    }
+
+    private static class CategoryFilter extends Filter {
+        private final EventsAdapter adapter;
+        private final List<Event> originalList;
+        private final List<Event> filteredList;
+
+        public CategoryFilter(EventsAdapter adapter, List<Event> originalList) {
+            this.adapter = adapter;
+            this.originalList = originalList;
+            filteredList = new ArrayList<>();
+        }
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            filteredList.clear();
+            final FilterResults results = new FilterResults();
+
+            String[] filterCategory = constraint.toString().split(",");
+            if (constraint.length() == 0) {
+                filteredList.addAll(originalList);
+            } else {
+                for (String filter : filterCategory) {
+                    for (final Event event : originalList) {
+                        if (event.getCategory().equals(filter)) {
+                            filteredList.add(event);
+                        }
+                    }
+                }
+            }
+
+            results.values = filteredList;
+            results.count = filteredList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults results) {
+            adapter.data.clear();
+            adapter.data.addAll((ArrayList<Event>) results.values);
+            adapter.notifyDataSetChanged();
         }
     }
 }

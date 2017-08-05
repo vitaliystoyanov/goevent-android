@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -11,43 +12,6 @@
         android:layout_gravity="center_vertical|center_horizontal"
         android:indeterminate="true"
         android:visibility="invisible" />
-
-    <RelativeLayout
-        android:id="@+id/saved_events_empty_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|center_horizontal">
-
-        <TextView
-            android:id="@+id/saved_events_text_first_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/text_you_don_t_have_saved_events" />
-
-        <ImageView
-            android:id="@+id/saved_events_image_save"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/saved_events_text_first_line"
-            android:layout_toRightOf="@+id/saved_events_text_2_line"
-            app:srcCompat="@drawable/ic_bookmark_outline" />
-
-        <TextView
-            android:id="@+id/saved_events_text_2_line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/saved_events_text_first_line"
-            android:text="Click" />
-
-        <TextView
-            android:id="@+id/saved_events_text_2_line1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/saved_events_text_first_line"
-            android:layout_toRightOf="@+id/saved_events_image_save"
-            android:text="to save an event" />
-
-    </RelativeLayout>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/saved_events_appbar"
@@ -72,4 +36,40 @@
         android:layout_alignParentTop="true"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|center_horizontal">
+
+        <TextView
+            android:id="@+id/saved_events_text_first_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_you_don_t_have_favorite_events"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/btn_explore_events"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:paddingEnd="16dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingStart="16dp"
+            android:text="@string/title_explore_events"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.design.widget.CoordinatorLayout>

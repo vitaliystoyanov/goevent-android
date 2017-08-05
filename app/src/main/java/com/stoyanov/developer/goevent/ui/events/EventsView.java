@@ -1,5 +1,7 @@
 package com.stoyanov.developer.goevent.ui.events;
 
+import android.widget.ImageView;
+
 import com.stoyanov.developer.goevent.mvp.model.domain.Category;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.view.BaseView;
@@ -19,7 +21,7 @@ public interface EventsView extends BaseView {
 
     void showMessageNetworkError();
 
-    void goToDetailEvent(Event event);
+    void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName);
 
     void goToSearchEvents();
 

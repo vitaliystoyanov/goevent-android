@@ -2,6 +2,7 @@ package com.stoyanov.developer.goevent;
 
 import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.stoyanov.developer.goevent.di.component.ApplicationComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerApplicationComponent;
@@ -35,7 +36,7 @@ public class GoeventApplication extends Application {
         RushCore.initialize(androidInitializeConfig);
 
         try {
-            latch.await(1, TimeUnit.SECONDS);
+            latch.await(2, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -47,5 +48,11 @@ public class GoeventApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 }

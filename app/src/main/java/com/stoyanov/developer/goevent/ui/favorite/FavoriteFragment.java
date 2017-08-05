@@ -3,6 +3,7 @@ package com.stoyanov.developer.goevent.ui.favorite;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class FavoriteFragment extends Fragment implements FavoriteView {
-    private static final String TAG = "FavoriteFragment";
     @Inject
     FavoriteEventsPresenter presenter;
     @Inject
@@ -37,7 +37,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     private ActionBarDrawerToggle drawerToggle;
     private EventsAdapter adapter;
     private ProgressBar progressBar;
-    private RelativeLayout emptyLayout;
+    private ConstraintLayout emptyLayout;
     private Toolbar toolbar;
 
     @Override
@@ -55,7 +55,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
                 .inject(this);
         setupToolbar();
         setupRecycleView();
-        emptyLayout = (RelativeLayout) getActivity().findViewById(R.id.saved_events_empty_layout);
+        emptyLayout = (ConstraintLayout) getActivity().findViewById(R.id.empty_layout);
     }
 
     private void setupToolbar() {
@@ -94,12 +94,9 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(list);
 
-        adapter = new EventsAdapter(getContext(), new EventsAdapter.OnItemClickListener() {
-            @Override
-            public void onItem(int position) {
-                presenter.onItemClick(adapter.getItem(position));
-            }
-        }, new EventsAdapter.OnLikeItemClickListener() {
+        adapter = new EventsAdapter(getContext(), (position, sharedImageView, transitionName) ->
+                presenter.onItemClick(adapter.getItem(position)),
+                new EventsAdapter.OnLikeItemClickListener() {
             @Override
             public void onItem(int position) {
                 presenter.onItem(adapter.getItem(position), position);
@@ -168,6 +165,6 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
 
     @Override
     public void goToDetailEvent(Event event) {
-        navigationManager.goToDetailEvent(event);
+        navigationManager.goToDetailEvent(event, null, "");
     }
 }
