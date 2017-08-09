@@ -17,16 +17,15 @@ import javax.inject.Inject;
 
 import io.reactivex.Single;
 import retrofit2.Retrofit;
+import timber.log.Timber;
 
 public class EventsServiceImp implements EventsService {
-    private static final String TAG = "EventsServiceImp";
     private final EventsApi eventsApi;
     @Inject
     Retrofit retrofit;
 
     public EventsServiceImp(Context context) {
         GoeventApplication.getApplicationComponent(context).inject(this);
-        Log.d(TAG, "EventsServiceImp: retrofit instance is null? - " + (retrofit == null));
         eventsApi = retrofit.create(EventsApi.class);
     }
 
@@ -36,7 +35,7 @@ public class EventsServiceImp implements EventsService {
         try {
             events = eventsApi.getEvents().execute().body();
         } catch (IOException e) {
-            Log.d(TAG, "getEvents: Error has occurred!", e);
+
         }
         return events != null ? events.list() : null;
     }
@@ -46,7 +45,7 @@ public class EventsServiceImp implements EventsService {
         try {
             return eventsApi.getEvent(id).execute().body();
         } catch (IOException e) {
-            Log.d(TAG, "getEvents: Error has occurred!", e);
+            Timber.e(e);
         }
         return null;
     }
@@ -59,5 +58,10 @@ public class EventsServiceImp implements EventsService {
     @Nullable
     public Single<Events> getEventsByLocation(double latitude, double longitude) {
         return eventsApi.getEventsByLocation(latitude, longitude, 5000);
+    }
+
+    @Override
+    public Single<Events> getEventsByLocation(double latitude, double longitude, int maxDistance, String since, String until) {
+        return eventsApi.getEventsByLocation(latitude, longitude, maxDistance, since, until);
     }
 }

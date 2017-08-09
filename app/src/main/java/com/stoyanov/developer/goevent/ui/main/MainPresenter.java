@@ -29,7 +29,7 @@ public class MainPresenter extends BasePresenter<MainView> {
     public void provideData(LocationPref pref) {
         location = pref;
         if (pref != null) {
-            disposable = repository.getEventsByLocation(pref.getLatitude(), pref.getLongitude(), true)
+            disposable = repository.getEventsBy(pref.getLatitude(), pref.getLongitude(), true)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(e -> getView().showProgress(true))

@@ -259,13 +259,6 @@ public class DetailEventFragment extends Fragment
     @Override
     public void showMessageAdded() {
         Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
-                .setAction(R.string.action_saved, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        navigationManager.goToFavorites();
-                    }
-                })
-                .setActionTextColor(ContextCompat.getColor(getContext(), R.color.textAction))
                 .show();
     }
 

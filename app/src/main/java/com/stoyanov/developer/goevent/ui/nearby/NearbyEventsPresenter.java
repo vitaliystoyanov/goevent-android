@@ -7,9 +7,6 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
-import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepositoryImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.local.EventsLocalStorageImp;
-import com.stoyanov.developer.goevent.mvp.model.repository.remote.EventsServiceImp;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
 
 import java.util.Iterator;
@@ -36,7 +33,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView> {
     }
 
     private Disposable getEvents(LocationPref location) {
-        return repository.getEventsByLocation(location.getLatitude(), location.getLongitude(), true)
+        return repository.getEventsBy(location.getLatitude(), location.getLongitude(), true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(e -> getView().visibleProgress(true))

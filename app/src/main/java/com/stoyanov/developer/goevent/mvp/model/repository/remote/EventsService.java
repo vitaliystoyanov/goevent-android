@@ -22,4 +22,6 @@ public interface EventsService {
 
     Single<Events> getEventsByLocation(double latitude, double longitude);
 
+    Single<Events> getEventsByLocation(double latitude, double longitude, int maxDistance, String since, String until);
+
 }

@@ -25,7 +25,7 @@
     <string name="event_info_location">Місце</string>
     <string name="event_info_category">Категорія</string>
     <string name="registration_create">Створити</string>
-    <string name="message_event_added_saved">Event saved</string>
+    <string name="message_event_added_saved">Event saved to Favorite</string>
     <string name="message_bad_connection">Check your connection or try again later</string>
     <string name="title_detail_event">Detail event</string>
     <string name="location_field_full_format">%1$s, %2$s, %3$s</string>
@@ -39,7 +39,7 @@
     <string name="message_you_have_favorite_events">You have %1$d favorite events</string>
     <string name="action_undo">UNDO</string>
     <string name="field_no_location">Location isn\'t specified</string>
-    <string name="title_you_don_t_have_favorite_events">You don\'t have favorite events.</string>
+    <string name="title_you_don_t_have_favorite_events">You don\'t have any favorite events yet</string>
     <string name="field_no_category">No category</string>
     <string name="action_saved">Saved</string>
     <string name="geocoding_service_not_available">Service not available</string>

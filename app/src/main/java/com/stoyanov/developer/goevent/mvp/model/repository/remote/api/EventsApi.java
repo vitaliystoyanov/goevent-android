@@ -19,10 +19,18 @@ public interface EventsApi {
     Call<Event> getEvent(@Path("id") String id);
 
     @GET("events-location")
-    Observable<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude);
+    Observable<Events> getEventsByLocation(@Query("lat") double latitude,
+                                           @Query("lng") double longitude);
 
     @GET("events-location")
-    Single<Events> getEventsByLocation(@Query("lat") double latitude, @Query("lng") double longitude,
+    Single<Events> getEventsByLocation(@Query("lat") double latitude,
+                                       @Query("lng") double longitude,
                                        @Query("distance") float distance);
 
+    @GET("events-location")
+    Single<Events> getEventsByLocation(@Query("lat") double latitude,
+                                       @Query("lng") double longitude,
+                                       @Query("distance") float distance,
+                                       @Query("since") String since,
+                                       @Query("until") String until);
 }

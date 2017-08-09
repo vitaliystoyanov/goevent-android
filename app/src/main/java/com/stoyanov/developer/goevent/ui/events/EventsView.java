@@ -19,8 +19,6 @@ public interface EventsView extends BaseView {
 
     void showProgress(boolean state);
 
-    void showMessageNetworkError();
-
     void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName);
 
     void goToSearchEvents();
@@ -29,4 +27,5 @@ public interface EventsView extends BaseView {
 
     void showAddedToSaved();
 
+    void showError();
 }

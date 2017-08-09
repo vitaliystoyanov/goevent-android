@@ -1,6 +1,7 @@
 package com.stoyanov.developer.goevent.utill;
 
 import android.support.annotation.Nullable;
+import android.util.Pair;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,8 +46,8 @@ public class DateUtil {
         return fullFormat.format(dateFrom) + " - " + fullFormat.format(dateTo);
     }
 
-    public static String toDurationWithoutTimeRange(Date dateFrom, Date dateTo) {
-        SimpleDateFormat fullFormat = new SimpleDateFormat("EEE, MMM d",
+    public static Pair<String, String> toDurationWithoutTimeRange(Date dateFrom, Date dateTo) {
+        SimpleDateFormat fullFormat = new SimpleDateFormat("yyyy-MM-dd",
                 Locale.getDefault());
 
         Calendar from = new GregorianCalendar();
@@ -54,7 +55,6 @@ public class DateUtil {
 
         Calendar to = new GregorianCalendar();
         to.setTime(dateTo);
-
-        return fullFormat.format(dateFrom) + " - " + fullFormat.format(dateTo);
+        return new Pair<>(fullFormat.format(dateFrom), fullFormat.format(dateTo));
     }
 }

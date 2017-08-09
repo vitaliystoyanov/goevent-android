@@ -17,9 +17,11 @@ public interface EventsRepository {
 
     void setOnNetworkErrorListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
 
-    Single<List<Event>> getEventsByLocation(double latitude, double longitude, boolean updateCache);
+    Single<List<Event>> getEventsBy(double latitude, double longitude, boolean updateCache);
 
-    Single<List<Event>> getEventsByLocation(double latitude, double longitude, int distance, boolean updateCache);
+    Single<List<Event>> getEventsBy(double latitude, double longitude, String since, String until, boolean updateCache);
+
+    Single<List<Event>> getEventsBy(double latitude, double longitude, int distance, boolean updateCache);
 
     interface OnNotReceiveRemoteListener {
 

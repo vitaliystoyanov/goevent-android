@@ -20,6 +20,7 @@ import android.transition.Fade;
 import android.transition.SidePropagation;
 import android.transition.Slide;
 import android.transition.TransitionSet;
+import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,14 +47,12 @@ import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 import com.stoyanov.developer.goevent.utill.DateUtil;
 import com.stoyanov.developer.goevent.utill.transition.PropagatingTransition;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -199,7 +198,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
         mapBadgesDates = new LinkedHashMap<>();
         mapBadgesCategories = new LinkedHashMap<>();
         mapBadgesCategoriesSelectedState = new HashMap<>();
-        mapBadgesDates.put(getString(R.string.title_today), badgeDate.newBadge().setText(getString(R.string.title_today)).setSelected(true));
+        mapBadgesDates.put(getString(R.string.title_today), badgeDate.newBadge().setText(getString(R.string.title_today)));
         mapBadgesDates.put(getString(R.string.title_tomorrow), badgeDate.newBadge().setText(getString(R.string.title_tomorrow)));
         mapBadgesDates.put(getString(R.string.title_weekend), badgeDate.newBadge().setText(getString(R.string.title_weekend)));
         mapBadgesDates.put(getString(R.string.title_custom_date), badgeDate.newBadge().setText(getString(R.string.title_custom_date)));
@@ -213,6 +212,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
                     b.setSelected(false);
             }
             badge.setSelected(true);
+            selectByDate(badge.getText().toString());
         });
 
         badgeCategories.addOnBadgeClickedListener(badge -> {
@@ -224,6 +224,16 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
             performFiltering();
             badge.setSelected(true);
         });
+    }
+
+    private void selectByDate(String name) {
+        if (name.equals(getString(R.string.title_today))) {
+            presenter.loadForToday();
+        } else if (name.equals(getString(R.string.title_tomorrow))) {
+            presenter.loadForTomorrow();
+        } else if (name.equals(getString(R.string.title_weekend))) {
+            presenter.loadForWeekend();
+        }
     }
 
     private void performFiltering() {
@@ -360,7 +370,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     }
 
     @Override
-    public void showMessageNetworkError() {
+    public void showError() {
         Snackbar.make(coordinatorLayout,
                 R.string.message_bad_connection, Snackbar.LENGTH_LONG)
                 .show();
@@ -382,8 +392,9 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
         if (b == null) {
             b = mapBadgesDates.get(getString(R.string.title_custom_date));
         }
-        customDateRange = String.format("%s: %s", getString(R.string.title_date),
-                DateUtil.toDurationWithoutTimeRange(dateStart.getTime(), dateEnd.getTime()));
+        Pair<String, String> r = DateUtil.toDurationWithoutTimeRange(dateStart.getTime(), dateEnd.getTime());
+        customDateRange = String.format("%s: %s - %s", getString(R.string.title_date), r.first, r.second);
         b.setText(customDateRange);
+        presenter.loadForCustomDateRange(r);
     }
 }

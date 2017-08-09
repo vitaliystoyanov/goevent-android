@@ -14,6 +14,7 @@ import io.rx_cache2.EvictProvider;
 
 public class EventsRepositoryImp implements EventsRepository {
     private static final String KEY_EVENTS = "events";
+    private static final int MAX_DISTANCE = 5000;
     private final EventsLocalStorage localStorage;
     private final EventsService remoteService;
     private OnNotReceiveRemoteListener listener;
@@ -32,7 +33,7 @@ public class EventsRepositoryImp implements EventsRepository {
     }
 
     @Nullable
-    public Single<List<Event>> getEventsByLocation(double latitude, double longitude, boolean updateCache) {
+    public Single<List<Event>> getEventsBy(double latitude, double longitude, boolean updateCache) {
         Single<List<Event>> single = remoteService.getEventsByLocation(latitude, longitude).toObservable()
                 .flatMap(events -> Observable.fromIterable(events.list()))
                 .toList();
@@ -40,8 +41,16 @@ public class EventsRepositoryImp implements EventsRepository {
     }
 
     @Override
-    public Single<List<Event>> getEventsByLocation(double latitude, double longitude,
-                                                   int distance, boolean updateCache) {
+    public Single<List<Event>> getEventsBy(double latitude, double longitude, String since, String until, boolean updateCache) {
+        return remoteService.getEventsByLocation(latitude, longitude, MAX_DISTANCE, since, until)
+                .toObservable()
+                .flatMap(events -> Observable.fromIterable(events.list()))
+                .toList();
+    }
+
+    @Override
+    public Single<List<Event>> getEventsBy(double latitude, double longitude,
+                                           int distance, boolean updateCache) {
         Single<List<Event>> single = remoteService.getEventsByLocation(latitude, longitude, distance)
                 .toObservable()
                 .flatMap(events -> Observable.fromIterable(events.list()))
