@@ -12,7 +12,6 @@ import io.reactivex.Single;
 
 public interface EventsRepository {
 
-    @Nullable
     List<Event> getEvents();
 
     void setOnNetworkErrorListener(EventsRepositoryImp.OnNotReceiveRemoteListener listener);
@@ -22,6 +21,8 @@ public interface EventsRepository {
     Single<List<Event>> getEventsBy(double latitude, double longitude, String since, String until, boolean updateCache);
 
     Single<List<Event>> getEventsBy(double latitude, double longitude, int distance, boolean updateCache);
+
+    Single<Event> getEvent(String id);
 
     interface OnNotReceiveRemoteListener {
 

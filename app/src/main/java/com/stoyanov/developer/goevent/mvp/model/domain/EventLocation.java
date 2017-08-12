@@ -1,7 +1,10 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
+import org.parceler.Parcel;
+
 import co.uk.rushorm.core.RushObject;
 
+@Parcel
 public class EventLocation extends RushObject {
     private Location location;
 

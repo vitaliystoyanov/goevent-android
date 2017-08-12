@@ -1,5 +1,6 @@
 package com.stoyanov.developer.goevent.ui.main;
 
+import android.animation.Animator;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.ProgressBar;
@@ -45,6 +47,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class MainFragment extends Fragment implements MainView {
@@ -150,11 +153,9 @@ public class MainFragment extends Fragment implements MainView {
         presenter.detach();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
-        unbinder.unbind();
+    @OnClick(R.id.btn_near_me)
+    public void onClickNearMe() {
+
     }
 
     @Override
@@ -197,6 +198,13 @@ public class MainFragment extends Fragment implements MainView {
                 R.string.message_bad_connection,
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+        unbinder.unbind();
     }
 
     private class SlidePagerAdapter extends FragmentPagerAdapter {

@@ -59,6 +59,7 @@
     <string name="title_explore_events">Explore events</string>
     <string name="title_events_on_weekends">Events on weekends</string>
     <string name="title_near_me">Near me</string>
+    <string name="title_tickets">Get tickets</string>
 
     <string-array name="items_category_of_events_for_spinner">
         <item>Nightlife</item>

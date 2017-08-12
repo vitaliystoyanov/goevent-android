@@ -28,8 +28,9 @@ public class PresenterModule {
     }
 
     @Provides
-    EventDetailPresenter provideDetailPresenter() {
-        return new EventDetailPresenter();
+    EventDetailPresenter provideDetailPresenter(FavoriteManager manager,
+                                                EventsRepository repository) {
+        return new EventDetailPresenter(repository, manager);
     }
 
     @Provides

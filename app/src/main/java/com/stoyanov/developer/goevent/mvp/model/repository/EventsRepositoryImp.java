@@ -28,6 +28,11 @@ public class EventsRepositoryImp implements EventsRepository {
     }
 
     @Override
+    public Single<Event> getEvent(String id) {
+        return remoteService.getEvent(id);
+    }
+
+    @Override
     public List<Event> getEvents() {
         return null;
     }

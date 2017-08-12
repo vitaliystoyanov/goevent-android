@@ -16,7 +16,7 @@ public interface EventsApi {
     Call<Events> getEvents();
 
     @GET("events/{id}")
-    Call<Event> getEvent(@Path("id") String id);
+    Single<Event> getEvent(@Path("id") String id);
 
     @GET("events-location")
     Observable<Events> getEventsByLocation(@Query("lat") double latitude,

@@ -1,31 +1,29 @@
 package com.stoyanov.developer.goevent.ui.eventdetail;
 
+import android.animation.Animator;
+import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
-import android.transition.CircularPropagation;
-import android.transition.Fade;
-import android.transition.SidePropagation;
-import android.transition.Slide;
-import android.transition.TransitionSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,7 +46,8 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Location;
 import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 import com.stoyanov.developer.goevent.utill.DateUtil;
 import com.stoyanov.developer.goevent.utill.transition.DetailTransition;
-import com.stoyanov.developer.goevent.utill.transition.PropagatingTransition;
+
+import org.parceler.Parcels;
 
 import javax.inject.Inject;
 
@@ -57,8 +56,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class DetailEventFragment extends Fragment
-        implements DetailEventView, OnMapReadyCallback {
+public class EventDetailFragment extends Fragment
+        implements EventDetailView, OnMapReadyCallback {
     public static final String EXTRA_PARCELABLE_EVENT = "EXTRA_PARCELABLE_EVENT";
     public static final String EXTRA_TRANSITION_NAME = "EXTRA_TRANSITION_NAME";
     public static final int ZOOM_LEVEL = 16;
@@ -91,6 +90,12 @@ public class DetailEventFragment extends Fragment
     CardView cardViewMap;
     @BindView(R.id.content)
     LinearLayout content;
+    @BindView(R.id.nested_scroll)
+    NestedScrollView nestedScroll;
+    @BindView(R.id.bottom_sheet)
+    RelativeLayout bottomSheet;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     private GoogleMap map;
     private LatLng location;
@@ -99,8 +104,8 @@ public class DetailEventFragment extends Fragment
 
     public static Fragment newInstance(Event event, String transitionName) {
         Bundle bundle = new Bundle();
-        Fragment fragment = new DetailEventFragment();
-        bundle.putParcelable(EXTRA_PARCELABLE_EVENT, event);
+        Fragment fragment = new EventDetailFragment();
+        bundle.putParcelable(EXTRA_PARCELABLE_EVENT, Parcels.wrap(event));
         bundle.putString(EXTRA_TRANSITION_NAME, transitionName);
         fragment.setArguments(bundle);
         return fragment;
@@ -149,9 +154,9 @@ public class DetailEventFragment extends Fragment
                 R.drawable.ic_marker_red_32px, null));
     }
 
-    @OnClick(R.id.detail_event_fab)
-    public void onClickSaveFab() {
-        presenter.onSaveClick();
+    @OnClick(R.id.fab)
+    public void onClickStarFab() {
+        presenter.onStarClick();
     }
 
     @OnClick(R.id.event_map_button_open_map)
@@ -163,14 +168,29 @@ public class DetailEventFragment extends Fragment
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ((ContainerActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setNavigationOnClickListener(view -> navigationManager.back(DetailEventFragment.this));
+        toolbar.setNavigationOnClickListener(view -> navigationManager.back(EventDetailFragment.this));
     }
 
     @Override
     public void onStart() {
         super.onStart();
         presenter.attach(this);
-        presenter.onStart((Event) getArguments().getParcelable(EXTRA_PARCELABLE_EVENT));
+        presenter.onStart(Parcels.unwrap(getArguments().getParcelable(EXTRA_PARCELABLE_EVENT)));
+        startCircularAnimation(content);
+    }
+
+    private void startCircularAnimation(View vg) {
+        vg.setVisibility(View.INVISIBLE);
+        int cx = vg.getWidth() / 2;
+        int cy = vg.getHeight() / 2;
+
+        float finalRadius = (float) Math.hypot(cx, cy);
+
+        Animator anim =
+                ViewAnimationUtils.createCircularReveal(vg, cx, cy, 0, finalRadius);
+
+        vg.setVisibility(View.VISIBLE);
+        anim.start();
     }
 
     @Override
@@ -257,9 +277,8 @@ public class DetailEventFragment extends Fragment
     }
 
     @Override
-    public void showMessageAdded() {
-        Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
-                .show();
+    public void showIsFavorite(boolean b) {
+        fab.setImageResource(b ? R.drawable.ic_done_white_24dp : R.drawable.ic_star_white_24px);
     }
 
     @Override
@@ -270,6 +289,11 @@ public class DetailEventFragment extends Fragment
     @Override
     public void openGoogleMapApp(LatLng latLng) {
         NavigationManager.openGoogleMapApp(getContext(), latLng);
+    }
+
+    @Override
+    public void showProgress(boolean b) {
+
     }
 
     @Override
@@ -317,7 +341,6 @@ public class DetailEventFragment extends Fragment
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        presenter.onDestroyView();
         unbinder.unbind();
     }
 }

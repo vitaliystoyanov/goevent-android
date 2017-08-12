@@ -13,10 +13,9 @@ import io.reactivex.Single;
 
 public interface EventsService {
 
-    @Nullable
     List<Event> getEvents();
 
-    Event getEvent(@NonNull String id);
+    Single<Event> getEvent(@NonNull String id);
 
     Single<Events> getEventsByLocation(double latitude, double longitude, int distance);
 

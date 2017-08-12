@@ -2,7 +2,7 @@ package com.stoyanov.developer.goevent.di.component;
 
 import com.stoyanov.developer.goevent.di.module.PresenterModule;
 import com.stoyanov.developer.goevent.di.scope.FragmentScope;
-import com.stoyanov.developer.goevent.ui.eventdetail.DetailEventFragment;
+import com.stoyanov.developer.goevent.ui.eventdetail.EventDetailFragment;
 import com.stoyanov.developer.goevent.ui.events.EventsFragment;
 import com.stoyanov.developer.goevent.ui.favorite.FavoriteFragment;
 import com.stoyanov.developer.goevent.ui.main.MainFragment;
@@ -16,7 +16,7 @@ public interface FragmentComponent {
 
     void inject(EventsFragment fragment);
 
-    void inject(DetailEventFragment fragment);
+    void inject(EventDetailFragment fragment);
 
     void inject(NearbyEventsFragment fragment);
 

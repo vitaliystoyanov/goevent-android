@@ -18,19 +18,20 @@
             app:contentScrim="@color/colorPrimary"
             app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="enterAlwaysCollapsed|scroll">
 
             <ImageView
                 android:id="@+id/detail_event_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
                 android:scaleType="centerCrop" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/detail_event_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/toolbar_height"
-                app:layout_collapseMode="pin" />
+                android:fitsSystemWindows="true" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -46,6 +47,7 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/transparent"
             android:orientation="vertical">
 
             <include layout="@layout/layout_event_text_description" />
@@ -59,7 +61,7 @@
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/detail_event_fab"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -67,5 +69,7 @@
         app:layout_anchor="@id/detail_event_appbar"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_star_white_24px" />
+
+    <include layout="@layout/bottom_sheet_tickets" />
 
 </android.support.design.widget.CoordinatorLayout>

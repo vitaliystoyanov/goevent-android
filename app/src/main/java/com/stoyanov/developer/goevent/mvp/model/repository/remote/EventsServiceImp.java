@@ -41,13 +41,8 @@ public class EventsServiceImp implements EventsService {
     }
 
     @Nullable
-    public Event getEvent(@NonNull String id) {
-        try {
-            return eventsApi.getEvent(id).execute().body();
-        } catch (IOException e) {
-            Timber.e(e);
-        }
-        return null;
+    public Single<Event> getEvent(@NonNull String id) {
+        return eventsApi.getEvent(id);
     }
 
     @Nullable

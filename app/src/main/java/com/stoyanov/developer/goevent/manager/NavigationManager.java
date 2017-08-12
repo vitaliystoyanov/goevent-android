@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.google.android.gms.maps.model.LatLng;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
-import com.stoyanov.developer.goevent.ui.eventdetail.DetailEventFragment;
+import com.stoyanov.developer.goevent.ui.eventdetail.EventDetailFragment;
 import com.stoyanov.developer.goevent.ui.events.EventsFragment;
 import com.stoyanov.developer.goevent.ui.favorite.FavoriteFragment;
 import com.stoyanov.developer.goevent.ui.location.DefaultLocationActivity;
@@ -41,7 +41,7 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public static void goToDetailEvent(FragmentManager manager, Event event) {
-        Fragment fragment = DetailEventFragment.newInstance(event, "");
+        Fragment fragment = EventDetailFragment.newInstance(event, "");
         runReplaceTransaction(manager, fragment);
     }
 
@@ -64,7 +64,7 @@ public class NavigationManager extends BaseNavigationManager {
     public void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName) {
         getManager().beginTransaction()
                 .addSharedElement(sharedImageView, ViewCompat.getTransitionName(sharedImageView))
-                .replace(R.id.container, DetailEventFragment.newInstance(event, transitionName))
+                .replace(R.id.container, EventDetailFragment.newInstance(event, transitionName))
                 .addToBackStack(null)
                 .commit();
     }

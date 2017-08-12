@@ -75,6 +75,8 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     ProgressBar progressBar;
     @BindView(R.id.badge_date)
     BadgeLayout badgeDate;
+    @BindView(R.id.list_events_fab)
+    FloatingActionButton fab;
 
     private Map<String, BadgeLayout.Badge> mapBadgesDates;
     private Map<String, BadgeLayout.Badge> mapBadgesCategories;
@@ -143,7 +145,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     }
 
     private void setupRecycleView() {
-        rvList = (RecyclerView) getView().findViewById(R.id.list_events_recycle_view);
+        rvList = getView().findViewById(R.id.list_events_recycle_view);
         rvList.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         rvList.setLayoutManager(layoutManager);
@@ -164,20 +166,19 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        noUpcomingEventsLayout = (RelativeLayout) getActivity().findViewById(R.id.list_events_no_upcoming_events);
+        noUpcomingEventsLayout = getActivity().findViewById(R.id.list_events_no_upcoming_events);
 
-        badgeCategories = (BadgeLayout) getActivity().findViewById(R.id.badge_categories);
+        badgeCategories = getActivity().findViewById(R.id.badge_categories);
         setupBadges();
 
-        FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.list_events_fab);
+        FloatingActionButton fab = getView().findViewById(R.id.list_events_fab);
         fab.setOnClickListener(view1 -> navigationManager.goToAddEvent());
         setupToolbar();
         setupEventsAdapter();
         setupToolbarTitle(toolbar);
         setupRecycleView();
 
-        swipeRefreshLayout = (SwipeRefreshLayout) getActivity()
-                .findViewById(R.id.list_events_swipe_refresh_layout);
+        swipeRefreshLayout = getActivity().findViewById(R.id.list_events_swipe_refresh_layout);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setEnabled(false);
         swipeRefreshLayout.setDistanceToTriggerSync(50);

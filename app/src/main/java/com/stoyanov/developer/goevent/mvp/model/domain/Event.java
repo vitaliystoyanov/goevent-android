@@ -1,28 +1,18 @@
 package com.stoyanov.developer.goevent.mvp.model.domain;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 
+import org.parceler.Parcel;
+
 import co.uk.rushorm.core.RushObject;
 
-public class Event extends RushObject implements Parcelable, ClusterItem {
-    public static final Parcelable.Creator<Event> CREATOR =
-            new Parcelable.Creator<Event>() {
-                @Override
-                public Event createFromParcel(Parcel parcel) {
-                    return new Event(parcel);
-                }
+@Parcel
+public class Event extends RushObject implements ClusterItem {
 
-                @Override
-                public Event[] newArray(int i) {
-                    return new Event[i];
-                }
-            };
     @SerializedName("eventPicture")
     private String picture;
     @SerializedName("eventId")
@@ -37,6 +27,7 @@ public class Event extends RushObject implements Parcelable, ClusterItem {
     private String startTime;
     @SerializedName("eventEndTime")
     private String endTime;
+
     private EventLocation eventLocation;
 
     public Event() {
@@ -51,15 +42,6 @@ public class Event extends RushObject implements Parcelable, ClusterItem {
         this.startTime = startTime;
         this.endTime = endTime;
         this.eventLocation = eventLocation;
-    }
-
-    private Event(Parcel in) {
-        picture = in.readString();
-        description = in.readString();
-        eventId = in.readString();
-        name = in.readString();
-        startTime = in.readString();
-        endTime = in.readString();
     }
 
     public String getPicture() {
@@ -137,26 +119,10 @@ public class Event extends RushObject implements Parcelable, ClusterItem {
                 ", picture='" + picture + '\'' +
                 ", eventId='" + eventId + '\'' +
                 ", name='" + name + '\'' +
-//                ", description='" + description + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
                 ", eventLocation=" + locationToString +
                 '}';
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(picture);
-        parcel.writeString(description);
-        parcel.writeString(eventId);
-        parcel.writeString(name);
-        parcel.writeString(startTime);
-        parcel.writeString(endTime);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     @Override
