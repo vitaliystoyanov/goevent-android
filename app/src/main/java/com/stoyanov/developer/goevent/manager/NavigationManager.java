@@ -21,10 +21,7 @@ import com.stoyanov.developer.goevent.ui.nearby.NearbyEventsFragment;
 import com.stoyanov.developer.goevent.ui.settings.SettingsActivity;
 
 public class NavigationManager extends BaseNavigationManager {
-    private static final String TAG = "NavigationManager";
-
     private NearbyEventsFragment nearbyEventsFragment;
-    private Fragment restore;
 
     public NavigationManager(FragmentManager manager) {
         super(manager);
@@ -58,7 +55,7 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public void goToNearby() {
-        openAsRoot(nearbyEventsFragment);
+        openAsRoot(new NearbyEventsFragment());
     }
 
     public void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName) {

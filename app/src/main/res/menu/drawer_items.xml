@@ -21,7 +21,7 @@
         <item
             android:id="@+id/drawer_item_saved"
             android:icon="@drawable/ic_bookmark"
-            android:title="@string/drawer_saved" />
+            android:title="@string/drawer_favorite" />
 
         <!--        <item
                     android:id="@+id/drawer_item_notification"
@@ -39,6 +39,6 @@
         <item
             android:id="@+id/drawer_item_defined_location"
             android:icon="@drawable/ic_home_map_marker_24px"
-            android:title="Місцезнаходження" />
+            android:title="Location" />
     </group>
 </menu>

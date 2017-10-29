@@ -1,10 +1,10 @@
 package com.stoyanov.developer.goevent.ui.main;
 
-import android.animation.Animator;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,9 +24,9 @@ import android.transition.TransitionSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,8 +51,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class MainFragment extends Fragment implements MainView {
-    @BindView(R.id.txt_popular_events)
-    TextView txtPopularEvents;
     private Unbinder unbinder;
     private ActionBarDrawerToggle drawerToggle;
     @Inject
@@ -74,6 +72,8 @@ public class MainFragment extends Fragment implements MainView {
     ViewPager pager;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.txt_popular_events)
+    TextView txtPopularEvents;
     private SlidePagerAdapter pagerAdapter;
 
     public static MainFragment newInstance() {
@@ -137,25 +137,25 @@ public class MainFragment extends Fragment implements MainView {
         drawerToggle.syncState();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    @OnClick(R.id.btn_location)
+    public void onClickBtnLocation() {
+        navigationManager.goToDefineLocation(getContext());
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    @OnClick(R.id.btn_near_me)
+    public void onClickBtnNearMe() {
+        navigationManager.goToNearby();
+    }
+
+    @OnClick(R.id.btn_explore_more)
+    public void onClickBtnExploreMore() {
+        navigationManager.goToListOfEvents();
     }
 
     @Override
     public void onStop() {
         super.onStop();
         presenter.detach();
-    }
-
-    @OnClick(R.id.btn_near_me)
-    public void onClickNearMe() {
-
     }
 
     @Override

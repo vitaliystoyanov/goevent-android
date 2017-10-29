@@ -4,13 +4,13 @@
     <string name="drawer_close">drawer close</string>
     <string name="drawer_home">Main</string>
     <string name="drawer_list_of_events">Events</string>
-    <string name="drawer_saved">Saved</string>
+    <string name="drawer_favorite">Favorite</string>
     <string name="drawer_nearby">Nearby</string>
     <string name="drawer_map">Map</string>
     <string name="drawer_notifications">Notifications</string>
     <string name="drawer_login">Login</string>
     <string name="title_activity_search">Search events</string>
-    <string name="title_favorite_events">Saved events</string>
+    <string name="title_favorite_events">Favorite</string>
 
     <string name="card_item_filter">Фільтр</string>
     <string name="card_item_share">Поширити</string>
@@ -36,12 +36,9 @@
     <string name="contact_us_button_send">Send</string>
     <string name="contact_us_title_in_text_field">Message</string>
     <string name="contact_us_your_message">Your message</string>
-    <string name="message_you_have_favorite_events">You have %1$d favorite events</string>
-    <string name="action_undo">UNDO</string>
     <string name="field_no_location">Location isn\'t specified</string>
     <string name="title_you_don_t_have_favorite_events">You don\'t have any favorite events yet</string>
     <string name="field_no_category">No category</string>
-    <string name="action_saved">Saved</string>
     <string name="geocoding_service_not_available">Service not available</string>
     <string name="geocoding_invalid_lat_long_used">Invalid latitude or longitude used</string>
     <string name="geocoding_no_address_found">No address found</string>
@@ -60,31 +57,7 @@
     <string name="title_events_on_weekends">Events on weekends</string>
     <string name="title_near_me">Near me</string>
     <string name="title_tickets">Get tickets</string>
-
-    <string-array name="items_category_of_events_for_spinner">
-        <item>Nightlife</item>
-        <item>Shopping</item>
-        <item>Music</item>
-        <item>Art</item>
-        <item>Food</item>
-        <item>Movie</item>
-        <item>Dance</item>
-        <item>Festival</item>
-        <item>Comedy</item>
-        <item>Theater</item>
-        <item>Dining</item>
-        <item>Conference</item>
-        <item>Sports</item>
-        <item>Other</item>
-    </string-array>
-
-    <string-array name="items_date_for_spinner">
-        <item>Tomorrow</item>
-        <item>Today</item>
-        <item>Weekend</item>
-        <item>This week</item>
-        <item>Set date</item>
-    </string-array>
+    <string name="title_search_this_area">Search this area</string>
 
     <string-array name="items_popular_locations">
         <item>Kyiv, UA</item>

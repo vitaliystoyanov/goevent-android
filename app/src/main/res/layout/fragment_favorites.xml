@@ -61,6 +61,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
+            android:clickable="true"
             android:paddingEnd="16dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"

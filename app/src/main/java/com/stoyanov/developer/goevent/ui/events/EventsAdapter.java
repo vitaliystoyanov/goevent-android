@@ -97,7 +97,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     @Override
                     public void onError() {
                         holder.progressBar.setVisibility(View.INVISIBLE);
-                        holder.image.setImageResource(R.drawable.background_splash);
+                        holder.image.setImageResource(R.drawable.layer_list_splash);
                     }
                 });
         if (event.getStartTime() != null && event.getEndTime() != null) {

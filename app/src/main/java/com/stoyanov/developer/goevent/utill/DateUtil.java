@@ -35,7 +35,7 @@ public class DateUtil {
         from.setTime(dateFrom);
 
         Calendar to = new GregorianCalendar();
-        to.setTime(dateTo);
+        to.setTime(dateTo != null ? dateTo : dateFrom);
 
         if (from.get(Calendar.DAY_OF_MONTH) == to.get(Calendar.DAY_OF_MONTH)
                 && from.get(Calendar.MONTH) == to.get(Calendar.MONTH)

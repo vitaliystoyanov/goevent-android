@@ -4,24 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="-6dp"
-        android:layout_marginTop="-2dp"
-        android:indeterminate="true" />
-
     <com.google.android.gms.maps.MapView
         android:id="@+id/nearby_events_mapview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:id="@+id/rl_search_area"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btn_search_area"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="false"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="60dp"
+            android:backgroundTint="@color/colorWhite"
+            android:text="@string/title_search_this_area"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
     <com.arlib.floatingsearchview.FloatingSearchView
         android:id="@+id/nearby_floating_search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:backgroundTintMode="src_atop"
         app:floatingSearch_close_search_on_keyboard_dismiss="true"
         app:floatingSearch_leftActionMode="showHamburger"
         app:floatingSearch_menu="@menu/floating_search_menu"
@@ -39,6 +50,15 @@
         android:layout_alignParentBottom="true"
         android:paddingBottom="5dp"
         android:paddingLeft="5dp"
-        android:paddingStart="5dp" />
+        android:paddingStart="5dp">
+
+    </android.support.v4.view.ViewPager>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true" />
 
 </RelativeLayout>

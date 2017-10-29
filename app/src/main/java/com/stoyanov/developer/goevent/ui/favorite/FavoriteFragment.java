@@ -28,6 +28,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.OnClick;
+
 public class FavoriteFragment extends Fragment implements FavoriteView {
     @Inject
     FavoriteEventsPresenter presenter;
@@ -96,20 +98,20 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
         adapter = new EventsAdapter(getContext(), (position, sharedImageView, transitionName) ->
                 presenter.onItemClick(adapter.getItem(position)),
                 new EventsAdapter.OnLikeItemClickListener() {
-            @Override
-            public void onItem(int position) {
-                presenter.onItem(adapter.getItem(position), position);
-            }
+                    @Override
+                    public void onItem(int position) {
+                        presenter.onItem(adapter.getItem(position), position);
+                    }
 
-            @Override
-            public void liked(LikeButton likeButton) {
+                    @Override
+                    public void liked(LikeButton likeButton) {
 
-            }
+                    }
 
-            @Override
-            public void unLiked(LikeButton likeButton) {
-            }
-        });
+                    @Override
+                    public void unLiked(LikeButton likeButton) {
+                    }
+                });
         list.setAdapter(adapter);
     }
 
@@ -125,6 +127,11 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     public void onStop() {
         super.onStop();
         presenter.detach();
+    }
+
+    @OnClick(R.id.btn_explore_events)
+    public void onClickBtnExploreMore() {
+        navigationManager.goToListOfEvents();
     }
 
     @Override

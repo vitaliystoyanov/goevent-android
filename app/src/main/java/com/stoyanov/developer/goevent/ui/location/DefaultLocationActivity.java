@@ -83,6 +83,7 @@ public class DefaultLocationActivity extends AppCompatActivity
                         if (searchView.isSearchBarFocused()) {
                             searchView.clearSearchFocus();
                         } else {
+                            locationManager.updateLastDefinedLocation(new LocationPref(50.4534067f, 30.5130514f));
                             finish();
                         }
                     }

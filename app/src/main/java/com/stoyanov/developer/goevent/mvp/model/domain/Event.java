@@ -129,4 +129,14 @@ public class Event extends RushObject implements ClusterItem {
     public LatLng getPosition() {
         return new LatLng(getLocation().getLatitude(), getLocation().getLongitude());
     }
+
+    @Override
+    public String getTitle() {
+        return "";
+    }
+
+    @Override
+    public String getSnippet() {
+        return "";
+    }
 }

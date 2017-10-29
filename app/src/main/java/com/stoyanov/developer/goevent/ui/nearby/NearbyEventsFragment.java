@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -20,13 +21,19 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.transition.SidePropagation;
+import android.transition.Slide;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,7 +80,11 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+
+import static android.view.Gravity.BOTTOM;
+import static android.view.Gravity.TOP;
 
 public class NearbyEventsFragment extends Fragment
         implements NearbyEventsView, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -97,6 +108,10 @@ public class NearbyEventsFragment extends Fragment
     ViewPager viewPager;
     @BindView(R.id.progress_bar)
     ProgressBar progressBar;
+    @BindView(R.id.btn_search_area)
+    Button btnSearchArea;
+    @BindView(R.id.rl_search_area)
+    RelativeLayout rlSearchArea;
     private GoogleMap map;
     private Unbinder unbinder;
     private ClusterManager<Event> clusterManager;
@@ -263,11 +278,26 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void showMarkers(List<Event> events) {
         if (events == null) return;
+        startPropagationTransition(viewPager, true, BOTTOM);
         clusterManager.addItems(events);
         clusterManager.cluster();
         slidePagerAdapter.removeAndAdd(events);
         if (events.size() == 0) Snackbar.make(mapView, "Here are no events.",
                 Snackbar.LENGTH_LONG).show();
+    }
+
+    private void startPropagationTransition(ViewGroup vg, boolean isInOrOut, int side) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int newVisibility = isInOrOut ? View.INVISIBLE : View.VISIBLE;
+            vg.setVisibility(newVisibility);
+            TransitionSet set = new TransitionSet();
+            SidePropagation transition = new SidePropagation();
+            set.setPropagation(transition);
+            set.addTransition(new Slide(side));
+            set.setDuration(400);
+            TransitionManager.beginDelayedTransition(vg, set);
+            vg.setVisibility(isInOrOut ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     @Override
@@ -388,9 +418,6 @@ public class NearbyEventsFragment extends Fragment
         MarkerOptions marker =
                 new MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(generator.makeIcon()));
         marker.position(position);
-        if (isCurrentLocation) {
-            marker.title("You are here");
-        }
         selectedPositionMarker = map.addMarker(marker);
         if (isCurrentLocation) selectedPositionMarker.showInfoWindow();
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(position, ZOOM_LEVEL));
@@ -411,7 +438,8 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.setOnMapLongClickListener(latLng -> presenter.onUpdateSearchLocation(new LocationPref(latLng)));
+        map.setOnCameraMoveStartedListener(i -> startPropagationTransition(rlSearchArea, false, TOP));
+        map.setOnCameraIdleListener(() -> startPropagationTransition(rlSearchArea, true, TOP));
         clusterManager = new ClusterManager<>(getActivity(), map);
         clusterManager.setRenderer(new EventMarkerClusterRenderer(getContext(), map, clusterManager));
         clusterManager.setOnClusterClickListener(cluster -> {
@@ -424,7 +452,7 @@ public class NearbyEventsFragment extends Fragment
             return false;
         });
         map.setOnMarkerClickListener(clusterManager);
-        map.setOnCameraChangeListener(clusterManager);
+        map.setOnCameraIdleListener(clusterManager);
 
         MapStyleOptions style = MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_maps_style);
         map.setMapStyle(style);
@@ -510,19 +538,21 @@ public class NearbyEventsFragment extends Fragment
         }
     }
 
+    @OnClick(R.id.btn_search_area)
+    public void onClickSearchArea() {
+        presenter.onUpdateSearchLocation(new LocationPref(map.getCameraPosition().target));
+    }
+
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG, "onConnected: ");
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended: ");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: ");
     }
 
     private class SlidePagerAdapter extends FragmentStatePagerAdapter {

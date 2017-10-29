@@ -61,7 +61,7 @@
                     android:textColor="@color/primaryText"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/button2"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/btn_explore_more"
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
@@ -87,7 +87,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button2" />
+                    app:layout_constraintTop_toBottomOf="@+id/btn_explore_more" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_category"
@@ -133,7 +133,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/viewpager" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/btn_explore_more"
                     style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
