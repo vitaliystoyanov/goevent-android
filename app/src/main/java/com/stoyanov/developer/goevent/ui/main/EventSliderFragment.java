@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
+import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import org.parceler.Parcels;
 
@@ -20,6 +22,14 @@ import butterknife.Unbinder;
 
 public class EventSliderFragment extends Fragment {
     public static final String KEY_ARG_EVENT = "key-arg-event";
+    @BindView(R.id.tv_name)
+    TextView tvName;
+    @BindView(R.id.iv_circle)
+    ImageView ivCircle;
+    @BindView(R.id.tv_day)
+    TextView tvDay;
+    @BindView(R.id.tv_month)
+    TextView tvMonth;
     private Unbinder unbinder;
 
     @BindView(R.id.img_event_slider)
@@ -49,6 +59,9 @@ public class EventSliderFragment extends Fragment {
             Picasso.with(getContext())
                     .load(e.getPicture())
                     .into(image);
+            tvName.setText(e.getName());
+            tvDay.setText(DateUtil.toDay(e.getStartTime()));
+            tvMonth.setText(DateUtil.toMonth(e.getStartTime()));
         }
     }
 

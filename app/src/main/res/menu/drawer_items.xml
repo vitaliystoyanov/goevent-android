@@ -3,7 +3,7 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/drawer_item_home"
+            android:id="@+id/drawer_item_main"
             android:checked="true"
             android:icon="@drawable/ic_home"
             android:title="@string/drawer_home" />
@@ -19,7 +19,7 @@
             android:title="@string/drawer_nearby" />
 
         <item
-            android:id="@+id/drawer_item_saved"
+            android:id="@+id/drawer_item_favorites"
             android:icon="@drawable/ic_bookmark"
             android:title="@string/drawer_favorite" />
 

@@ -28,7 +28,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class FavoriteFragment extends Fragment implements FavoriteView {
     @Inject
@@ -39,12 +41,14 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     private EventsAdapter adapter;
     private ProgressBar progressBar;
     private ConstraintLayout emptyLayout;
-    private Toolbar toolbar;
+    private Unbinder unbinder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_favorites, null);
+        View v = inflater.inflate(R.layout.fragment_favorites, null);
+        unbinder = ButterKnife.bind(this, v);
+        return v;
     }
 
     @Override
@@ -60,9 +64,9 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) getActivity().findViewById(R.id.saved_events_toolbar);
+        Toolbar toolbar = getActivity().findViewById(R.id.saved_events_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        progressBar = (ProgressBar) getActivity().findViewById(R.id.saved_events_progress_bar);
+        progressBar = getActivity().findViewById(R.id.saved_events_progress_bar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
                 ((ContainerActivity) getActivity()).getDrawerLayout(),
                 toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -71,7 +75,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     }
 
     private void setupRecycleView() {
-        RecyclerView list = (RecyclerView) getActivity().findViewById(R.id.saved_events_recycler_view);
+        RecyclerView list = getActivity().findViewById(R.id.saved_events_recycler_view);
         list.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(layoutManager);
@@ -121,6 +125,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
         presenter.attach(this);
         presenter.onStart();
         drawerToggle.syncState();
+        ((ContainerActivity) getActivity()).setNavigationItem(R.id.drawer_item_favorites);
     }
 
     @Override
@@ -129,7 +134,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
         presenter.detach();
     }
 
-    @OnClick(R.id.btn_explore_events)
+    @OnClick(R.id.btn_explore_more_events)
     public void onClickBtnExploreMore() {
         navigationManager.goToListOfEvents();
     }
@@ -142,9 +147,10 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         presenter.onDestroyView();
         ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+        unbinder.unbind();
+        super.onDestroyView();
     }
 
     @Override

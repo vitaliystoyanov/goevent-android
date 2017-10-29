@@ -56,6 +56,7 @@
                     android:id="@+id/txt_popular_events"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
                     android:text="@string/title_events_on_weekends"
                     android:textColor="@color/primaryText"
@@ -65,7 +66,7 @@
                     app:layout_constraintStart_toStartOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/txt_all_categories"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -103,7 +104,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                    app:layout_constraintTop_toBottomOf="@+id/txt_all_categories" />
 
                 <Button
                     android:id="@+id/btn_near_me"
@@ -128,7 +129,7 @@
                     android:layout_marginTop="8dp"
                     android:drawableLeft="@drawable/ic_marker_accent_24px"
                     android:drawableStart="@drawable/ic_marker_accent_24px"
-                    android:text="Kiyv, Ukraine"
+                    android:text="@string/title_set_your_location"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/viewpager" />
 
@@ -140,10 +141,20 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginTop="10dp"
-                    android:text="More"
+                    android:text="@string/title_more"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <me.relex.circleindicator.CircleIndicator
+                    android:id="@+id/indicator"
+                    android:layout_width="100dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/viewpager"
+                    app:layout_constraintEnd_toEndOf="@+id/viewpager"
+                    app:layout_constraintStart_toStartOf="@+id/viewpager" />
+
             </android.support.constraint.ConstraintLayout>
         </RelativeLayout>
     </android.support.v4.widget.NestedScrollView>

@@ -57,4 +57,18 @@ public class DateUtil {
         to.setTime(dateTo);
         return new Pair<>(fullFormat.format(dateFrom), fullFormat.format(dateTo));
     }
+
+    public static String toDay(String startTime) {
+        Date date = toDate(startTime);
+        SimpleDateFormat format = new SimpleDateFormat("dd",
+                Locale.getDefault());
+        return format.format(date);
+    }
+
+    public static String toMonth(String startTime) {
+        Date date = toDate(startTime);
+        SimpleDateFormat format = new SimpleDateFormat("MMM",
+                Locale.getDefault());
+        return format.format(date);
+    }
 }

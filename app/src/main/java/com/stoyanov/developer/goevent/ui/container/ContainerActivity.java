@@ -2,8 +2,7 @@ package com.stoyanov.developer.goevent.ui.container;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,18 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.stoyanov.developer.goevent.GoeventApplication;
-import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.ActivityComponent;
 import com.stoyanov.developer.goevent.di.component.DaggerActivityComponent;
 import com.stoyanov.developer.goevent.di.module.ActivityModule;
 import com.stoyanov.developer.goevent.manager.LocationManager;
+import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
+import com.stoyanov.developer.goevent.ui.location.DefaultLocationActivity;
+import com.stoyanov.developer.goevent.utill.Formatter;
 
 import javax.inject.Inject;
 
 public class ContainerActivity extends AppCompatActivity implements ContainerView {
-    private static final String TAG = "ContainerActivity";
     @Inject
     NavigationManager navigationManager;
     @Inject
@@ -31,6 +31,7 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
     private ActivityComponent activityComponent;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
+    private int resultCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +51,12 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
     }
 
     public void setupNavigationDrawer() {
-        drawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
-        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        drawerLayout = findViewById(R.id.main_drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
             int i = menuItem.getItemId();
+            if (navigationView.getMenu().findItem(i).isChecked()) return true;
             if (i == R.id.drawer_item_list_events) {
                 presenter.onItemListOfEvents();
             } else if (i == R.id.drawer_item_login) {
@@ -63,12 +65,12 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
                 presenter.onItemNearby();
             } /*else if (i == R.id.drawer_item_notification) {
                 presenter.onItemNotifications();
-            }*/ else if (i == R.id.drawer_item_saved) {
+            }*/ else if (i == R.id.drawer_item_favorites) {
                 presenter.onItemFavorites();
             } else if (i == R.id.drawer_item_defined_location) {
                 presenter.onItemDefineLocation();
-            } else if (i == R.id.drawer_item_home) {
-                presenter.onItemHome();
+            } else if (i == R.id.drawer_item_main) {
+                presenter.onItemMain();
             }
             return true;
         });
@@ -94,26 +96,25 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
         drawerLayout.removeDrawerListener(listener);
     }
 
+    public void setNavigationItem(@IdRes int id) {
+        navigationView.setCheckedItem(id);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        navigationManager.delegateOnActivityResult(requestCode, resultCode, data);
+        if (requestCode == DefaultLocationActivity.REQUEST_CODE
+                && resultCode == DefaultLocationActivity.RUSULT_CODE_IF_NEEDED_UPDATE) {
+            this.resultCode = resultCode;
+        } else {
+            navigationManager.delegateOnActivityResult(requestCode, resultCode, data);
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
-        super.onDestroy();
         presenter.detach();
+        super.onDestroy();
     }
 
     @Override
@@ -123,7 +124,12 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
         if (location != null) {
             Menu menu = navigationView.getMenu();
             MenuItem item = menu.findItem(R.id.drawer_item_defined_location);
-            item.setTitle(location.getCity());
+            item.setTitle(Formatter.formatLocation(location));
+        }
+
+        if (resultCode != 0) {
+            presenter.onItemMain();
+            resultCode = 0;
         }
     }
 
@@ -163,7 +169,7 @@ public class ContainerActivity extends AppCompatActivity implements ContainerVie
     }
 
     @Override
-    public void goToHome() {
+    public void goToMain() {
         navigationManager.goToHome();
     }
 

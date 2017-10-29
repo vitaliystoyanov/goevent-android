@@ -482,6 +482,7 @@ public class NearbyEventsFragment extends Fragment
         super.onStart();
         googleApiClient.connect();
         presenter.attach(this);
+        ((ContainerActivity) getActivity()).setNavigationItem(R.id.drawer_item_nearby);
     }
 
     @Override

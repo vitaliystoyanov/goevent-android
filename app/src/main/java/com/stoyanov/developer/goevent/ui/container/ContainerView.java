@@ -6,7 +6,7 @@ public interface ContainerView extends BaseView {
 
     void goToListOfEvents();
 
-    void goToHome();
+    void goToMain();
 
     void goToLogin();
 

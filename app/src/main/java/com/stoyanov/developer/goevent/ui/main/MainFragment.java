@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -49,8 +47,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import me.relex.circleindicator.CircleIndicator;
 
 public class MainFragment extends Fragment implements MainView {
+    @BindView(R.id.indicator)
+    CircleIndicator indicator;
     private Unbinder unbinder;
     private ActionBarDrawerToggle drawerToggle;
     @Inject
@@ -112,12 +113,13 @@ public class MainFragment extends Fragment implements MainView {
         presenter.provideData(locationManager.getLastDefinedLocation());
         setupRecycleView();
         setupViewPager();
-        setupToolbar();
     }
 
     private void setupViewPager() {
         pagerAdapter = new SlidePagerAdapter(getChildFragmentManager());
         pager.setAdapter(pagerAdapter);
+//        indicator.setViewPager(pager);
+//        pagerAdapter.registerDataSetObserver(indicator.getDataSetObserver());
     }
 
     private void setupRecycleView() {
@@ -127,19 +129,9 @@ public class MainFragment extends Fragment implements MainView {
         rvCategory.setNestedScrollingEnabled(false);
     }
 
-    private void setupToolbar() {
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        drawerToggle = new ActionBarDrawerToggle(getActivity(),
-                ((ContainerActivity) getActivity()).getDrawerLayout(),
-                toolbar, R.string.drawer_open, R.string.drawer_close);
-        ((ContainerActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
-        toolbar.setTitle(R.string.title_home);
-        drawerToggle.syncState();
-    }
-
     @OnClick(R.id.btn_location)
     public void onClickBtnLocation() {
-        navigationManager.goToDefineLocation(getContext());
+        navigationManager.goToDefineLocation(getActivity());
     }
 
     @OnClick(R.id.btn_near_me)
@@ -150,6 +142,23 @@ public class MainFragment extends Fragment implements MainView {
     @OnClick(R.id.btn_explore_more)
     public void onClickBtnExploreMore() {
         navigationManager.goToListOfEvents();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        setupToolbar();
+        ((ContainerActivity) getActivity()).setNavigationItem(R.id.drawer_item_main);
+    }
+
+    private void setupToolbar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        drawerToggle = new ActionBarDrawerToggle(getActivity(),
+                ((ContainerActivity) getActivity()).getDrawerLayout(),
+                toolbar, R.string.drawer_open, R.string.drawer_close);
+        ((ContainerActivity) getActivity()).setDrawerLayoutListener(drawerToggle);
+        toolbar.setTitle(R.string.title_home);
+        drawerToggle.syncState();
     }
 
     @Override
@@ -202,9 +211,9 @@ public class MainFragment extends Fragment implements MainView {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
         unbinder.unbind();
+        super.onDestroyView();
     }
 
     private class SlidePagerAdapter extends FragmentPagerAdapter {

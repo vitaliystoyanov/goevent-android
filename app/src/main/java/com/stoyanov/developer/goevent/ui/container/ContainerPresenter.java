@@ -25,15 +25,15 @@ public class ContainerPresenter extends BasePresenter<ContainerView> {
     }
 
     public void openHome() {
-        getView().goToHome();
+        getView().goToMain();
     }
 
     public void onItemDefineLocation() {
         getView().goToDefineLocation();
     }
 
-    public void onItemHome() {
-        getView().goToHome();
+    public void onItemMain() {
+        getView().goToMain();
     }
 
 }

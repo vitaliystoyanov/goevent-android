@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 
 public class SplashActivity extends AppCompatActivity {

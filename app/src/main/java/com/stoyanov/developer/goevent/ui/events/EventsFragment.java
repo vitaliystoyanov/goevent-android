@@ -45,6 +45,7 @@ import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.model.domain.LocationPref;
 import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 import com.stoyanov.developer.goevent.utill.DateUtil;
+import com.stoyanov.developer.goevent.utill.Formatter;
 import com.stoyanov.developer.goevent.utill.transition.PropagatingTransition;
 
 import java.util.Calendar;
@@ -113,7 +114,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     }
 
     private void setupToolbar() {
-        toolbar = (Toolbar) getView().findViewById(R.id.list_events_toolbar);
+        toolbar = getView().findViewById(R.id.list_events_toolbar);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         drawerToggle = new ActionBarDrawerToggle(getActivity(),
                 ((ContainerActivity) getActivity()).getDrawerLayout(),
@@ -160,7 +161,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         toolbar.addView(toolbarContainer, lp);
         toolbarContainer.findViewById(R.id.toolbar_location_textview)
-                .setOnClickListener(view -> navigationManager.goToDefineLocation(getContext()));
+                .setOnClickListener(view -> navigationManager.goToDefineLocation(getActivity()));
     }
 
     @Override
@@ -188,9 +189,10 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
         });
 
         location = locationManager.getLastDefinedLocation();
-        if (location != null)
+        if (location != null) {
             ((TextView) getView().findViewById(R.id.toolbar_location_textview))
-                    .setText(String.format("%s, %s", location.getCity(), location.getCountry()));
+                    .setText(Formatter.formatLocation(location));
+        }
         presenter.attach(this);
         presenter.provideData(locationManager.getLastDefinedLocation());
     }
@@ -265,6 +267,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     public void onStart() {
         super.onStart();
         drawerToggle.syncState();
+        ((ContainerActivity) getActivity()).setNavigationItem(R.id.drawer_item_list_events);
     }
 
     @Override
@@ -301,10 +304,10 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         presenter.detach();
         ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
         unbinder.unbind();
+        super.onDestroyView();
     }
 
     @Override

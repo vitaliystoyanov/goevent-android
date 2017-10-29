@@ -58,6 +58,9 @@
     <string name="title_near_me">Near me</string>
     <string name="title_tickets">Get tickets</string>
     <string name="title_search_this_area">Search this area</string>
+    <string name="you_have_no_upcoming_events">You have no upcoming events</string>
+    <string name="title_more">More</string>
+    <string name="title_set_your_location">Set your location</string>
 
     <string-array name="items_popular_locations">
         <item>Kyiv, UA</item>

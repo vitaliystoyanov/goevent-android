@@ -69,7 +69,7 @@
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             app:badgeBackground="@drawable/background_app_badge"
-            app:badgeTextColor="@android:color/white"
+            app:badgeTextColor="@color/textWhite"
             app:layout_scrollFlags="scroll|enterAlways"
             app:spacing="8dp" />
 
@@ -82,7 +82,7 @@
             android:paddingStart="8dp"
             android:paddingTop="8dp"
             app:badgeBackground="@drawable/background_app_badge"
-            app:badgeTextColor="@android:color/white"
+            app:badgeTextColor="@color/textWhite"
             app:layout_scrollFlags="enterAlways"
             app:spacing="8dp" />
 
@@ -128,7 +128,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="You have no upcoming events" />
+            android:text="@string/you_have_no_upcoming_events" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

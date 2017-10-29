@@ -1,5 +1,6 @@
 package com.stoyanov.developer.goevent.manager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -25,7 +26,6 @@ public class NavigationManager extends BaseNavigationManager {
 
     public NavigationManager(FragmentManager manager) {
         super(manager);
-        nearbyEventsFragment = new NearbyEventsFragment();
     }
 
     public static void openGoogleMapApp(Context context, LatLng location) {
@@ -38,12 +38,15 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public static void goToDetailEvent(FragmentManager manager, Event event) {
-        Fragment fragment = EventDetailFragment.newInstance(event, "");
-        runReplaceTransaction(manager, fragment);
+        runReplaceTransaction(manager, EventDetailFragment.newInstance(event, ""));
+    }
+
+    public void goToHome() {
+        openAsRoot(MainFragment.newInstance());
     }
 
     public void goToListOfEvents() {
-        openAsRoot(new EventsFragment());
+        open(new EventsFragment());
     }
 
     public void goToLoginForm(Context context) {
@@ -55,7 +58,8 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public void goToNearby() {
-        openAsRoot(new NearbyEventsFragment());
+        if (nearbyEventsFragment == null) nearbyEventsFragment = new NearbyEventsFragment();
+        openAsRoot(nearbyEventsFragment);
     }
 
     public void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName) {
@@ -74,8 +78,8 @@ public class NavigationManager extends BaseNavigationManager {
         context.startActivity(new Intent(context, SettingsActivity.class));
     }
 
-    public void goToDefineLocation(Context context) {
-        context.startActivity(new Intent(context, DefaultLocationActivity.class));
+    public void goToDefineLocation(Activity activity) {
+        activity.startActivityForResult(new Intent(activity, DefaultLocationActivity.class), DefaultLocationActivity.REQUEST_CODE);
     }
 
     public void goToAddEvent() {
@@ -86,9 +90,5 @@ public class NavigationManager extends BaseNavigationManager {
         if (requestCode == NearbyEventsFragment.REQUEST_CHECK_SETTINGS) {
             nearbyEventsFragment.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    public void goToHome() {
-        open(MainFragment.newInstance());
     }
 }

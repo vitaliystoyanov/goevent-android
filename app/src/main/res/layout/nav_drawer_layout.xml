@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="190dp"
-    android:background="@color/colorPrimary">
+    android:background="@drawable/background_nav_drawer">
 
-    <RelativeLayout
+    <ImageView
         android:id="@+id/profile_image"
         android:layout_width="76dp"
         android:layout_height="76dp"
@@ -12,7 +13,8 @@
         android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="24dp"
-        android:layout_marginStart="24dp" />
+        android:layout_marginStart="24dp"
+        app:srcCompat="@drawable/ic_logo" />
 
     <TextView
         android:id="@+id/drawer_header_username"
@@ -37,7 +39,7 @@
         android:layout_alignStart="@+id/drawer_header_username"
         android:layout_marginBottom="9dp"
         android:gravity="left"
-        android:text="Find the best events"
+        android:text="Find the best nearby events"
         android:textColor="@android:color/white"
         android:textSize="@dimen/drawer_text_size" />
 
