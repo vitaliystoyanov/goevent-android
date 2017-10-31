@@ -2,6 +2,7 @@
     <string name="app_name">Goevent</string>
     <string name="drawer_open">drawer open</string>
     <string name="drawer_close">drawer close</string>
+
     <string name="drawer_home">Main</string>
     <string name="drawer_list_of_events">Events</string>
     <string name="drawer_favorite">Favorite</string>
@@ -9,23 +10,17 @@
     <string name="drawer_map">Map</string>
     <string name="drawer_notifications">Notifications</string>
     <string name="drawer_login">Login</string>
+
     <string name="title_activity_search">Search events</string>
     <string name="title_favorite_events">Favorite</string>
-
-    <string name="card_item_filter">Фільтр</string>
-    <string name="card_item_share">Поширити</string>
-    <string name="login_password_field">Пароль</string>
-    <string name="login_login_button">Логін</string>
-    <string name="no_account_yet_create_one">Немає акаунту? Створи його</string>
-    <string name="login_username">Логін</string>
-    <string name="registration_log_in">Already have an account? Log in.</string>
+    <string name="title_password">Password</string>
+    <string name="title_sign_in">Sign in</string>
+    <string name="registration_log_in">Already have an account? Sign in</string>
     <string name="description_time">Duration time</string>
     <string name="event_map_directions">Directions</string>
     <string name="event_map_open">Open map</string>
-    <string name="event_info_location">Місце</string>
-    <string name="event_info_category">Категорія</string>
-    <string name="registration_create">Створити</string>
-    <string name="message_event_added_saved">Event saved to Favorite</string>
+    <string name="event_info_location">Location</string>
+    <string name="event_info_category">Category</string>
     <string name="message_bad_connection">Check your connection or try again later</string>
     <string name="title_detail_event">Detail event</string>
     <string name="location_field_full_format">%1$s, %2$s, %3$s</string>
@@ -39,6 +34,7 @@
     <string name="field_no_location">Location isn\'t specified</string>
     <string name="title_you_don_t_have_favorite_events">You don\'t have any favorite events yet</string>
     <string name="field_no_category">No category</string>
+
     <string name="geocoding_service_not_available">Service not available</string>
     <string name="geocoding_invalid_lat_long_used">Invalid latitude or longitude used</string>
     <string name="geocoding_no_address_found">No address found</string>
@@ -61,11 +57,8 @@
     <string name="you_have_no_upcoming_events">You have no upcoming events</string>
     <string name="title_more">More</string>
     <string name="title_set_your_location">Set your location</string>
-
-    <string-array name="items_popular_locations">
-        <item>Kyiv, UA</item>
-        <item>Lviv, UA</item>
-        <item>Odessa, UA</item>
-    </string-array>
+    <string name="title_sign_up">Sign up</string>
+    <string name="title_login">Login</string>
+    <string name="no_account_yet_create_one">No an account yet? Create one</string>
 
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v13.view.ViewCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.widget.ImageView;
 
@@ -16,7 +15,7 @@ import com.stoyanov.developer.goevent.ui.eventdetail.EventDetailFragment;
 import com.stoyanov.developer.goevent.ui.events.EventsFragment;
 import com.stoyanov.developer.goevent.ui.favorite.FavoriteFragment;
 import com.stoyanov.developer.goevent.ui.location.DefaultLocationActivity;
-import com.stoyanov.developer.goevent.ui.login.LoginActivity;
+import com.stoyanov.developer.goevent.ui.signin.SignInActivity;
 import com.stoyanov.developer.goevent.ui.main.MainFragment;
 import com.stoyanov.developer.goevent.ui.nearby.NearbyEventsFragment;
 import com.stoyanov.developer.goevent.ui.settings.SettingsActivity;
@@ -50,7 +49,7 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public void goToLoginForm(Context context) {
-        context.startActivity(new Intent(context, LoginActivity.class));
+        context.startActivity(new Intent(context, SignInActivity.class));
     }
 
     public void goToFavorites() {
@@ -71,7 +70,7 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public void goToSearchEvents(Context context) {
-        context.startActivity(new Intent(context, LoginActivity.class));
+        context.startActivity(new Intent(context, SignInActivity.class));
     }
 
     public void goToNotificationSettings(Context context) {

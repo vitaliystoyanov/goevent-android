@@ -354,8 +354,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
 
     @Override
     public void showAddedToSaved() {
-        Snackbar.make(coordinatorLayout, R.string.message_event_added_saved, Snackbar.LENGTH_LONG)
-                .show();
+
     }
 
     @Override
