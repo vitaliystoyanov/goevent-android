@@ -27,23 +27,18 @@ import android.transition.TransitionManager;
 import android.transition.TransitionSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.arlib.floatingsearchview.FloatingSearchView;
-import com.arlib.floatingsearchview.suggestions.SearchSuggestionsAdapter;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -86,12 +81,11 @@ import butterknife.Unbinder;
 import static android.view.Gravity.BOTTOM;
 import static android.view.Gravity.TOP;
 
-public class NearbyEventsFragment extends Fragment
-        implements NearbyEventsView, OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class NearbyEventsFragment extends Fragment implements NearbyEventsView,
+        OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
     public static final int REQUEST_CHECK_SETTINGS = 1;
     public static final int ZOOM_LEVEL = 15;
-    public static final String KEY_CAMERA_POSITION = "key-camera-position";
     private static final String TAG = "NearbyEventsFragment";
     private static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
     private static final long FASTEST_UPDATE_INTERVAL_IN_MILLISECONDS =
@@ -126,6 +120,8 @@ public class NearbyEventsFragment extends Fragment
     private LocationRequest locationRequest;
     private CameraPosition cameraPosition;
     private boolean isLoadedFirstStartLocation;
+    private List<Event> data;
+    private int pageSelected;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,36 +145,23 @@ public class NearbyEventsFragment extends Fragment
                 .build();
         generator = new IconGenerator(getContext());
         searchView.attachNavigationDrawerToMenuButton(((ContainerActivity) getActivity()).getDrawerLayout());
-        searchView.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
-
-            @Override
-            public void onActionMenuItemSelected(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.floating_search_my_location) {
-                    presenter.onActionMenuMyLocation();
-                }
+        searchView.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.floating_search_my_location) {
+                presenter.onActionMenuMyLocation();
             }
         });
-        searchView.setOnQueryChangeListener(new FloatingSearchView.OnQueryChangeListener() {
-            @Override
-            public void onSearchTextChanged(String oldQuery, String newQuery) {
-                if (!oldQuery.equals("") && newQuery.equals("")) {
-                    searchView.clearSuggestions();
-                    searchView.hideProgress();
-                } else {
-                    FetchAddressIntentService.start(getActivity(), suggestionAddressResultReceiver, newQuery);
-                    searchView.showProgress();
-                }
+        searchView.setOnQueryChangeListener((oldQuery, newQuery) -> {
+            if (!oldQuery.equals("") && newQuery.equals("")) {
+                searchView.clearSuggestions();
+                searchView.hideProgress();
+            } else {
+                FetchAddressIntentService.start(getActivity(), suggestionAddressResultReceiver, newQuery);
+                searchView.showProgress();
             }
         });
-        searchView.setOnBindSuggestionCallback(new SearchSuggestionsAdapter.OnBindSuggestionCallback() {
-            @Override
-            public void onBindSuggestion(View suggestionView, ImageView leftIcon,
-                                         TextView textView, SearchSuggestion item,
-                                         int itemPosition) {
-                leftIcon.setImageResource(R.drawable.ic_marker_gray_24px);
-            }
-        });
+        searchView.setOnBindSuggestionCallback((suggestionView, leftIcon, textView, item, itemPosition) ->
+                leftIcon.setImageResource(R.drawable.ic_marker_gray_24px));
         searchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(SearchSuggestion searchSuggestion) {
@@ -250,22 +233,18 @@ public class NearbyEventsFragment extends Fragment
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
-                if (isMapReady()) {
-                    presenter.onPageSelected(slidePagerAdapter.get(position));
-                }
+                pageSelected = position;
+                if (isMapReady()) presenter.onPageSelected(slidePagerAdapter.get(position));
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
-        if (savedInstanceState != null) updateValuesFromBundle(savedInstanceState);
     }
 
     private void setupDagger() {
@@ -276,13 +255,15 @@ public class NearbyEventsFragment extends Fragment
     }
 
     @Override
-    public void showMarkers(List<Event> events) {
+    public void showMarkers(List<Event> events, boolean animate) {
         if (events == null) return;
-        startPropagationTransition(viewPager, true, BOTTOM);
+        data = events;
+        if (animate) startPropagationTransition(viewPager, true, BOTTOM);
         clusterManager.addItems(events);
         clusterManager.cluster();
         slidePagerAdapter.removeAndAdd(events);
-        if (events.size() == 0) Snackbar.make(mapView, "Here are no events.",
+        if (pageSelected != 0) viewPager.setCurrentItem(pageSelected, false);
+        if (events.size() == 0 && animate) Snackbar.make(mapView, "Here are no events.",
                 Snackbar.LENGTH_LONG).show();
     }
 
@@ -302,15 +283,10 @@ public class NearbyEventsFragment extends Fragment
 
     @Override
     public void showMessageNetworkError() {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getContext(),
-                        R.string.message_bad_connection,
-                        Toast.LENGTH_SHORT)
-                        .show();
-            }
-        });
+        getActivity().runOnUiThread(() -> Toast.makeText(getContext(),
+                R.string.message_bad_connection,
+                Toast.LENGTH_SHORT)
+                .show());
     }
 
     @Override
@@ -322,23 +298,20 @@ public class NearbyEventsFragment extends Fragment
         PendingResult<LocationSettingsResult> result =
                 LocationServices.SettingsApi.checkLocationSettings(googleApiClient,
                         locationSettingsRequest);
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
-                Status status = locationSettingsResult.getStatus();
-                int statusCode = status.getStatusCode();
-                if (statusCode == LocationSettingsStatusCodes.SUCCESS) {
-                    Log.d(TAG, "onResult: LocationSettingsStatusCodes.SUCCESS");
-                    startLocationUpdates();
-                } else if (statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
-                    try {
-                        status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
-                    } catch (IntentSender.SendIntentException e) {
-                        Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
-                    }
-                } else if (statusCode == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
-                    Toast.makeText(getContext(), "SETTINGS CHANGE UNAVAILABLE", Toast.LENGTH_SHORT).show();
+        result.setResultCallback(locationSettingsResult -> {
+            Status status = locationSettingsResult.getStatus();
+            int statusCode = status.getStatusCode();
+            if (statusCode == LocationSettingsStatusCodes.SUCCESS) {
+                Log.d(TAG, "onResult: LocationSettingsStatusCodes.SUCCESS");
+                startLocationUpdates();
+            } else if (statusCode == LocationSettingsStatusCodes.RESOLUTION_REQUIRED) {
+                try {
+                    status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                } catch (IntentSender.SendIntentException e) {
+                    Toast.makeText(getContext(), "An error occurred", Toast.LENGTH_SHORT).show();
                 }
+            } else if (statusCode == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
+                Toast.makeText(getContext(), "SETTINGS CHANGE UNAVAILABLE", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -366,20 +339,16 @@ public class NearbyEventsFragment extends Fragment
                 googleApiClient,
                 locationRequest,
                 this
-        ).setResultCallback(status -> {
-            searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
-                    R.color.colorLightBlue, null));
-        });
+        ).setResultCallback(status -> searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
+                R.color.colorLightBlue, null)));
     }
 
     private void stopLocationUpdates() {
         LocationServices.FusedLocationApi.removeLocationUpdates(
                 googleApiClient,
                 this
-        ).setResultCallback(status -> {
-            searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
-                    R.color.colorPrimary, null));
-        });
+        ).setResultCallback(status -> searchView.setMenuItemIconColor(ResourcesCompat.getColor(getResources(),
+                R.color.colorPrimary, null)));
     }
 
     @Override
@@ -393,7 +362,6 @@ public class NearbyEventsFragment extends Fragment
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult: requestCode - " + requestCode);
         if (requestCode == REQUEST_CHECK_SETTINGS) {
             switch (resultCode) {
                 case Activity.RESULT_OK:
@@ -424,8 +392,8 @@ public class NearbyEventsFragment extends Fragment
     }
 
     @Override
-    public void visibleProgress(boolean state) {
-        if (state) {
+    public void visibleProgress(boolean visibility) {
+        if (visibility) {
             clusterManager.clearItems();
             clusterManager.cluster();
             slidePagerAdapter.clear();
@@ -438,17 +406,16 @@ public class NearbyEventsFragment extends Fragment
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-        map.setOnCameraMoveStartedListener(i -> startPropagationTransition(rlSearchArea, false, TOP));
-        map.setOnCameraIdleListener(() -> startPropagationTransition(rlSearchArea, true, TOP));
-        clusterManager = new ClusterManager<>(getActivity(), map);
+//        map.setOnCameraMoveStartedListener(i -> startPropagationTransition(rlSearchArea, true, TOP));
+//        map.setOnCameraIdleListener(() -> startPropagationTransition(rlSearchArea, false, TOP));
+        clusterManager = new ClusterManager<>(getContext(), map);
         clusterManager.setRenderer(new EventMarkerClusterRenderer(getContext(), map, clusterManager));
-        clusterManager.setOnClusterClickListener(cluster -> {
+        /*clusterManager.setOnClusterClickListener(cluster -> {
             slidePagerAdapter.removeAndAdd(new ArrayList<>(cluster.getItems()));
             return false;
-        });
+        });*/
         clusterManager.setOnClusterItemClickListener(event -> {
-            slidePagerAdapter.singleItem(event);
-            presenter.onClusterItemClick(event);
+            viewPager.setCurrentItem(slidePagerAdapter.getPosition(event), true);
             return false;
         });
         map.setOnMarkerClickListener(clusterManager);
@@ -465,7 +432,12 @@ public class NearbyEventsFragment extends Fragment
                 LatLng cameraPosition = new LatLng(location.getLatitude(),
                         location.getLongitude());
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(cameraPosition, 13));
-                presenter.onMapReady(location);
+                if (data == null) {
+                    presenter.onMapReady(location);
+                } else {
+                    presenter.restore(data);
+
+                }
                 isLoadedFirstStartLocation = false;
             }
         }
@@ -503,40 +475,19 @@ public class NearbyEventsFragment extends Fragment
     public void onPause() {
         super.onPause();
         presenter.pause();
-        if (googleApiClient.isConnected()) {
-            stopLocationUpdates();
-        }
+        if (googleApiClient.isConnected()) stopLocationUpdates();
     }
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+        super.onDestroyView();
     }
 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(KEY_CAMERA_POSITION, cameraPosition);
-        Log.d(TAG, "onSaveInstanceState: ");
-        super.onSaveInstanceState(outState);
-    }
-
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        if (savedInstanceState.containsKey(KEY_CAMERA_POSITION)) {
-            cameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-            Log.d(TAG, "updateValuesFromBundle: ");
-        }
     }
 
     @OnClick(R.id.btn_search_area)
@@ -557,7 +508,7 @@ public class NearbyEventsFragment extends Fragment
     }
 
     private class SlidePagerAdapter extends FragmentStatePagerAdapter {
-        private List<Event> events;
+        private ArrayList<Event> events;
 
         SlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -575,10 +526,8 @@ public class NearbyEventsFragment extends Fragment
             notifyDataSetChanged();
         }
 
-        void singleItem(Event event) {
-            events.clear();
-            events.add(event);
-            notifyDataSetChanged();
+        public int getPosition(Event event) {
+            return events.indexOf(event);
         }
 
         @Nullable

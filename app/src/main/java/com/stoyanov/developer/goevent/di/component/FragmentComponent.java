@@ -5,7 +5,9 @@ import com.stoyanov.developer.goevent.di.scope.FragmentScope;
 import com.stoyanov.developer.goevent.ui.eventdetail.EventDetailFragment;
 import com.stoyanov.developer.goevent.ui.events.EventsFragment;
 import com.stoyanov.developer.goevent.ui.favorite.FavoriteFragment;
+import com.stoyanov.developer.goevent.ui.main.EventSliderFragment;
 import com.stoyanov.developer.goevent.ui.main.MainFragment;
+import com.stoyanov.developer.goevent.ui.nearby.EventSlidePageFragment;
 import com.stoyanov.developer.goevent.ui.nearby.NearbyEventsFragment;
 
 import dagger.Component;
@@ -23,5 +25,9 @@ public interface FragmentComponent {
     void inject(FavoriteFragment fragment);
 
     void inject(MainFragment fragment);
+
+    void inject(EventSliderFragment fragment);
+
+    void inject(EventSlidePageFragment fragment);
 
 }

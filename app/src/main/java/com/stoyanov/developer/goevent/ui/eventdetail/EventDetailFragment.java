@@ -1,19 +1,19 @@
 package com.stoyanov.developer.goevent.ui.eventdetail;
 
 import android.animation.Animator;
-import android.content.res.ColorStateList;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,10 +21,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,7 +39,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.ui.IconGenerator;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.R;
@@ -51,6 +54,7 @@ import org.parceler.Parcels;
 
 import javax.inject.Inject;
 
+import at.blogc.android.views.ExpandableTextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -70,7 +74,7 @@ public class EventDetailFragment extends Fragment
     MapView mapView;
     @BindView(R.id.detail_event_coordinator)
     CoordinatorLayout coordinatorLayout;
-    @BindView(R.id.description_expand_text_view)
+    @BindView(R.id.expandable_textview)
     ExpandableTextView expandableTextView;
     @BindView(R.id.detail_event_info_duration_time)
     TextView durationTime;
@@ -96,6 +100,14 @@ public class EventDetailFragment extends Fragment
     RelativeLayout bottomSheet;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.img_btn_expand_collapse)
+    ImageButton imgBtnExpandCollapse;
+    @BindView(R.id.event_map_button_open_map)
+    Button eventMapButtonOpenMap;
+    @BindView(R.id.btn_tickets)
+    Button btnTickets;
+    @BindView(R.id.btn_share)
+    Button btnShare;
 
     private GoogleMap map;
     private LatLng location;
@@ -107,6 +119,14 @@ public class EventDetailFragment extends Fragment
         Fragment fragment = new EventDetailFragment();
         bundle.putParcelable(EXTRA_PARCELABLE_EVENT, Parcels.wrap(event));
         bundle.putString(EXTRA_TRANSITION_NAME, transitionName);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static Fragment newInstance(Event event) {
+        Bundle bundle = new Bundle();
+        Fragment fragment = new EventDetailFragment();
+        bundle.putParcelable(EXTRA_PARCELABLE_EVENT, Parcels.wrap(event));
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -134,7 +154,7 @@ public class EventDetailFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         String transitionName = getArguments().getString(EXTRA_TRANSITION_NAME);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && transitionName != null) {
             image.setTransitionName(transitionName);
         }
     }
@@ -152,6 +172,17 @@ public class EventDetailFragment extends Fragment
         generator = new IconGenerator(getContext());
         generator.setBackground(ResourcesCompat.getDrawable(getResources(),
                 R.drawable.ic_marker_red_32px, null));
+        expandableTextView.addOnExpandListener(new ExpandableTextView.OnExpandListener() {
+            @Override
+            public void onExpand(@NonNull ExpandableTextView view) {
+                imgBtnExpandCollapse.setImageResource(R.drawable.ic_arrow_up_black_25px);
+            }
+
+            @Override
+            public void onCollapse(@NonNull ExpandableTextView view) {
+                imgBtnExpandCollapse.setImageResource(R.drawable.ic_arrow_down_black_25px);
+            }
+        });
     }
 
     @OnClick(R.id.fab)
@@ -162,6 +193,11 @@ public class EventDetailFragment extends Fragment
     @OnClick(R.id.event_map_button_open_map)
     public void onClickOpenMap() {
         presenter.onOpenMapClick(location);
+    }
+
+    @OnClick(R.id.img_btn_expand_collapse)
+    public void onClickExpandOrCollapse(View v) {
+        expandableTextView.toggle();
     }
 
     private void setupToolbar() {
@@ -180,16 +216,33 @@ public class EventDetailFragment extends Fragment
     }
 
     private void startCircularAnimation(View vg) {
-        vg.setVisibility(View.INVISIBLE);
         int cx = vg.getWidth() / 2;
         int cy = vg.getHeight() / 2;
-
         float finalRadius = (float) Math.hypot(cx, cy);
+        Animator anim = ViewAnimationUtils.createCircularReveal(vg, cx, cy, 0, finalRadius);
+        anim.setInterpolator(new AccelerateInterpolator());
+        anim.setDuration(300);
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                vg.setVisibility(View.INVISIBLE);
+            }
 
-        Animator anim =
-                ViewAnimationUtils.createCircularReveal(vg, cx, cy, 0, finalRadius);
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                vg.setVisibility(View.VISIBLE);
+            }
 
-        vg.setVisibility(View.VISIBLE);
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
         anim.start();
     }
 
@@ -227,7 +280,11 @@ public class EventDetailFragment extends Fragment
                         }
                     });
         } else {
-            // FIXME: 05.12.2016
+            Picasso.with(getContext())
+                    .load(R.drawable.ic_logo)
+                    .fit()
+                    .centerCrop()
+                    .into(image);
         }
     }
 
@@ -283,7 +340,6 @@ public class EventDetailFragment extends Fragment
 
     @Override
     public void addToCalendar() {
-
     }
 
     @Override
@@ -293,7 +349,6 @@ public class EventDetailFragment extends Fragment
 
     @Override
     public void showProgress(boolean b) {
-
     }
 
     @Override

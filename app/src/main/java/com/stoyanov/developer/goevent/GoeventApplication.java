@@ -30,7 +30,6 @@ public class GoeventApplication extends Application {
         super.onCreate();
 
         final CountDownLatch latch = new CountDownLatch(2);
-
         AndroidInitializeConfig androidInitializeConfig = new AndroidInitializeConfig(this);
         androidInitializeConfig.setInitializeListener(firstRun -> latch.countDown());
         RushCore.initialize(androidInitializeConfig);

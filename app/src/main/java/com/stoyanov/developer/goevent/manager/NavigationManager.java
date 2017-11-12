@@ -36,10 +36,6 @@ public class NavigationManager extends BaseNavigationManager {
         }
     }
 
-    public static void goToDetailEvent(FragmentManager manager, Event event) {
-        runReplaceTransaction(manager, EventDetailFragment.newInstance(event, ""));
-    }
-
     public void goToHome() {
         openAsRoot(MainFragment.newInstance());
     }
@@ -58,7 +54,11 @@ public class NavigationManager extends BaseNavigationManager {
 
     public void goToNearby() {
         if (nearbyEventsFragment == null) nearbyEventsFragment = new NearbyEventsFragment();
-        openAsRoot(nearbyEventsFragment);
+        openAsRoot(new NearbyEventsFragment());
+    }
+
+    public void goToDetailEvent(Event event) {
+        open(EventDetailFragment.newInstance(event));
     }
 
     public void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName) {
@@ -82,12 +82,12 @@ public class NavigationManager extends BaseNavigationManager {
     }
 
     public void goToAddEvent() {
-
     }
 
     public void delegateOnActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == NearbyEventsFragment.REQUEST_CHECK_SETTINGS) {
-            nearbyEventsFragment.onActivityResult(requestCode, resultCode, data);
+            if (nearbyEventsFragment != null)
+                nearbyEventsFragment.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

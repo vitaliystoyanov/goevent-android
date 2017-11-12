@@ -16,6 +16,7 @@ import com.like.IconType;
 import com.like.LikeButton;
 import com.like.OnLikeListener;
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.R;
@@ -134,7 +135,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @Override
     public Filter getFilter() {
-        if (categoryFilter == null) categoryFilter = new CategoryFilter(this, new ArrayList<>(data));
+        if (categoryFilter == null)
+            categoryFilter = new CategoryFilter(this, new ArrayList<>(data));
         return categoryFilter;
     }
 

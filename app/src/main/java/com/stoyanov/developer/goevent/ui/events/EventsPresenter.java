@@ -15,6 +15,7 @@ import com.stoyanov.developer.goevent.utill.DateUtil;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -35,7 +36,7 @@ public class EventsPresenter extends BasePresenter<EventsView> {
         this.repository = repository;
     }
 
-    public void provideData(LocationPref location) {
+    public void load(LocationPref location) {
         cachedLocation = location;
         disposable.add(getEvents(location, false));
     }
@@ -47,18 +48,22 @@ public class EventsPresenter extends BasePresenter<EventsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(e -> getView().showProgress(true))
                 .subscribe(events -> {
-                    if (events != null && events.size() > 0) {
-                        Set<Category> set = new HashSet<>();
-                        for (Event e : events) {
-                            set.add(new Category(e.getCategory()));
-                        }
-                        getView().showCategories(set);
-                        getView().showEvents(events);
-                    } else {
-                        getView().showEmpty();
-                    }
+                    show(events, true);
                     getView().showProgress(false);
                 });
+    }
+
+    private void show(List<Event> events, boolean animate) {
+        if (events != null && events.size() > 0) {
+            Set<Category> set = new HashSet<>();
+            for (Event e : events) {
+                set.add(new Category(e.getCategory()));
+            }
+            getView().showCategories(set);
+            getView().showEvents(events, animate);
+        } else {
+            getView().showEmpty();
+        }
     }
 
     public void onRefresh() {
@@ -79,9 +84,7 @@ public class EventsPresenter extends BasePresenter<EventsView> {
     }
 
     public void onLike() {
-        if (savedEvent != null) {
-            favoriteManager.add(savedEvent);
-        }
+        if (savedEvent != null) favoriteManager.add(savedEvent);
     }
 
     public void onUnlike() {
@@ -156,18 +159,13 @@ public class EventsPresenter extends BasePresenter<EventsView> {
                     getView().showProgress(true);
                 })
                 .subscribe(events -> {
-                    if (events != null && events.size() > 0) {
-                        Set<Category> set = new HashSet<>();
-                        for (Event e : events) {
-                            set.add(new Category(e.getCategory()));
-                        }
-                        getView().showCategories(set);
-                        getView().showEvents(events);
-                    } else {
-                        getView().showEmpty();
-                    }
+                    show(events, true);
                     getView().showProgress(false);
                 }, throwable -> getView().showError())
         );
+    }
+
+    public void restore(List<Event> data) {
+        show(data, false);
     }
 }

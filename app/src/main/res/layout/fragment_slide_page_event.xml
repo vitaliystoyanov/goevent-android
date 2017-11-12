@@ -4,46 +4,99 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="?attr/colorPrimary"
     card_view:cardCornerRadius="4dp">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/slide_page_events_cardview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:minHeight="120dp">
 
         <ImageView
             android:id="@+id/slide_page_image"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="0dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/slide_page_date"
+        <FrameLayout
+            android:id="@+id/fl_overlay"
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.55"
+            android:background="@color/black"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent">
+
+        </FrameLayout>
+
+        <ProgressBar
+            android:id="@+id/slide_page_progressbar"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/slide_page_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/slide_page_image" />
+
+        <ImageView
+            android:id="@+id/iv_circle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:srcCompat="@drawable/background_circle" />
+
+        <TextView
+            android:id="@+id/tv_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="28"
+            android:textColor="@color/textWhite"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/iv_circle"
+            app:layout_constraintStart_toStartOf="@+id/iv_circle"
+            app:layout_constraintTop_toTopOf="@+id/iv_circle"
+            tools:text="28" />
+
+        <TextView
+            android:id="@+id/tv_month"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:padding="5dp"
-            android:textColor="@color/textSecondary"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/slide_page_name" />
+            android:text="Oct"
+            android:textColor="@color/textWhite"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_circle"
+            app:layout_constraintEnd_toEndOf="@+id/iv_circle"
+            app:layout_constraintStart_toStartOf="@+id/iv_circle" />
 
         <TextView
             android:id="@+id/slide_page_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:maxLength="90"
@@ -52,22 +105,11 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingStart="5dp"
-            android:textColor="@color/primaryText"
+            android:textColor="@color/textWhite"
+            android:textSize="16sp"
             android:textStyle="normal|bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/slide_page_image" />
-
-        <ProgressBar
-            android:id="@+id/slide_page_progressbar"
-            style="@style/Widget.AppCompat.ProgressBar"
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="@+id/slide_page_image"
-            app:layout_constraintEnd_toStartOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/slide_page_image" />
 

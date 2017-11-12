@@ -9,7 +9,7 @@
     <string name="drawer_nearby">Nearby</string>
     <string name="drawer_map">Map</string>
     <string name="drawer_notifications">Notifications</string>
-    <string name="drawer_login">Login</string>
+    <string name="drawer_signin">Sign In</string>
 
     <string name="title_activity_search">Search events</string>
     <string name="title_favorite_events">Favorite</string>

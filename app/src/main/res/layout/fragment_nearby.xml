@@ -19,9 +19,10 @@
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="false"
             android:layout_centerInParent="false"
-            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="5dp"
             android:layout_marginTop="60dp"
             android:backgroundTint="@color/colorWhite"
             android:text="@string/title_search_this_area"
@@ -46,7 +47,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/nearby_events_viewpager"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="160dp"
         android:layout_alignParentBottom="true"
         android:paddingBottom="5dp"
         android:paddingLeft="5dp"
@@ -59,6 +60,7 @@
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

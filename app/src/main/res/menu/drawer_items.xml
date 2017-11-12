@@ -35,7 +35,7 @@
         <item
             android:id="@+id/drawer_item_login"
             android:icon="@drawable/common_full_open_on_phone"
-            android:title="@string/drawer_login" />
+            android:title="@string/drawer_signin" />
         <item
             android:id="@+id/drawer_item_defined_location"
             android:icon="@drawable/ic_home_map_marker_24px"

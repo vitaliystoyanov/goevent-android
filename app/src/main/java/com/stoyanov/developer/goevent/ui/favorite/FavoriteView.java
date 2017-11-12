@@ -1,5 +1,7 @@
 package com.stoyanov.developer.goevent.ui.favorite;
 
+import android.widget.ImageView;
+
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.mvp.view.BaseView;
 
@@ -9,11 +11,11 @@ public interface FavoriteView extends BaseView {
 
     void showProgressBar(boolean state);
 
-    void showSaved(List<Event> events);
+    void show(List<Event> events);
 
     void showEmpty();
 
-    void goToDetailEvent(Event event);
+    void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName);
 
     void removeItem(Event event, int itemPosition);
 

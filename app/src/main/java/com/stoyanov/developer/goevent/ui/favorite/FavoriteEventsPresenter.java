@@ -1,6 +1,7 @@
 package com.stoyanov.developer.goevent.ui.favorite;
 
 import android.content.Context;
+import android.widget.ImageView;
 
 import com.stoyanov.developer.goevent.GoeventApplication;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
@@ -19,11 +20,10 @@ public class FavoriteEventsPresenter extends BasePresenter<FavoriteView> {
         (GoeventApplication.getApplicationComponent(context)).inject(this);
     }
 
-    public void onStart() {
-//        getView().visibleProgress(true);
-        List<Event> savedEvents = favoriteManager.get();
-        if (savedEvents != null && savedEvents.size() > 0) {
-            getView().showSaved(savedEvents);
+    public void load() {
+        List<Event> favorites = favoriteManager.get();
+        if (favorites != null && favorites.size() > 0) {
+            getView().show(favorites);
         } else {
             getView().showEmpty();
         }
@@ -32,8 +32,8 @@ public class FavoriteEventsPresenter extends BasePresenter<FavoriteView> {
     public void onDestroyView() {
     }
 
-    public void onItemClick(Event event) {
-        getView().goToDetailEvent(event);
+    public void onItemClick(Event event, ImageView sharedImageView, String transitionName) {
+        getView().goToDetailEvent(event, sharedImageView, transitionName);
     }
 
     public void onUndoClick(Event event) {
@@ -47,5 +47,13 @@ public class FavoriteEventsPresenter extends BasePresenter<FavoriteView> {
 
     public void deleteItem(Event event) {
         favoriteManager.remove(event);
+    }
+
+    public void restore(List<Event> data) {
+        if (data != null && data.size() > 0) {
+            getView().show(data);
+        } else {
+            getView().showEmpty();
+        }
     }
 }

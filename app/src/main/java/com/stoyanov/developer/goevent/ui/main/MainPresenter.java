@@ -9,6 +9,7 @@ import com.stoyanov.developer.goevent.mvp.model.repository.EventsRepository;
 import com.stoyanov.developer.goevent.mvp.presenter.BasePresenter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -26,7 +27,7 @@ public class MainPresenter extends BasePresenter<MainView> {
         this.repository = repository;
     }
 
-    public void provideData(LocationPref pref) {
+    public void load(LocationPref pref) {
         location = pref;
         if (pref != null) {
             disposable = repository.getEventsBy(pref.getLatitude(), pref.getLongitude(), true)
@@ -34,18 +35,24 @@ public class MainPresenter extends BasePresenter<MainView> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(e -> getView().showProgress(true))
                     .subscribe(events -> {
-                        if (events != null && events.size() > 0) {
-                            getView().showPopularEvents(events);
-                            Set<Category> set = new HashSet<>();
-                            for (Event e : events) {
-                                set.add(new Category(e.getCategory()));
-                            }
-                            getView().showCategories(set);
-                        } else {
-                            getView().showEmpty();
-                        }
+                        show(events);
                         getView().showProgress(false);
                     }, throwable -> getView().showError());
+        }
+    }
+
+    public void restore(List<Event> data) {
+        show(data);
+    }
+
+    private void show(List<Event> events) {
+        if (events != null && events.size() > 0) {
+            getView().showPopularEvents(events);
+            Set<Category> set = new HashSet<>();
+            for (Event e : events) set.add(new Category(e.getCategory()));
+            getView().showCategories(set);
+        } else {
+            getView().showEmpty();
         }
     }
 

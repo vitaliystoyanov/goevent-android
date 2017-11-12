@@ -76,21 +76,14 @@ public class MainFragment extends Fragment implements MainView {
     @BindView(R.id.txt_popular_events)
     TextView txtPopularEvents;
     private SlidePagerAdapter pagerAdapter;
+    private List<Event> data;
+    private int pagerPosition;
 
     public static MainFragment newInstance() {
         Bundle args = new Bundle();
         MainFragment fragment = new MainFragment();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        DaggerFragmentComponent.builder()
-                .activityComponent(((ContainerActivity) getActivity()).getActivityComponent())
-                .build()
-                .inject(this);
     }
 
     @Override
@@ -102,17 +95,20 @@ public class MainFragment extends Fragment implements MainView {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        DaggerFragmentComponent.builder()
+                .activityComponent(((ContainerActivity) getActivity()).getActivityComponent())
+                .build()
+                .inject(this);
+        setupToolbar();
+        setupRecycleView();
+        setupViewPager();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        presenter.attach(this);
-        presenter.provideData(locationManager.getLastDefinedLocation());
-        setupRecycleView();
-        setupViewPager();
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void setupViewPager() {
@@ -147,8 +143,19 @@ public class MainFragment extends Fragment implements MainView {
     @Override
     public void onStart() {
         super.onStart();
-        setupToolbar();
+        presenter.attach(this);
+        if (data == null) {
+            presenter.load(locationManager.getLastDefinedLocation());
+        } else {
+            presenter.restore(data);
+            pager.setCurrentItem(pagerPosition);
+        }
         ((ContainerActivity) getActivity()).setNavigationItem(R.id.drawer_item_main);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     private void setupToolbar() {
@@ -170,14 +177,14 @@ public class MainFragment extends Fragment implements MainView {
     @Override
     public void showCategories(Set<Category> categories) {
         List<CategoryAdapter.Item> items = new ArrayList<>();
-        for (Category c : categories) {
+        for (Category c : categories)
             items.add(CategoryAdapter.Item.newBuilder().name(c.getName()).build());
-        }
         rvCategory.setAdapter(new CategoryAdapter(items, getContext()));
     }
 
     @Override
     public void showPopularEvents(List<Event> data) {
+        this.data = data;
         pagerAdapter.setEvents(data);
         pagerAdapter.setEvents(data);
     }
@@ -212,6 +219,7 @@ public class MainFragment extends Fragment implements MainView {
     @Override
     public void onDestroyView() {
         ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
+        pagerPosition = pager.getCurrentItem();
         unbinder.unbind();
         super.onDestroyView();
     }

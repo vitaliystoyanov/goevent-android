@@ -38,11 +38,14 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(e -> getView().visibleProgress(true))
                 .subscribe(events -> {
-                    if (events != null && events.size() > 0) {
-                        getView().showMarkers(removeNullLocation(events));
-                    }
+                    if (events != null && events.size() > 0)
+                        getView().showMarkers(removeNullLocation(events), true);
                     getView().visibleProgress(false);
                 });
+    }
+
+    public void restore(List<Event> data) {
+        getView().showMarkers(data, false);
     }
 
     @NonNull
@@ -50,9 +53,7 @@ public class NearbyEventsPresenter extends BasePresenter<NearbyEventsView> {
         Iterator<Event> iterator = data.iterator();
         while (iterator.hasNext()) {
             Event next = iterator.next();
-            if (next.getLocation() == null) {
-                iterator.remove();
-            }
+            if (next.getLocation() == null) iterator.remove();
         }
         return data;
     }

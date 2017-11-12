@@ -11,7 +11,7 @@ import java.util.Set;
 
 public interface EventsView extends BaseView {
 
-    void showEvents(List<Event> events);
+    void showEvents(List<Event> events, boolean animate);
 
     void showEmpty();
 

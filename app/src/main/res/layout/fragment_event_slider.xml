@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/fl_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0.65"
@@ -40,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/frameLayout"
+        app:layout_constraintTop_toTopOf="@+id/fl_overlay"
         tools:text="Name" />
 
     <ImageView

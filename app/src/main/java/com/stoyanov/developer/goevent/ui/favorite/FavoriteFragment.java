@@ -1,6 +1,7 @@
 package com.stoyanov.developer.goevent.ui.favorite;
 
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -11,23 +12,33 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.transition.CircularPropagation;
+import android.transition.Fade;
+import android.transition.SidePropagation;
+import android.transition.Slide;
+import android.transition.TransitionSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.like.LikeButton;
-import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.R;
 import com.stoyanov.developer.goevent.di.component.DaggerFragmentComponent;
+import com.stoyanov.developer.goevent.manager.NavigationManager;
 import com.stoyanov.developer.goevent.mvp.model.domain.Event;
 import com.stoyanov.developer.goevent.ui.container.ContainerActivity;
 import com.stoyanov.developer.goevent.ui.events.EventsAdapter;
+import com.stoyanov.developer.goevent.utill.transition.PropagatingTransition;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -37,11 +48,14 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     FavoriteEventsPresenter presenter;
     @Inject
     NavigationManager navigationManager;
+    @BindView(R.id.saved_events_recycler_view)
+    RecyclerView savedEventsRecyclerView;
     private ActionBarDrawerToggle drawerToggle;
     private EventsAdapter adapter;
     private ProgressBar progressBar;
     private ConstraintLayout emptyLayout;
     private Unbinder unbinder;
+    private List<Event> data;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +74,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
                 .inject(this);
         setupToolbar();
         setupRecycleView();
-        emptyLayout = (ConstraintLayout) getActivity().findViewById(R.id.empty_layout);
+        emptyLayout = getActivity().findViewById(R.id.empty_layout);
     }
 
     private void setupToolbar() {
@@ -100,7 +114,7 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
         itemTouchHelper.attachToRecyclerView(list);
 
         adapter = new EventsAdapter(getContext(), (position, sharedImageView, transitionName) ->
-                presenter.onItemClick(adapter.getItem(position)),
+                presenter.onItemClick(adapter.getItem(position), sharedImageView, transitionName),
                 new EventsAdapter.OnLikeItemClickListener() {
                     @Override
                     public void onItem(int position) {
@@ -123,7 +137,11 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     public void onStart() {
         super.onStart();
         presenter.attach(this);
-        presenter.onStart();
+        if (data == null) {
+            presenter.load();
+        } else {
+            presenter.restore(data);
+        }
         drawerToggle.syncState();
         ((ContainerActivity) getActivity()).setNavigationItem(R.id.drawer_item_favorites);
     }
@@ -170,13 +188,22 @@ public class FavoriteFragment extends Fragment implements FavoriteView {
     }
 
     @Override
-    public void showSaved(List<Event> events) {
+    public void show(List<Event> events) {
+        this.data = events;
         if (emptyLayout.getVisibility() == View.VISIBLE) emptyLayout.setVisibility(View.INVISIBLE);
         adapter.removeAndAdd(events);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            TransitionSet set = new TransitionSet();
+            set.setPropagation(new SidePropagation());
+            set.addTransition(new Fade(Fade.IN).setDuration(300));
+            set.addTransition(new Slide(Gravity.BOTTOM));
+            new PropagatingTransition(savedEventsRecyclerView, savedEventsRecyclerView, set,
+                    650, new LinearInterpolator(), new CircularPropagation()).start();
+        }
     }
 
     @Override
-    public void goToDetailEvent(Event event) {
-        navigationManager.goToDetailEvent(event, null, "");
+    public void goToDetailEvent(Event event, ImageView sharedImageView, String transitionName) {
+        navigationManager.goToDetailEvent(event, sharedImageView, transitionName);
     }
 }

@@ -7,9 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Interpolator
 
-/**
- * Created by Nick Cruz on 4/23/17
- */
 class PropagatingTransition(
         val sceneRoot: ViewGroup,
         var startingView: View? = null,

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NearbyEventsView extends BaseView {
 
-    void showMarkers(List<Event> events);
+    void showMarkers(List<Event> events, boolean animate);
 
     void showMessageNetworkError();
 

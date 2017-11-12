@@ -94,6 +94,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     private Unbinder unbinder;
     private EventsAdapter adapter;
     private String customDateRange;
+    private List<Event> data;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -193,8 +194,6 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
             ((TextView) getView().findViewById(R.id.toolbar_location_textview))
                     .setText(Formatter.formatLocation(location));
         }
-        presenter.attach(this);
-        presenter.provideData(locationManager.getLastDefinedLocation());
     }
 
     private void setupBadges() {
@@ -207,7 +206,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
         mapBadgesDates.put(getString(R.string.title_custom_date), badgeDate.newBadge().setText(getString(R.string.title_custom_date)));
         for (BadgeLayout.Badge b : mapBadgesDates.values()) badgeDate.addBadge(b);
         badgeDate.addOnBadgeClickedListener(badge -> {
-            if (badge.getText().equals(customDateRange) || badge.getText().equals(getString(R.string.title_custom_date))) {
+            if (badge.getText() != null && (badge.getText().equals(customDateRange) || badge.getText().equals(getString(R.string.title_custom_date)))) {
                 openDateRangePicker();
             }
             for (BadgeLayout.Badge b : mapBadgesDates.values()) {
@@ -242,7 +241,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     private void performFiltering() {
         for (BadgeLayout.Badge badge : mapBadgesCategories.values()) {
             if (mapBadgesCategoriesSelectedState.get(badge.getText())) {
-                if (!badge.getText().equals(getString(R.string.title_all))) {
+                if (badge.getText() != null && !badge.getText().equals(getString(R.string.title_all))) {
                     adapter.getFilter().filter(badge.getText());
                 } else {
                     adapter.getFilter().filter("");
@@ -266,8 +265,20 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     @Override
     public void onStart() {
         super.onStart();
+        presenter.attach(this);
+        if (data == null) {
+            presenter.load(locationManager.getLastDefinedLocation());
+        } else {
+            presenter.restore(data);
+        }
         drawerToggle.syncState();
         ((ContainerActivity) getActivity()).setNavigationItem(R.id.drawer_item_list_events);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        presenter.detach();
     }
 
     @Override
@@ -298,11 +309,6 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public void onDestroyView() {
         presenter.detach();
         ((ContainerActivity) getActivity()).removeDrawerLayoutListener(drawerToggle);
@@ -327,12 +333,13 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     }
 
     @Override
-    public void showEvents(List<Event> events) {
+    public void showEvents(List<Event> events, boolean animate) {
+        data = events;
         noUpcomingEventsLayout.setVisibility(View.INVISIBLE);
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setRefreshing(false);
         adapter.removeAndAdd(events);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && animate) {
             TransitionSet set = new TransitionSet();
             set.setPropagation(new SidePropagation());
             set.addTransition(new Fade(Fade.IN).setDuration(300));
@@ -378,9 +385,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
                 R.string.message_bad_connection, Snackbar.LENGTH_LONG)
                 .show();
         getActivity().runOnUiThread(() -> {
-            if (swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
+            if (swipeRefreshLayout.isRefreshing()) swipeRefreshLayout.setRefreshing(false);
         });
     }
 
@@ -392,9 +397,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
         dateStart.set(year, monthOfYear, dayOfMonth);
         dateEnd.set(yearEnd, monthOfYearEnd, dayOfMonthEnd);
         BadgeLayout.Badge b = mapBadgesDates.get(customDateRange);
-        if (b == null) {
-            b = mapBadgesDates.get(getString(R.string.title_custom_date));
-        }
+        if (b == null) b = mapBadgesDates.get(getString(R.string.title_custom_date));
         Pair<String, String> r = DateUtil.toDurationWithoutTimeRange(dateStart.getTime(), dateEnd.getTime());
         customDateRange = String.format("%s: %s - %s", getString(R.string.title_date), r.first, r.second);
         b.setText(customDateRange);

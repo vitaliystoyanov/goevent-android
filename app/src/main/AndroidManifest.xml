@@ -49,6 +49,7 @@
             android:windowSoftInputMode="adjustNothing" />
         <activity android:name=".ui.signin.SignInActivity" />
         <activity android:name=".ui.location.DefaultLocationActivity" />
+        <activity android:name=".ui.getstarted.GetStartedActivity" />
         <activity android:name=".ui.settings.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
