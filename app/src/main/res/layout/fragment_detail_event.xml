@@ -68,6 +68,7 @@
         app:fabSize="normal"
         app:layout_anchor="@id/detail_event_appbar"
         app:layout_anchorGravity="bottom|end"
+        app:pressedTranslationZ="4dp"
         app:srcCompat="@drawable/ic_star_white_24px" />
 
     <include layout="@layout/bottom_sheet_tickets" />

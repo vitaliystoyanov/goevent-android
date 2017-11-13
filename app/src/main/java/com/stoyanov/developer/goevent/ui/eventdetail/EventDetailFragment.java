@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -101,7 +102,7 @@ public class EventDetailFragment extends Fragment
     @BindView(R.id.fab)
     FloatingActionButton fab;
     @BindView(R.id.img_btn_expand_collapse)
-    ImageButton imgBtnExpandCollapse;
+    Button imgBtnExpandCollapse;
     @BindView(R.id.event_map_button_open_map)
     Button eventMapButtonOpenMap;
     @BindView(R.id.btn_tickets)
@@ -157,6 +158,8 @@ public class EventDetailFragment extends Fragment
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && transitionName != null) {
             image.setTransitionName(transitionName);
         }
+        fab.setVisibility(View.GONE);
+        BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
     @Override
@@ -175,12 +178,12 @@ public class EventDetailFragment extends Fragment
         expandableTextView.addOnExpandListener(new ExpandableTextView.OnExpandListener() {
             @Override
             public void onExpand(@NonNull ExpandableTextView view) {
-                imgBtnExpandCollapse.setImageResource(R.drawable.ic_arrow_up_black_25px);
+                imgBtnExpandCollapse.setText("Collapse");
             }
 
             @Override
             public void onCollapse(@NonNull ExpandableTextView view) {
-                imgBtnExpandCollapse.setImageResource(R.drawable.ic_arrow_down_black_25px);
+                imgBtnExpandCollapse.setText("Read more");
             }
         });
     }
@@ -213,6 +216,9 @@ public class EventDetailFragment extends Fragment
         presenter.attach(this);
         presenter.onStart(Parcels.unwrap(getArguments().getParcelable(EXTRA_PARCELABLE_EVENT)));
         startCircularAnimation(content);
+        fab.postDelayed(() -> fab.show(), 400);
+        bottomSheet.postDelayed(() -> BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED),
+                400);
     }
 
     private void startCircularAnimation(View vg) {
