@@ -158,7 +158,7 @@ public class EventDetailFragment extends Fragment
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && transitionName != null) {
             image.setTransitionName(transitionName);
         }
-        fab.setVisibility(View.GONE);
+        fab.hide();
         BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_HIDDEN);
     }
 
@@ -216,7 +216,7 @@ public class EventDetailFragment extends Fragment
         presenter.attach(this);
         presenter.onStart(Parcels.unwrap(getArguments().getParcelable(EXTRA_PARCELABLE_EVENT)));
         startCircularAnimation(content);
-        fab.postDelayed(() -> fab.show(), 400);
+        fab.show();
         bottomSheet.postDelayed(() -> BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED),
                 400);
     }

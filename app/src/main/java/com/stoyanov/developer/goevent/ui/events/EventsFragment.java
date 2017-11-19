@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -78,6 +79,8 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     BadgeLayout badgeDate;
     @BindView(R.id.list_events_fab)
     FloatingActionButton fab;
+    @BindView(R.id.appbar)
+    AppBarLayout appbar;
 
     private Map<String, BadgeLayout.Badge> mapBadgesDates;
     private Map<String, BadgeLayout.Badge> mapBadgesCategories;
@@ -377,6 +380,7 @@ public class EventsFragment extends Fragment implements EventsView, DatePickerDi
     @Override
     public void showProgress(boolean isLoading) {
         progressBar.setVisibility(isLoading ? View.VISIBLE : View.INVISIBLE);
+        appbar.setExpanded(!isLoading, true);
     }
 
     @Override

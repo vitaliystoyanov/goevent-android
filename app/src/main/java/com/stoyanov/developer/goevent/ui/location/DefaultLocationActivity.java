@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,8 @@ public class DefaultLocationActivity extends AppCompatActivity
     RecyclerView recyclerView;
     @Inject
     LocationManager locationManager;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     private GoogleApiClient googleApiClient;
     private ResultReceiver suggestionAddressResultReceiver;
     private ResultReceiver addressResultReceiver;
@@ -163,6 +166,7 @@ public class DefaultLocationActivity extends AppCompatActivity
                 searchView.hideProgress();
             }
         };
+        setSupportActionBar(toolbar);
     }
 
     @Override

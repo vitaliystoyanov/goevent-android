@@ -40,7 +40,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Item i = data.get(position);
 
-        holder.card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAdditionAccent));
+        holder.card.setCardBackgroundColor(ContextCompat.getColor(context, R.color.dark_gray));
         holder.txtAmount.setText(String.format(Locale.getDefault(), "%d+", i.getAmount()));
         holder.txtName.setText(i.getName());
     }

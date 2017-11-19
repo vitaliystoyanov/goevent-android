@@ -40,12 +40,12 @@
     <string name="geocoding_no_address_found">No address found</string>
     <string name="geocoding_address_found">Address found</string>
 
-    <string name="title_home">Main</string>
+    <string name="title_explore">Explore</string>
     <string name="title_all_category">All categories</string>
     <string name="title_favorite">Saved</string>
     <string name="title_date">Date</string>
     <string name="title_custom_date">Custom date</string>
-    <string name="title_weekend">Weekend</string>
+    <string name="title_weekend">This weekend</string>
     <string name="title_tomorrow">Tomorrow</string>
     <string name="title_today">Today</string>
     <string name="title_all">All</string>

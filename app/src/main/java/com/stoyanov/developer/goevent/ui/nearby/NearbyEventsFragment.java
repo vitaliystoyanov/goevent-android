@@ -398,7 +398,9 @@ public class NearbyEventsFragment extends Fragment implements NearbyEventsView,
             clusterManager.cluster();
             slidePagerAdapter.clear();
             progressBar.setVisibility(View.VISIBLE);
+            startPropagationTransition(rlSearchArea, false, TOP);
         } else {
+            startPropagationTransition(rlSearchArea, true, TOP);
             progressBar.setVisibility(View.INVISIBLE);
         }
     }
